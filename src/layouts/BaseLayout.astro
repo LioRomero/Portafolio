@@ -6,7 +6,7 @@ import '@fontsource/inter/latin-600.css';
 import '../styles/global.css';
 import TopBar from '../components/TopBar.astro';
 import { DEFAULTS, KEYS } from '../lib/prefs';
-import { ROUTES, type Lang, type PageKey } from '../content/ui';
+import { ROUTES, UI, type Lang, type PageKey } from '../content/ui';
 import { withBase } from '../lib/paths';
 
 interface Props {
@@ -78,9 +78,7 @@ const favicon = withBase('/favicon.svg');
   </head>
 
   <body>
-    <a class="skip-link" href="#main">
-      {lang === 'es' ? 'Saltar al contenido' : 'Skip to content'}
-    </a>
+    <a class="skip-link" href="#main">{UI[lang].skipToContent}</a>
 
     <div id="read-progress" aria-hidden="true"></div>
 

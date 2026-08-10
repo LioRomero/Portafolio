@@ -35,7 +35,7 @@ const title =
   <CuriousLayer lang={lang} client:idle />
 
   {/* --- Hero --------------------------------------------------------- */}
-  <section class="section hero" data-hue="mind">
+  <section class="section hero">
     <div class="wrap">
       <p class="label kicker">{u.location}</p>
 
@@ -74,7 +74,7 @@ const title =
   </section>
 
   {/* --- Mapa de emociones -------------------------------------------- */}
-  <section class="section bordered" id="emociones" data-hue="feel">
+  <section class="section bordered" id="emociones">
     <div class="wrap">
       <div class="note-row">
         <div>
@@ -91,7 +91,7 @@ const title =
   </section>
 
   {/* --- Casos (resumen) ---------------------------------------------- */}
-  <section class="section bordered" id="casos" data-hue="feel">
+  <section class="section bordered" id="casos">
     <div class="wrap">
       <h2>{t.casesTitle}</h2>
       <p class="lead cases-hint">{t.casesHint}</p>
@@ -159,7 +159,7 @@ const title =
   </section>
 
   {/* --- Método -------------------------------------------------------- */}
-  <section class="section bordered" id="metodo" data-hue="clarity">
+  <section class="section bordered" id="metodo">
     <div class="wrap">
       <div class="note-row">
         <div>
@@ -200,7 +200,7 @@ const title =
   </section>
 
   {/* --- Sobre mí (resumen) -------------------------------------------- */}
-  <section class="section bordered" id="sobre" data-hue="mind">
+  <section class="section bordered" id="sobre">
     <div class="wrap about">
       <div>
         <h2>{t.aboutTitleA}<br />{t.aboutTitleB}</h2>
@@ -236,7 +236,7 @@ const title =
   </section>
 
   {/* --- Canvas -------------------------------------------------------- */}
-  <section class="section bordered" data-playful data-hue="clarity">
+  <section class="section bordered" data-playful>
     <div class="wrap wrap--canvas">
       <EmotionCanvas lang={lang} client:visible />
     </div>

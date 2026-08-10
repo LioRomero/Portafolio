@@ -35,14 +35,23 @@ const otherHref = ROUTES[other][page];
     {t.langBtn}
   </a>
 
-  <button
-    class="tutorial"
-    type="button"
-    aria-label={t.tutorialTitle}
-    title={t.tutorialTitle}
-    onclick="dispatchEvent(new Event('em-open-tutorial'))">?</button
+  <button class="tutorial" type="button" aria-label={t.tutorialTitle} title={t.tutorialTitle}
+    data-abrir-tutorial>?</button
   >
 </header>
+
+{/*
+  Un `onclick` en línea no sirve aquí: esos manejadores se evalúan con el
+  elemento en el ámbito, así que `dispatchEvent(...)` resolvía al método del
+  propio botón y el evento nunca llegaba a `window`. El tutorial no abría.
+*/}
+<script>
+  document.querySelectorAll('[data-abrir-tutorial]').forEach((boton) => {
+    boton.addEventListener('click', () => {
+      window.dispatchEvent(new Event('em-open-tutorial'));
+    });
+  });
+</script>
 
 <style>
   .bar {

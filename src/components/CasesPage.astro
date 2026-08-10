@@ -47,7 +47,7 @@ const tabs = CASE_ORDER.map((k) => ({ key: k, label: CASES[k].tab, accent: CASES
       const d = c[lang];
       const nextKey = CASE_ORDER[(ci + 1) % CASE_ORDER.length]!;
       return (
-        <article class="case" id={key} data-case={key} data-hue="feel" style={`--accent:${c.accent}`}>
+        <article class="case" id={key} data-case={key} style={`--accent:${c.accent}`}>
           <section class="section">
             <div class="wrap wrap--cases">
               <div class="chips">
@@ -215,13 +215,13 @@ const tabs = CASE_ORDER.map((k) => ({ key: k, label: CASES[k].tab, accent: CASES
     })
   }
 
-  <section class="section bordered" data-playful data-hue="clarity">
+  <section class="section bordered" data-playful>
     <div class="wrap wrap--canvas">
       <Puzzle variant="casos" lang={lang} client:visible />
     </div>
   </section>
 
-  <section class="section bordered" data-playful data-hue="clarity">
+  <section class="section bordered" data-playful>
     <div class="wrap wrap--canvas">
       <EmotionCanvas lang={lang} client:visible />
     </div>
