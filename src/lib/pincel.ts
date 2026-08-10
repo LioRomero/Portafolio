@@ -8,7 +8,14 @@
 
 export type ModoColor = 'ciclo' | 'mind' | 'clarity' | 'feel';
 
+/**
+ * `estela` deja manchas de luz que se abren; `ondas` dibuja anillos que se
+ * expanden, como una gota al caer sobre agua quieta.
+ */
+export type TipoPincel = 'estela' | 'ondas';
+
 export interface Pincel {
+  tipo: TipoPincel;
   /** Brillo del trazo, 0–1. Por debajo de ~0.3 apenas se intuye. */
   intensidad: number;
   /** Cuánto se abre la partícula al envejecer, 0–1. */
@@ -27,6 +34,7 @@ export interface Pincel {
  * ella. Quien quiera un rastro más presente lo sube desde el panel.
  */
 export const PINCEL_DEFECTO: Pincel = {
+  tipo: 'estela',
   intensidad: 0.42,
   dispersion: 0.3,
   caida: 0,
@@ -35,13 +43,17 @@ export const PINCEL_DEFECTO: Pincel = {
   modoColor: 'ciclo',
 };
 
-/** Gotas que caen y se abren al bajar. */
+/**
+ * Gotas sobre agua quieta: cada punto abre un anillo que se expande y se apaga.
+ * Sin caída, porque una onda se abre en la superficie, no se descuelga.
+ */
 export const PINCEL_GOTAS: Pincel = {
-  intensidad: 0.5,
-  dispersion: 0.75,
-  caida: 0.6,
-  duracion: 5.5,
-  tamano: 62,
+  tipo: 'ondas',
+  intensidad: 0.62,
+  dispersion: 0.55,
+  caida: 0,
+  duracion: 3.4,
+  tamano: 70,
   modoColor: 'clarity',
 };
 
@@ -61,7 +73,9 @@ const acotar = (v: number, min: number, max: number) => Math.min(max, Math.max(m
 export function normalizar(bruto: Partial<Pincel> | null | undefined): Pincel {
   const p = { ...PINCEL_DEFECTO, ...(bruto ?? {}) };
   const modos: ModoColor[] = ['ciclo', 'mind', 'clarity', 'feel'];
+  const tipos: TipoPincel[] = ['estela', 'ondas'];
   return {
+    tipo: tipos.includes(p.tipo) ? p.tipo : 'estela',
     intensidad: acotar(Number(p.intensidad) || PINCEL_DEFECTO.intensidad, 0.1, 1),
     dispersion: acotar(Number(p.dispersion) ?? PINCEL_DEFECTO.dispersion, 0, 1),
     caida: acotar(Number(p.caida) ?? PINCEL_DEFECTO.caida, 0, 1),

@@ -40,6 +40,9 @@ export const UI = {
     closePlayer: 'Cerrar el reproductor',
     /* Ajustes del pincel del fondo pintado. */
     pincel: 'Ajustes del pincel',
+    pincelTipo: 'Trazo',
+    pincelEstela: 'Estela de luz',
+    pincelOndas: 'Ondas en el agua',
     pincelIntensidad: 'Intensidad',
     pincelDispersion: 'Dispersión',
     pincelCaida: 'Caída',
@@ -53,7 +56,7 @@ export const UI = {
     pincelGotas: 'Preajuste: gotas de agua',
     pincelDefecto: 'Valores por defecto',
     pincelNota:
-      'La dispersión abre la partícula a medida que envejece; la caída la deja escurrir hacia abajo. Con las dos altas, el rastro se comporta como gotas de agua.',
+      'En estela, la dispersión abre la mancha al envejecer. En ondas, decide hasta dónde llega el anillo. La caída deja el trazo escurrir hacia abajo.',
     skipToContent: 'Saltar al contenido',
     role: 'Consultoría UX · Investigación · Diseño de servicios',
     location: 'Bogotá · Remoto global',
@@ -84,6 +87,9 @@ export const UI = {
     finePrintLabel: 'Fine print',
     closePlayer: 'Close the player',
     pincel: 'Brush settings',
+    pincelTipo: 'Stroke',
+    pincelEstela: 'Light trail',
+    pincelOndas: 'Ripples on water',
     pincelIntensidad: 'Intensity',
     pincelDispersion: 'Spread',
     pincelCaida: 'Fall',
@@ -97,7 +103,7 @@ export const UI = {
     pincelGotas: 'Preset: water drops',
     pincelDefecto: 'Default values',
     pincelNota:
-      'Spread opens the particle as it ages; fall lets it run downwards. With both high, the trail behaves like water drops.',
+      'On a light trail, spread opens the blob as it ages. On ripples, it sets how far the ring travels. Fall lets the stroke run downwards.',
     skipToContent: 'Skip to content',
     role: 'UX consulting · Research · Service design',
     location: 'Bogotá · Remote worldwide',

@@ -11,6 +11,7 @@ import {
   leerPincel,
   type ModoColor,
   type Pincel,
+  type TipoPincel,
 } from '../lib/pincel';
 
 /** Radio del haz, en px. Fuera de él la letra chica no se lee. */
@@ -26,6 +27,8 @@ const FOUND_AT = 130;
 
 /** Un trazo cada tantos ms: sin esto un gesto rápido crea cientos de partículas. */
 const CADENCIA_MS = 26;
+/** Las ondas se espacian más: si no, se pisan y dejan de leerse como gotas. */
+const CADENCIA_ONDAS_MS = 130;
 /** Techo de seguridad por si el navegador entrega eventos muy seguidos. */
 const MAX_TRAZOS = 260;
 /** Píxeles por segundo al cuadrado con `caida` al máximo. */
@@ -61,14 +64,23 @@ interface Trazo {
  * Un sprite por paso de color. Dibujar `drawImage` es mucho más barato que
  * construir un gradiente radial por partícula y por frame.
  */
+/** Color interpolado del ciclo, en el paso `i`. */
+function rgbDePaso(i: number): [number, number, number] {
+  const t = (i / PASOS_COLOR) * EMOCIONES.length;
+  const desde = EMOCIONES[Math.floor(t) % EMOCIONES.length]!;
+  const hasta = EMOCIONES[(Math.floor(t) + 1) % EMOCIONES.length]!;
+  const f = t % 1;
+  return [0, 1, 2].map((k) => Math.round(desde[k]! + (hasta[k]! - desde[k]!) * f)) as [
+    number,
+    number,
+    number,
+  ];
+}
+
 function crearSprites(): HTMLCanvasElement[] {
   const LADO = 128;
   return Array.from({ length: PASOS_COLOR }, (_, i) => {
-    const t = (i / PASOS_COLOR) * EMOCIONES.length;
-    const desde = EMOCIONES[Math.floor(t) % EMOCIONES.length]!;
-    const hasta = EMOCIONES[(Math.floor(t) + 1) % EMOCIONES.length]!;
-    const f = t % 1;
-    const [r, g, b] = [0, 1, 2].map((k) => Math.round(desde[k]! + (hasta[k]! - desde[k]!) * f));
+    const [r, g, b] = rgbDePaso(i);
 
     const s = document.createElement('canvas');
     s.width = s.height = LADO;
@@ -272,9 +284,9 @@ export default function CuriousLayer({ lang, research }: Props) {
     let ultimo = 0;
     const onMove = (e: PointerEvent) => {
       const ahora = performance.now();
-      if (ahora - ultimo < CADENCIA_MS) return;
-      ultimo = ahora;
       const p = ajustes.current;
+      if (ahora - ultimo < (p.tipo === 'ondas' ? CADENCIA_ONDAS_MS : CADENCIA_MS)) return;
+      ultimo = ahora;
       if (trazos.current.length >= MAX_TRAZOS) trazos.current.shift();
 
       /* La dispersión reparte velocidades al nacer: sin ella el trazo se queda
@@ -332,10 +344,11 @@ export default function CuriousLayer({ lang, research }: Props) {
       }
 
       cx.globalCompositeOperation = 'lighter';
+
       for (const p of trazos.current) {
         const edad = (ahora - p.nace) / vidaMs;
 
-        /* Física de gota: cae, se frena por rozamiento y se va abriendo. */
+        /* Física común: cae, se frena por rozamiento y deriva. */
         p.vy += GRAVEDAD * aj.caida * dt;
         const rozamiento = Math.pow(0.86, dt * 60);
         p.vx *= rozamiento;
@@ -343,7 +356,37 @@ export default function CuriousLayer({ lang, research }: Props) {
         p.x += p.vx * dt;
         p.y += p.vy * dt;
 
-        /* Desvanecido cuadrático: aguanta visible y se apaga al final. */
+        if (aj.tipo === 'ondas') {
+          /* Anillo que se expande deprisa y frena, como la onda de una gota:
+             el radio va con una curva de salida y el grosor se afina. */
+          const avance = 1 - Math.pow(1 - edad, 2.2);
+          const radio = p.r * (1.1 + aj.dispersion * 3.4) * avance;
+          /* Entra de golpe y se apaga despacio. */
+          const vida = Math.min(1, edad * 9) * Math.pow(1 - edad, 1.7);
+          const alfa = vida * aj.intensidad * (0.6 + 0.4 * latido);
+          if (alfa <= 0.004 || radio < 1) continue;
+
+          const [r, g, b] = rgbDePaso(p.color);
+          cx.lineWidth = Math.max(0.6, 2.6 * (1 - edad) * (0.85 + 0.3 * latido));
+          cx.strokeStyle = `rgba(${r},${g},${b},${alfa.toFixed(3)})`;
+          cx.beginPath();
+          cx.arc(p.x, p.y, radio, 0, Math.PI * 2);
+          cx.stroke();
+
+          /* Una segunda onda por detrás: es lo que la hace parecer agua y no
+             un círculo creciendo. */
+          const estela = radio * 0.78;
+          if (estela > 1) {
+            cx.lineWidth = Math.max(0.5, 1.6 * (1 - edad));
+            cx.strokeStyle = `rgba(${r},${g},${b},${(alfa * 0.4).toFixed(3)})`;
+            cx.beginPath();
+            cx.arc(p.x, p.y, estela, 0, Math.PI * 2);
+            cx.stroke();
+          }
+          continue;
+        }
+
+        /* Estela: mancha de luz que se abre y se apaga. */
         const vida = (1 - edad) * (1 - edad);
         const abierto = 1 + edad * aj.dispersion * 1.9;
         const radio = p.r * abierto * (0.82 + 0.26 * latido);
@@ -561,6 +604,20 @@ export default function CuriousLayer({ lang, research }: Props) {
 
           {pincelAbierto && (
             <div class="cl-pincel">
+              <label class="cl-campo">
+                <span class="cl-campo-label">{u.pincelTipo}</span>
+                <select
+                  class="cl-select"
+                  value={pincel.tipo}
+                  onChange={(e) =>
+                    cambiarPincel({ tipo: (e.target as HTMLSelectElement).value as TipoPincel })
+                  }
+                >
+                  <option value="estela">{u.pincelEstela}</option>
+                  <option value="ondas">{u.pincelOndas}</option>
+                </select>
+              </label>
+
               <Dial
                 label={u.pincelIntensidad}
                 valor={pincel.intensidad}
