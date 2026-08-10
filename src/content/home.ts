@@ -108,7 +108,7 @@ export const HOME = {
     playHint:
       'Hay tres puzzles repartidos entre las páginas (uno aquí, uno en Casos, uno en Sobre mí) y un canvas abierto al final de cada una para que dejes lo que pensaste.',
     paintHint:
-      'El fondo se pinta según la sección donde estés: violeta en lo que pienso, coral en los casos, cian en el método. Cada trazo se borra en menos de un segundo, así que el lienzo nunca se satura.',
+      'El fondo se pinta con el latido, a 55 pulsaciones por minuto, y el color va girando entre las tres emociones: violeta, cian y coral. Cada trazo vive unos segundos desde que lo dibujas y se apaga solo, así que el lienzo nunca se satura.',
     ghost1:
       'Lo que no pongo en el CV: tardé dos años en aprender a decir “no sé todavía” en una reunión. Sigue siendo la frase más útil que tengo.',
     ghost2:
@@ -264,7 +264,7 @@ export const HOME = {
     playHint:
       'There are three puzzles across the pages (one here, one in Cases, one in About) and an open canvas at the end of each, for whatever you thought.',
     paintHint:
-      'The background paints itself by section: violet where I think, coral in the cases, cyan in the method. Every stroke fades in under a second, so the canvas never saturates.',
+      'The background paints with the heartbeat, at 55 beats per minute, and the colour turns through the three emotions: violet, cyan and coral. Every stroke lives a few seconds from the moment you draw it and fades on its own, so the canvas never saturates.',
     ghost1:
       'What’s not on my CV: it took me two years to learn to say “I don’t know yet” in a meeting. It’s still the most useful sentence I have.',
     ghost2:

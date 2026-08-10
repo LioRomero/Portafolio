@@ -4,28 +4,71 @@ import { UI, type Lang } from '../content/ui';
 import { getFinds, onFindsChange, resetFinds, TOTAL_FINDS } from '../lib/finds';
 import { getMode, onPrefsChange } from '../lib/prefs';
 
-type Hue = '#8B7BF0' | '#22D3EE' | '#F0466B';
-
-const HUE_BY_SECTION: Record<string, Hue> = {
-  mind: '#8B7BF0',
-  clarity: '#22D3EE',
-  feel: '#F0466B',
-};
-
 /** Radio del haz, en px. Fuera de él la letra chica no se lee. */
 const BEAM = 210;
-
-/**
- * Frames sin rastro nuevo antes de limpiar el lienzo del todo.
- *
- * El borrado por frame es multiplicativo (cada frame quita un 10%), así que en
- * enteros de 8 bits se atasca: 4 × 0,9 = 3,6 y vuelve a redondear a 4. Sin este
- * barrido quedaría una película violeta permanente por donde pasó el cursor.
- * A 60 fps son ~0,8 s, bastante después de que el trazo deje de verse.
- */
-const FRAMES_HASTA_LIMPIAR = 48;
 /** Distancia a la que un fragmento cuenta como encontrado. */
 const FOUND_AT = 130;
+
+/* --- Rastro del cursor ------------------------------------------------------
+   Cada trazo es una partícula con su propia edad: vive los mismos segundos
+   desde que se dibujó, se mueva el cursor o no. Antes el lienzo entero se
+   borraba a la vez, así que al parar el ratón desaparecía todo de golpe.      */
+
+/** Cuánto vive cada trazo desde que nace. */
+const VIDA_MS = 4200;
+/** Un trazo cada tantos ms: sin esto un gesto rápido crea cientos de partículas. */
+const CADENCIA_MS = 26;
+/** Techo de seguridad por si el navegador entrega eventos muy seguidos. */
+const MAX_TRAZOS = 260;
+
+/**
+ * Los tres acentos del sistema, que es lo que el rastro va recorriendo:
+ * violeta (pensamiento), cian (claridad) y coral (emoción).
+ */
+const EMOCIONES: [number, number, number][] = [
+  [139, 123, 240], // --mind
+  [34, 211, 238], // --clarity
+  [240, 70, 107], // --feel
+];
+
+/** Pasos de color pregenerados: interpolar en cada frame sería tirar CPU. */
+const PASOS_COLOR = 36;
+/** Lo que tarda el rastro en recorrer las tres emociones y volver a empezar. */
+const CICLO_COLOR_MS = 21000;
+
+interface Trazo {
+  x: number;
+  y: number;
+  r: number;
+  nace: number;
+  color: number;
+}
+
+/**
+ * Un sprite por paso de color. Dibujar `drawImage` es mucho más barato que
+ * construir un gradiente radial por partícula y por frame.
+ */
+function crearSprites(): HTMLCanvasElement[] {
+  const LADO = 128;
+  return Array.from({ length: PASOS_COLOR }, (_, i) => {
+    const t = (i / PASOS_COLOR) * EMOCIONES.length;
+    const desde = EMOCIONES[Math.floor(t) % EMOCIONES.length]!;
+    const hasta = EMOCIONES[(Math.floor(t) + 1) % EMOCIONES.length]!;
+    const f = t % 1;
+    const [r, g, b] = [0, 1, 2].map((k) => Math.round(desde[k]! + (hasta[k]! - desde[k]!) * f));
+
+    const s = document.createElement('canvas');
+    s.width = s.height = LADO;
+    const cx = s.getContext('2d')!;
+    const grad = cx.createRadialGradient(LADO / 2, LADO / 2, 0, LADO / 2, LADO / 2, LADO / 2);
+    grad.addColorStop(0, `rgba(${r},${g},${b},0.42)`);
+    grad.addColorStop(0.45, `rgba(${r},${g},${b},0.12)`);
+    grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
+    cx.fillStyle = grad;
+    cx.fillRect(0, 0, LADO, LADO);
+    return s;
+  });
+}
 
 /**
  * ¿Hay un cursor de verdad? El rastro y la linterna dependen de él.
@@ -99,18 +142,13 @@ export default function CuriousLayer({ lang, research }: Props) {
 
   const canvas = useRef<HTMLCanvasElement | null>(null);
   const ctx = useRef<CanvasRenderingContext2D | null>(null);
-  const points = useRef<{ x: number; y: number; r: number }[]>([]);
-  const hue = useRef<Hue>('#8B7BF0');
+  const trazos = useRef<Trazo[]>([]);
   const seen = useRef<Set<string>>(new Set());
 
-  /** Borra el lienzo de un golpe, sin esperar al desvanecido. */
+  /** Borra el lienzo de un golpe, sin esperar a que los trazos cumplan su vida. */
   const clearPaint = () => {
-    points.current.length = 0;
-    const cx = ctx.current;
-    if (!cx) return;
-    cx.globalCompositeOperation = 'destination-out';
-    cx.fillStyle = 'rgba(0,0,0,1)';
-    cx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+    trazos.current.length = 0;
+    ctx.current?.clearRect(0, 0, window.innerWidth, window.innerHeight);
   };
 
   /* --- Notas encontradas ------------------------------------------------- */
@@ -181,31 +219,31 @@ export default function CuriousLayer({ lang, research }: Props) {
     };
     fit();
 
-    const onMove = (e: PointerEvent) => {
-      if (points.current.length < 44) {
-        points.current.push({ x: e.clientX, y: e.clientY, r: 55 + Math.random() * 75 });
-      }
-    };
+    const sprites = crearSprites();
 
-    /* El color depende de la sección visible: violeta donde se reflexiona,
-       coral en los casos, cian en el método. */
-    const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-hue]'));
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            const key = (entry.target as HTMLElement).dataset.hue ?? 'mind';
-            hue.current = HUE_BY_SECTION[key] ?? '#8B7BF0';
-          }
-        }
-      },
-      { rootMargin: '-40% 0px -40% 0px' }
-    );
-    sections.forEach((s) => observer.observe(s));
+    /* El color avanza con el reloj, no con la posición: el rastro recorre las
+       tres emociones y vuelve a empezar, así que un trazo largo queda como un
+       degradado de violeta a cian a coral. */
+    const colorAhora = (ahora: number) =>
+      Math.floor(((ahora % CICLO_COLOR_MS) / CICLO_COLOR_MS) * PASOS_COLOR) % PASOS_COLOR;
+
+    let ultimo = 0;
+    const onMove = (e: PointerEvent) => {
+      const ahora = performance.now();
+      if (ahora - ultimo < CADENCIA_MS) return;
+      ultimo = ahora;
+      if (trazos.current.length >= MAX_TRAZOS) trazos.current.shift();
+      trazos.current.push({
+        x: e.clientX,
+        y: e.clientY,
+        r: 55 + Math.random() * 75,
+        nace: ahora,
+        color: colorAhora(ahora),
+      });
+    };
 
     let raf = 0;
     let running = true;
-    let inactivos = 0;
 
     const frame = () => {
       raf = requestAnimationFrame(frame);
@@ -214,54 +252,44 @@ export default function CuriousLayer({ lang, research }: Props) {
 
       const w = window.innerWidth;
       const h = window.innerHeight;
+      const ahora = performance.now();
 
-      /* Sin rastro nuevo, se limpia una vez y se deja de componer: ni película
-         residual ni un bucle repintando un lienzo ya vacío. */
-      if (points.current.length === 0) {
-        inactivos++;
-        if (inactivos === FRAMES_HASTA_LIMPIAR) cx.clearRect(0, 0, w, h);
-        if (inactivos >= FRAMES_HASTA_LIMPIAR) return;
-      } else {
-        inactivos = 0;
+      /* Se repinta todo desde cero cada frame. Al no acumular capas no queda
+         ninguna película residual, por muchas vueltas que dé el cursor. */
+      cx.clearRect(0, 0, w, h);
+
+      /* Cada trazo muere a los VIDA_MS de nacer, se mueva el cursor o no. */
+      while (trazos.current.length && ahora - trazos.current[0]!.nace > VIDA_MS) {
+        trazos.current.shift();
       }
+      if (trazos.current.length === 0) return;
 
-      /* Cada frame borra un 10%: el trazo deja de verse en ~0.4s. */
-      cx.globalCompositeOperation = 'destination-out';
-      cx.fillStyle = 'rgba(0,0,0,0.10)';
-      cx.fillRect(0, 0, w, h);
+      /* 55 lpm: dos golpes por ciclo, como un corazón. Modula radio e
+         intensidad de todo el rastro a la vez, nunca la posición. */
+      let latido = 1;
+      if (pulse) {
+        const fase = (ahora % 1091) / 1091;
+        const golpe = (t0: number) => Math.exp(-Math.pow((fase - t0) / 0.055, 2));
+        latido = 0.34 + 1.5 * golpe(0.1) + 0.72 * golpe(0.28);
+      }
 
       cx.globalCompositeOperation = 'lighter';
-
-      /* 55 bpm. El latido modula radio e intensidad, nunca la posición. */
-      let beat = 1;
-      if (pulse) {
-        const phase = (performance.now() % 1100) / 1100;
-        const thump = (t0: number) => Math.exp(-Math.pow((phase - t0) / 0.055, 2));
-        beat = 0.34 + 1.5 * thump(0.1) + 0.72 * thump(0.28);
+      for (const p of trazos.current) {
+        const edad = (ahora - p.nace) / VIDA_MS;
+        /* Desvanecido cuadrático: aguanta visible y se va apagando al final. */
+        const vida = (1 - edad) * (1 - edad);
+        const radio = p.r * (0.82 + 0.26 * latido);
+        cx.globalAlpha = Math.min(1, vida * (0.55 + 0.45 * latido));
+        cx.drawImage(sprites[p.color]!, p.x - radio, p.y - radio, radio * 2, radio * 2);
       }
-      const alpha = Math.min(255, Math.round(20 + 30 * beat))
-        .toString(16)
-        .padStart(2, '0');
-
-      let p = points.current.shift();
-      while (p) {
-        const r = p.r * (0.72 + 0.34 * beat);
-        const grad = cx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
-        grad.addColorStop(0, hue.current + alpha);
-        grad.addColorStop(1, hue.current + '00');
-        cx.fillStyle = grad;
-        cx.beginPath();
-        cx.arc(p.x, p.y, r, 0, Math.PI * 2);
-        cx.fill();
-        p = points.current.shift();
-      }
+      cx.globalAlpha = 1;
     };
     raf = requestAnimationFrame(frame);
 
     /* Pausa cuando la pestaña no está visible: nada de pintar en segundo plano. */
     const onVisibility = () => {
       running = !document.hidden;
-      if (!running) points.current.length = 0;
+      if (!running) clearPaint();
     };
 
     window.addEventListener('pointermove', onMove, { passive: true });
@@ -270,7 +298,6 @@ export default function CuriousLayer({ lang, research }: Props) {
 
     return () => {
       cancelAnimationFrame(raf);
-      observer.disconnect();
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('resize', fit);
       document.removeEventListener('visibilitychange', onVisibility);

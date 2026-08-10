@@ -44,7 +44,7 @@ export const TUTORIAL = {
       {
         icon: '◍',
         title: 'El fondo se pinta contigo',
-        body: 'Tu cursor deja rastros de luz que se borran en medio segundo. El color cambia según la sección: violeta donde pienso, coral en los casos, cian en el método. Late a 55 pulsaciones por minuto.',
+        body: 'Tu cursor deja rastros de luz que viven unos segundos y se apagan solos. Late a 55 pulsaciones por minuto y va cambiando de color entre las tres emociones: violeta cuando pienso, cian cuando aclaro, coral cuando algo se siente.',
         why: 'Es el argumento de todo el portafolio hecho interacción: quien está del otro lado deja huella, aunque no la vea. Se borra rápido para que nunca estorbe la lectura.',
       },
       {
@@ -91,7 +91,7 @@ export const TUTORIAL = {
       {
         icon: '◍',
         title: 'The background paints with you',
-        body: 'Your cursor leaves light trails that fade in half a second. The colour shifts by section: violet where I think, coral in the cases, cyan in the method. It beats at 55 per minute.',
+        body: 'Your cursor leaves light trails that live for a few seconds and fade on their own. They beat at 55 per minute and drift through the three emotions: violet when I think, cyan when I clarify, coral when something is felt.',
         why: "It's the whole argument of this portfolio turned into interaction: the person on the other side leaves a mark, even when they can't see it. It fades fast so it never gets in the way of reading.",
       },
       {
