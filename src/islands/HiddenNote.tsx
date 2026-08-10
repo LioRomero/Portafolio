@@ -9,6 +9,12 @@ import type { Lang } from '../content/ui';
  *
  * Las clases llevan prefijo `hn-`. Preact no encapsula los `<style>`, así que un
  * nombre genérico se filtraría al resto de la página y a las demás islas.
+ *
+ * **Montar siempre con `client:idle`, nunca con `client:visible`.** El envoltorio
+ * usa `display: contents` para que el punto y la caja de la nota sean hermanos
+ * en la fila del párrafo. Eso deja el elemento sin caja, y `client:visible`
+ * observa justamente ese hijo de la isla: al medir 0×0 nunca "entra en
+ * pantalla" y el punto se queda dibujado pero muerto, sin abrir ni contar.
  */
 export default function HiddenNote({ index, lang }: { index: number; lang: Lang }) {
   const t = HOME[lang];

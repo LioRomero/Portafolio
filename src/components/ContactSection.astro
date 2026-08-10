@@ -67,7 +67,7 @@ const sub = Astro.props.sub ?? t.ctaSub;
 
     <div class="note-row">
       <p class="what-happens">{t.whatHappens}</p>
-      {noteIndex !== undefined && <HiddenNote index={noteIndex} lang={lang} client:visible />}
+      {noteIndex !== undefined && <HiddenNote index={noteIndex} lang={lang} client:idle />}
     </div>
   </div>
 </section>

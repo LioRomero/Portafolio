@@ -48,7 +48,7 @@ const title =
 
       <div class="note-row">
         <p class="lead hero-sub">{t.heroSub}</p>
-        <HiddenNote index={0} lang={lang} client:visible />
+        <HiddenNote index={0} lang={lang} client:idle />
       </div>
 
       <div class="actions">
@@ -82,7 +82,7 @@ const title =
           <h2>{t.mapTitle}</h2>
           <p class="lead map-sub">{t.mapSub}</p>
         </div>
-        <HiddenNote index={1} lang={lang} client:visible />
+        <HiddenNote index={1} lang={lang} client:idle />
       </div>
 
       <EmotionMap lang={lang} client:visible />
@@ -143,7 +143,7 @@ const title =
                     <p class="case-more">
                       <a href={`${withBase(r.cases)}#${c.key}`}>{t.readFull}</a>
                     </p>
-                    <HiddenNote index={c.findIdx} lang={lang} client:visible />
+                    <HiddenNote index={c.findIdx} lang={lang} client:idle />
                   </div>
                 </div>
 
@@ -167,7 +167,7 @@ const title =
           <h2>{t.methodTitle}</h2>
           <p class="lead method-sub">{t.methodSub}</p>
         </div>
-        <HiddenNote index={2} lang={lang} client:visible />
+        <HiddenNote index={2} lang={lang} client:idle />
       </div>
 
       <ol class="steps">
@@ -208,7 +208,7 @@ const title =
         <p class="lead about-p">{t.aboutP1}</p>
         <div class="note-row">
           <p class="lead about-p">{t.aboutP2}</p>
-          <HiddenNote index={3} lang={lang} client:visible />
+          <HiddenNote index={3} lang={lang} client:idle />
         </div>
 
         <div class="chips">
