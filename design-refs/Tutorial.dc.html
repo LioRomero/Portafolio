@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  @keyframes tuIn { from { opacity:0; transform:translate3d(0,16px,0) scale(.98) } to { opacity:1; transform:none } }
+  @keyframes tuVeil { from { opacity:0 } to { opacity:1 } }
+</style>
+</helmet>
+
+<sc-if value="{{ open }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:110;display:flex;align-items:center;justify-content:center;padding:28px;background:color-mix(in srgb,#04060E 82%,transparent);backdrop-filter:blur(6px);font-family:Inter,system-ui,sans-serif;animation:tuVeil .3s ease both">
+    <div style="width:min(620px,100%);max-height:calc(100vh - 56px);overflow-y:auto;border:1px solid #232A44;border-radius:20px;padding:36px 38px 30px;background:#0C1020;box-shadow:0 30px 80px rgba(0,0,0,.7);animation:tuIn .4s cubic-bezier(.2,.8,.25,1) both">
+
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:22px">
+        <span style="font-size:11px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:#8B7BF0">{{ t.label }}</span>
+        <span style="flex:1;height:1px;background:#232A44"></span>
+        <span style="font-size:12.5px;color:#767C99;font-variant-numeric:tabular-nums">{{ counter }}</span>
+        <button onClick="{{ close }}" aria-label="{{ t.close }}" style="border:0;background:transparent;color:#767C99;font-size:16px;line-height:1;padding:0;cursor:pointer" style-hover="color:#E9EBF4">✕</button>
+      </div>
+
+      <div style="{{ iconStyle }}">{{ step.icon }}</div>
+
+      <h2 style="font-weight:500;font-size:27px;line-height:1.18;letter-spacing:-0.03em;color:#E9EBF4;margin:20px 0 12px;text-wrap:pretty">{{ step.title }}</h2>
+      <p style="font-size:16px;line-height:1.65;color:#A2A8C2;font-weight:300;margin:0 0 16px;text-wrap:pretty">{{ step.body }}</p>
+
+      <div style="border-left:2px solid #8B7BF0;padding:2px 0 2px 18px;margin-bottom:26px">
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#C7BFFA;margin-bottom:7px">{{ t.whyLabel }}</div>
+        <p style="font-size:14.5px;line-height:1.6;color:#A2A8C2;font-weight:300;margin:0;text-wrap:pretty">{{ step.why }}</p>
+      </div>
+
+      <div style="display:flex;gap:7px;margin-bottom:24px">
+        <sc-for list="{{ pips }}" as="p" hint-placeholder-count="6">
+          <button onClick="{{ p.go }}" aria-label="{{ p.aria }}" style="{{ p.style }}"></button>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <sc-if value="{{ hasPrev }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ prev }}" style="padding:11px 20px;border-radius:10px;border:1px solid #232A44;background:#141A2E;color:#A2A8C2;font-size:14px;font-family:inherit;cursor:pointer" style-hover="color:#E9EBF4;border-color:#3A4468">{{ t.prev }}</button>
+        </sc-if>
+        <button onClick="{{ next }}" style="{{ nextStyle }}">{{ nextLabel }}</button>
+        <span style="flex:1"></span>
+        <button onClick="{{ close }}" style="border:0;background:transparent;color:#767C99;font-size:13.5px;font-family:inherit;cursor:pointer" style-hover="color:#E9EBF4">{{ t.skip }}</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:700,&quot;height&quot;:640},&quot;lang&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;es&quot;,&quot;en&quot;],&quot;default&quot;:&quot;es&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;delay&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:5800,&quot;min&quot;:0,&quot;max&quot;:12000,&quot;step&quot;:200,&quot;unit&quot;:&quot;ms&quot;,&quot;tsType&quot;:&quot;number&quot;}}">
+const T = {
+  es: {
+    label: "Cómo se lee este portafolio", close: "Cerrar", whyLabel: "Por qué está aquí",
+    prev: "Atrás", next: "Siguiente", done: "Entendido, a explorar", skip: "Saltar el tour",
+    steps: [
+      {
+        icon: "◑",
+        title: "Primero: elige cómo quieres leerme",
+        body: "Arriba hay dos modos. Al grano deja solo lo que un reclutador necesita: problema, decisión, resultado. Explorar añade la capa lúdica — puzzles, notas escondidas, sonido y luz.",
+        why: "No todo el mundo llega con el mismo tiempo. Obligarte a jugar para entender mi trabajo sería mal diseño: en Al grano no se pierde ni un dato."
+      },
+      {
+        icon: "◦",
+        title: "Los puntos que laten son notas mías",
+        body: "Cada punto violeta abre una nota corta: por qué tomé una decisión, una manía de trabajo, algo que normalmente solo sale en una entrevista. Hay ocho repartidas.",
+        why: "Un portafolio muestra resultados. Estas notas muestran criterio — que es lo que en realidad estás evaluando cuando lees a un diseñador."
+      },
+      {
+        icon: "⁘",
+        title: "Tres puzzles, uno por página",
+        body: "Ordena mi proceso, el recorrido de un caso y mi trayectoria. Se resuelven en menos de un minuto y al terminar cuentan algo que no está escrito en ningún otro lado.",
+        why: "Vengo del game design. Ordenar algo con las manos se recuerda mejor que leerlo — y me deja mostrar cómo pienso en vez de solo afirmarlo."
+      },
+      {
+        icon: "◉",
+        title: "La linterna y el vals",
+        body: "La linterna apaga la página salvo un círculo alrededor del cursor, y revela texto que estaba ahí sin que lo vieras. El vals es una pieza sintetizada en La menor que suena de fondo, o mi playlist real de trabajo.",
+        why: "La linterna es literal: en todo proyecto hay letra chica que nadie mira hasta que la alumbras. El vals es el contexto emocional — diseñar tiene una temperatura, y prefiero mostrarla a describirla."
+      },
+      {
+        icon: "◍",
+        title: "El fondo se pinta contigo",
+        body: "Tu cursor deja rastros de luz que se borran en medio segundo. El color cambia según la sección: violeta donde pienso, coral en los casos, cian en el método. Late a 55 pulsaciones por minuto.",
+        why: "Es el argumento de todo el portafolio hecho interacción: quien está del otro lado deja huella, aunque no la vea. Se borra rápido para que nunca estorbe la lectura."
+      },
+      {
+        icon: "✎",
+        title: "Y al final, déjame algo",
+        body: "Cada página termina con un canvas abierto: eliges con qué te quedaste — claridad, duda, sugerencia — y escribes. Puedes enviármelo por correo con un clic.",
+        why: "Es la única investigación que puedo hacer sobre mi propio trabajo. Si diseño escuchando, sería incoherente publicar esto sin un lugar donde escucharte."
+      }
+    ]
+  },
+  en: {
+    label: "How to read this portfolio", close: "Close", whyLabel: "Why it's here",
+    prev: "Back", next: "Next", done: "Got it, let's explore", skip: "Skip the tour",
+    steps: [
+      {
+        icon: "◑",
+        title: "First: choose how you want to read me",
+        body: "There are two modes up top. Quick read keeps only what a recruiter needs: problem, decision, result. Explore adds the playful layer — puzzles, hidden notes, sound and light.",
+        why: "Not everyone arrives with the same time. Forcing you to play in order to understand my work would be bad design: Quick read loses no information."
+      },
+      {
+        icon: "◦",
+        title: "The pulsing dots are notes from me",
+        body: "Each violet dot opens a short note: why I made a decision, a working habit, something that normally only comes up in an interview. There are eight of them.",
+        why: "A portfolio shows results. These notes show judgement — which is what you're actually assessing when you read a designer."
+      },
+      {
+        icon: "⁘",
+        title: "Three puzzles, one per page",
+        body: "Order my process, the arc of a case, and my track record. Each takes under a minute and ends with something that isn't written anywhere else.",
+        why: "I come from game design. Ordering something with your hands sticks better than reading it — and it lets me show how I think instead of just claiming it."
+      },
+      {
+        icon: "◉",
+        title: "The flashlight and the waltz",
+        body: "The flashlight dims the page except for a circle around your cursor, revealing text that was there all along. The waltz is a synthesised piece in A minor, or my real working playlist.",
+        why: "The flashlight is literal: every project has fine print nobody looks at until you shine a light on it. The waltz is emotional context — design has a temperature, and I'd rather show it than describe it."
+      },
+      {
+        icon: "◍",
+        title: "The background paints with you",
+        body: "Your cursor leaves light trails that fade in half a second. The colour shifts by section: violet where I think, coral in the cases, cyan in the method. It beats at 55 per minute.",
+        why: "It's the whole argument of this portfolio turned into interaction: the person on the other side leaves a mark, even when they can't see it. It fades fast so it never gets in the way of reading."
+      },
+      {
+        icon: "✎",
+        title: "And at the end, leave me something",
+        body: "Every page ends with an open canvas: pick what you took away — clarity, doubt, a suggestion — and write. One click emails it to me.",
+        why: "It's the only research I can run on my own work. If I design by listening, publishing this without a place to hear you would be incoherent."
+      }
+    ]
+  }
+};
+
+const KEY = "em-tutorial-seen";
+
+class Component extends DCLogic {
+  state = { open: false, i: 0 };
+
+  componentDidMount() {
+    let seen = false;
+    try { seen = localStorage.getItem(KEY) === "1"; } catch (e) {}
+    if (!seen) this._t = setTimeout(() => this.setState({ open: true }), this.props.delay || 5800);
+    this._ev = () => this.setState({ open: true, i: 0 });
+    window.addEventListener("em-open-tutorial", this._ev);
+    this._key = e => {
+      if (!this.state.open) return;
+      if (e.key === "Escape") this.close();
+      else if (e.key === "ArrowRight") this.next();
+      else if (e.key === "ArrowLeft") this.setState(p => ({ i: Math.max(0, p.i - 1) }));
+    };
+    window.addEventListener("keydown", this._key);
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this._t);
+    window.removeEventListener("em-open-tutorial", this._ev);
+    window.removeEventListener("keydown", this._key);
+  }
+
+  close() {
+    clearTimeout(this._t);
+    try { localStorage.setItem(KEY, "1"); } catch (e) {}
+    this.setState({ open: false });
+  }
+
+  next() {
+    const t = T[this.props.lang === "en" ? "en" : "es"];
+    if (this.state.i >= t.steps.length - 1) this.close();
+    else this.setState(p => ({ i: p.i + 1 }));
+  }
+
+  renderVals() {
+    const t = T[this.props.lang === "en" ? "en" : "es"];
+    const i = Math.min(this.state.i, t.steps.length - 1);
+    const last = i === t.steps.length - 1;
+
+    return {
+      t, open: this.state.open, step: t.steps[i],
+      counter: (i + 1) + " / " + t.steps.length,
+      hasPrev: i > 0,
+      nextLabel: last ? t.done : t.next,
+      close: () => this.close(),
+      next: () => this.next(),
+      prev: () => this.setState(p => ({ i: Math.max(0, p.i - 1) })),
+      iconStyle: "display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:14px;border:1px solid #8B7BF0;background:color-mix(in srgb,#8B7BF0 14%,transparent);color:#C7BFFA;font-size:24px;line-height:1",
+      nextStyle: "padding:11px 22px;border-radius:10px;border:0;background:" + (last ? "#22D3EE" : "#8B7BF0") + ";color:" + (last ? "#04222B" : "#0C1020") + ";font-size:14px;font-weight:500;font-family:inherit;cursor:pointer",
+      pips: t.steps.map((_, k) => ({
+        go: () => this.setState({ i: k }),
+        aria: (k + 1) + " / " + t.steps.length,
+        style: "width:" + (k === i ? "26px" : "9px") + ";height:9px;border-radius:999px;border:0;padding:0;cursor:pointer;transition:all .25s ease;background:" + (k === i ? "#8B7BF0" : (k < i ? "#3A4468" : "#232A44"))
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

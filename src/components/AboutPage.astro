@@ -1,0 +1,461 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactSection from './ContactSection.astro';
+import Intro from '../islands/Intro.tsx';
+import Tutorial from '../islands/Tutorial.tsx';
+import Puzzle from '../islands/Puzzle.tsx';
+import EmotionCanvas from '../islands/EmotionCanvas.tsx';
+import CuriousLayer from '../islands/CuriousLayer.tsx';
+import { Image } from 'astro:assets';
+import perfil from '../images/perfil-emilio.jpg';
+import { ABOUT, JOBS } from '../content/about';
+import type { Lang } from '../content/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ABOUT[lang];
+const es = lang === 'es';
+
+const title = es ? 'Sobre mí — Emilio Romero' : 'About — Emilio Romero';
+---
+
+<BaseLayout title={title} description={t.hook} lang={lang} page="about">
+  <Intro variant="sobre" lang={lang} client:load />
+  <Tutorial lang={lang} delay={2600} client:idle />
+  <CuriousLayer lang={lang} client:idle />
+
+  {/* --- Encabezado ---------------------------------------------------- */}
+  <section class="section" data-hue="mind">
+    <div class="wrap wrap--cases head">
+      <div>
+        <p class="label kicker">{t.kicker}</p>
+        <h1 class="name">Emilio Romero</h1>
+        <p class="role">{t.role}</p>
+        <p class="hook">{t.hook}</p>
+        <div class="chips">
+          {t.chips.map((c) => <span class="chip">{c}</span>)}
+        </div>
+      </div>
+
+      {/* El original pesa 1,8 MB. `Image` lo sirve en AVIF/WebP al tamaño real
+          de presentación: es la imagen más pesada del sitio y va en el LCP. */}
+      <figure class="portrait">
+        <Image
+          src={perfil}
+          alt={es ? 'Retrato de Emilio Romero' : 'Portrait of Emilio Romero'}
+          widths={[420, 840]}
+          sizes="(max-width: 900px) 280px, 420px"
+          loading="eager"
+          format="avif"
+        />
+      </figure>
+    </div>
+  </section>
+
+  {/* --- Quién soy ------------------------------------------------------ */}
+  <section class="section bordered" data-hue="mind">
+    <div class="wrap wrap--cases">
+      <h2 class="section-h">{t.k1}</h2>
+      <div class="prose">
+        {t.who.map((p) => <p class="body">{p}</p>)}
+      </div>
+
+      <div class="essays">
+        {
+          t.essays.map((e) => (
+            <div class="essay">
+              <h3 class="essay-q">{e.q}</h3>
+              <p class="body">{e.a}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* --- Trayectoria ---------------------------------------------------- */}
+  <section class="section bordered" data-hue="feel">
+    <div class="wrap wrap--cases">
+      <h2 class="section-h">{t.k2}</h2>
+      <p class="lead jobs-title">{t.jobsTitle}</p>
+
+      <ol class="jobs">
+        {
+          JOBS.map((j) => (
+            <li class="job">
+              <div class="job-when meta tabular">{es ? j.dates : j.datesEn}</div>
+              <div class="job-body">
+                <h3 class="job-title">{es ? j.title : j.titleEn}</h3>
+                <p class="job-org">{es ? j.org : (j.orgEn ?? j.org)}</p>
+                <p class="body job-lede">{es ? j.lede : j.ledeEn}</p>
+                <ul class="bullets">
+                  {(es ? j.bullets : j.bulletsEn).map((b) => (
+                    <li>{b}</li>
+                  ))}
+                </ul>
+                {j.note && <p class="meta job-note">{es ? j.note : j.noteEn}</p>}
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+
+      <div data-playful class="puzzle-slot">
+        <Puzzle variant="sobre" lang={lang} client:visible />
+      </div>
+    </div>
+  </section>
+
+  {/* --- Reconocimientos ------------------------------------------------ */}
+  <section class="section bordered" data-hue="clarity">
+    <div class="wrap wrap--cases">
+      <h2 class="section-h">{t.k3}</h2>
+      <div class="awards">
+        {
+          t.awards.map((a) => (
+            <div class="award">
+              <div class="award-tag">{a.tag}</div>
+              <h3 class="award-title">{a.title}</h3>
+              <p class="body">{a.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* --- Habilidades, formación e idiomas ------------------------------- */}
+  <section class="section bordered" data-hue="clarity">
+    <div class="wrap wrap--cases">
+      <h2 class="section-h">{t.k4}</h2>
+      <div class="skills">
+        {
+          t.skills.map((g) => (
+            <div class="skill-group">
+              <div class="col-label">{g.label}</div>
+              <div class="chips">
+                {g.items.map((i) => (
+                  <span class="chip chip--plain">{i}</span>
+                ))}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="two-up">
+        <div>
+          <h2 class="section-h">{t.k5}</h2>
+          <ul class="plain-list">
+            {
+              t.education.map((e) => (
+                <li>
+                  <span class="li-what">{e.what}</span>
+                  <span class="meta">{e.where}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="section-h">{t.k6}</h2>
+          <ul class="plain-list">
+            {
+              t.langs.map((l) => (
+                <li>
+                  <span class="li-what">{l.name}</span>
+                  <span class="meta">{l.level}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* --- Canvas --------------------------------------------------------- */}
+  <section class="section bordered" data-playful data-hue="mind">
+    <div class="wrap wrap--canvas">
+      <EmotionCanvas lang={lang} client:visible />
+    </div>
+  </section>
+
+  <ContactSection lang={lang} title={t.ctaTitle} sub={t.ctaSub} />
+</BaseLayout>
+
+<style>
+  .bordered {
+    border-top: var(--border);
+  }
+
+  .head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.62fr);
+    gap: 44px;
+    align-items: start;
+  }
+
+  .kicker {
+    color: var(--feel);
+    letter-spacing: 0.2em;
+    font-size: var(--fs-kicker);
+    margin-bottom: 16px;
+  }
+
+  .name {
+    font-size: var(--fs-intro);
+    font-weight: var(--fw-light);
+    line-height: var(--lh-intro);
+    letter-spacing: var(--ls-intro);
+    margin-bottom: 10px;
+  }
+
+  .role {
+    font-size: var(--fs-body-lg);
+    color: var(--on-clarity);
+    margin-bottom: 22px;
+  }
+
+  .hook {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--dim);
+    max-width: var(--max-read);
+    margin-bottom: 22px;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chip {
+    padding: 6px 13px;
+    border-radius: var(--r-tag);
+    border: var(--border);
+    color: var(--dim);
+    font-size: 13px;
+  }
+
+  .chip--plain {
+    border: 0;
+    background: var(--surface);
+  }
+
+  .portrait {
+    margin: 0;
+    border-radius: var(--r-card-lg);
+    overflow: hidden;
+    border: var(--border);
+  }
+
+  .portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .section-h {
+    margin-bottom: 20px;
+  }
+
+  .prose,
+  .jobs-title {
+    max-width: var(--max-read);
+  }
+
+  .body {
+    font-size: var(--fs-body-lg);
+    line-height: var(--lh-body-lg);
+    color: var(--dim);
+    max-width: var(--max-read);
+  }
+
+  .body + .body {
+    margin-top: 14px;
+  }
+
+  .essays {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--gap-cards);
+    margin-top: 34px;
+  }
+
+  .essay {
+    border-left: 2px solid var(--mind);
+    padding-left: 20px;
+  }
+
+  .essay-q {
+    font-size: 19px;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    color: var(--on-mind);
+    margin-bottom: 10px;
+  }
+
+  .essay .body {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body-sm);
+  }
+
+  .jobs-title {
+    margin-bottom: 34px;
+  }
+
+  .jobs {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .job {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: 26px;
+    border-top: var(--border);
+    padding-top: 26px;
+  }
+
+  .job-when {
+    padding-top: 4px;
+  }
+
+  .job-title {
+    font-size: 21px;
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+    margin-bottom: 4px;
+  }
+
+  .job-org {
+    font-size: var(--fs-body-sm);
+    color: var(--on-clarity);
+    margin-bottom: 12px;
+  }
+
+  .job-lede {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body-sm);
+    margin-bottom: 14px;
+  }
+
+  .bullets {
+    margin: 0;
+    padding-left: 20px;
+    max-width: var(--max-read);
+  }
+
+  .bullets li {
+    font-size: var(--fs-body-sm);
+    line-height: var(--lh-body-sm);
+    color: var(--dim);
+    margin-bottom: 7px;
+  }
+
+  .job-note {
+    margin-top: 12px;
+  }
+
+  .puzzle-slot {
+    margin-top: 48px;
+  }
+
+  .awards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--gap-cards);
+  }
+
+  .award {
+    border: var(--border);
+    border-top: 2px solid var(--clarity);
+    border-radius: var(--r-card);
+    padding: 22px 24px;
+    background: var(--surface);
+  }
+
+  .award-tag {
+    font-size: var(--fs-label);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    color: var(--clarity);
+    margin-bottom: 10px;
+  }
+
+  .award-title {
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+
+  .award .body {
+    font-size: var(--fs-body-sm);
+    line-height: var(--lh-body-sm);
+  }
+
+  .skills {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .col-label {
+    font-size: var(--fs-label);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    color: var(--dimmer);
+    margin-bottom: 12px;
+  }
+
+  .two-up {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 44px;
+    margin-top: 56px;
+  }
+
+  .plain-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .plain-list li {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-top: var(--border);
+    padding: 14px 0;
+  }
+
+  .li-what {
+    font-size: var(--fs-body-sm);
+    color: var(--text);
+  }
+
+  @media (max-width: 900px) {
+    .head,
+    .job {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 20px;
+    }
+
+    .portrait {
+      max-width: 280px;
+    }
+  }
+</style>

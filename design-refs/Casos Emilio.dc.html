@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+  body { margin:0; background:#080B16; }
+  a { color:#67E8F9; text-decoration:none; }
+  a:hover { color:#A5F3FC; }
+  #case {
+    --bg:#080B16; --bg-2:#0C1020; --surface:#141A2E; --surface-2:#1B2240;
+    --text:#E9EBF4; --dim:#A2A8C2; --dimmer:#767C99; --line:#232A44;
+    --mind:#8B7BF0; --clarity:#22D3EE; --feel:#F0466B;
+    --mind-deep:#2A2352; --clarity-deep:#123A4A; --feel-deep:#4A1B2C;
+    background:var(--bg); color:var(--text);
+    font-family:"Inter", system-ui, sans-serif; -webkit-font-smoothing:antialiased;
+  }
+  #case ::selection { background:#2A2352; }
+  #case :focus-visible { outline:2px solid #22D3EE; outline-offset:3px; }
+  #case .lighten { mix-blend-mode:lighten; overflow:hidden; min-width:0; }
+  #case button { font:inherit; cursor:pointer; }
+  @keyframes breathe { 0%,100% { transform:scale(1); opacity:.5 } 50% { transform:scale(1.08); opacity:.85 } }
+  @keyframes drift { 0%,100% { transform:translate3d(0,0,0) } 50% { transform:translate3d(16px,-12px,0) } }
+  @keyframes riseIn { from { opacity:0; transform:translate3d(0,10px,0) } to { opacity:1; transform:none } }
+  #case[data-still] *, #case[data-still] { animation:none !important; transition:none !important }
+</style>
+</helmet>
+
+<div id="case" data-still="{{ still }}" style="min-height:100vh">
+
+<dc-import name="Intro" variant="casos" lang="{{ lang }}" hint-size="100%,100%"></dc-import>
+<dc-import name="Tutorial" lang="{{ lang }}" delay="{{ tutorialDelay }}" hint-size="100%,100%"></dc-import>
+
+<div style="{{ progStyle }}"></div>
+
+<sc-if value="{{ keys }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;right:26px;bottom:26px;z-index:80;width:330px;border:1px solid var(--line);border-radius:14px;padding:22px 24px;background:var(--surface);box-shadow:0 24px 60px rgba(0,0,0,.55);animation:riseIn .3s ease both">
+    <div style="font-size:11.5px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--clarity);margin-bottom:16px">{{ t.shortcuts }}</div>
+    <div style="display:grid;gap:11px;font-size:14px;color:var(--dim)">
+      <sc-for list="{{ shortcutRows }}" as="k" hint-placeholder-count="5">
+        <div style="display:flex;justify-content:space-between;gap:14px"><span>{{ k.label }}</span><span style="font-family:ui-monospace,monospace;color:var(--text)">{{ k.key }}</span></div>
+      </sc-for>
+    </div>
+    <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;line-height:1.55;color:var(--dimmer);font-weight:300">{{ t.shortcutsHint }}</div>
+  </div>
+</sc-if>
+
+<div style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:14px 40px;background:color-mix(in srgb,#080B16 88%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);flex-wrap:wrap">
+  <div style="display:flex;align-items:center;gap:16px">
+    <a href="{{ homeHref }}" style="display:inline-flex;align-items:center;gap:8px;font-size:13.5px;color:var(--dim)" style-hover="color:var(--clarity)">{{ t.back }}</a>
+    <span style="width:1px;height:16px;background:var(--line)"></span>
+    <span onClick="{{ toggleResearch }}" title="{{ researchLabel }}" style="font-size:15px;font-weight:500;letter-spacing:-0.01em;cursor:default;user-select:none">Emilio Romero</span>
+    <sc-if value="{{ research }}" hint-placeholder-val="{{ false }}">
+      <span style="display:inline-flex;align-items:center;gap:7px;padding:4px 11px;border-radius:999px;border:1px solid var(--feel);color:#FCA5B8;font-size:11.5px;font-weight:500">{{ t.researchMode }}</span>
+    </sc-if>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px">
+    <div style="display:flex;align-items:center;gap:4px;padding:4px;border-radius:999px;border:1px solid var(--line);background:var(--bg-2)">
+      <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="3">
+        <button onClick="{{ tb.go }}" style="{{ tb.style }}">{{ tb.label }}</button>
+      </sc-for>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;padding:4px;border-radius:999px;border:1px solid var(--line);background:var(--bg-2)">
+      <button onClick="{{ setQuick }}" style="{{ quickBtn }}">{{ t.quick }}</button>
+      <button onClick="{{ setDeep }}" style="{{ deepBtn }}">{{ t.explore }}</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:2px;padding:4px;border-radius:999px;border:1px solid var(--line);background:var(--bg-2)">
+      <button onClick="{{ setEs }}" style="{{ esBtn }}">ES</button>
+      <button onClick="{{ setEn }}" style="{{ enBtn }}">EN</button>
+    </div>
+    <button onClick="{{ toggleStill }}" title="{{ stillLabel }}" aria-label="{{ stillLabel }}" style="display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--dimmer);font-size:12px" style-hover="border-color:var(--mind);color:var(--text)">◎</button>
+    <button onClick="{{ toggleKeys }}" title="{{ t.shortcuts }}" aria-label="{{ t.shortcuts }}" style="display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--dimmer);font-size:13px" style-hover="border-color:var(--clarity);color:var(--clarity)">?</button>
+  </div>
+</div>
+
+<div style="position:relative;overflow:hidden;padding:80px 40px 64px;border-bottom:1px solid var(--line)">
+  <div style="{{ heroGlow }}"></div>
+  <div style="position:relative;max-width:1180px;margin:0 auto">
+    <div style="display:flex;gap:8px;margin-bottom:26px;flex-wrap:wrap">
+      <sc-for list="{{ c.chips }}" as="ch" hint-placeholder-count="3">
+        <span style="{{ ch.style }}">{{ ch.label }}</span>
+      </sc-for>
+    </div>
+    <h1 style="font-weight:500;font-size:60px;line-height:1.04;letter-spacing:-0.04em;margin:0 0 26px;max-width:900px;text-wrap:pretty">{{ c.title }}</h1>
+    <p style="font-size:20px;line-height:1.6;color:var(--dim);max-width:680px;margin:0 0 42px;font-weight:300;text-wrap:pretty">{{ c.sub }}</p>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden">
+      <sc-for list="{{ c.cols }}" as="col" hint-placeholder-count="3">
+        <div style="padding:26px 28px;background:var(--surface)">
+          <div style="{{ col.labelStyle }}">{{ col.label }}</div>
+          <p style="{{ col.textStyle }}">{{ col.text }}</p>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+
+<div style="max-width:1180px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:180px minmax(0,1fr);gap:56px;align-items:start">
+
+  <div style="position:sticky;top:120px;padding:64px 0 0">
+    <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--dimmer);margin-bottom:18px">{{ t.onThisPage }}</div>
+    <div style="display:grid;gap:2px">
+      <sc-for list="{{ rail }}" as="r" hint-placeholder-count="6">
+        <a href="{{ r.href }}" style="{{ r.style }}">{{ r.label }}</a>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="padding:64px 0 96px;min-width:0">
+
+    <sc-if value="{{ research }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ noteBox }}">
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--feel);margin-bottom:8px">{{ t.designNote }}</div>
+        <p style="font-size:15px;line-height:1.6;color:var(--dim);margin:0;font-weight:300">{{ c.note }}</p>
+      </div>
+    </sc-if>
+
+    <div id="reto" style="scroll-margin-top:100px;margin-bottom:72px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+        <span style="font-size:11px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--mind)">{{ kick1 }}</span>
+        <span style="flex:1;height:1px;background:var(--line)"></span>
+      </div>
+      <h2 style="font-weight:500;font-size:34px;line-height:1.15;letter-spacing:-0.03em;margin:0 0 20px;max-width:720px;text-wrap:pretty">{{ c.brief.h2 }}</h2>
+      <p style="font-size:17px;line-height:1.7;color:var(--dim);margin:0 0 20px;max-width:700px;font-weight:300;text-wrap:pretty">{{ c.brief.p1 }}</p>
+      <p style="font-size:17px;line-height:1.7;color:var(--dim);margin:0 0 32px;max-width:700px;font-weight:300;text-wrap:pretty">{{ c.brief.p2 }}</p>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;max-width:760px">
+        <div style="border:1px solid var(--line);border-radius:14px;padding:24px 26px;background:var(--surface)">
+          <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--dimmer);margin-bottom:12px">{{ t.theBrief }}</div>
+          <p style="font-size:16.5px;line-height:1.5;color:var(--dim);margin:0;font-weight:300">{{ c.brief.asked }}</p>
+        </div>
+        <div style="border:1px solid var(--mind-deep);border-radius:14px;padding:24px 26px;background:color-mix(in srgb,#8B7BF0 8%,transparent)">
+          <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--mind);margin-bottom:12px">{{ t.realProblem }}</div>
+          <p style="font-size:16.5px;line-height:1.5;color:var(--text);margin:0;font-weight:300">{{ c.brief.real }}</p>
+        </div>
+      </div>
+    </div>
+
+    <sc-if value="{{ deep }}" hint-placeholder-val="{{ true }}">
+    <div id="investigacion" style="scroll-margin-top:100px;margin-bottom:72px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+        <span style="font-size:11px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--mind)">{{ kick2 }}</span>
+        <span style="flex:1;height:1px;background:var(--line)"></span>
+      </div>
+      <h2 style="font-weight:500;font-size:34px;line-height:1.15;letter-spacing:-0.03em;margin:0 0 20px;max-width:720px;text-wrap:pretty">{{ c.research.h2 }}</h2>
+      <p style="font-size:17px;line-height:1.7;color:var(--dim);margin:0 0 32px;max-width:700px;font-weight:300;text-wrap:pretty">{{ c.research.p }}</p>
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-bottom:36px">
+        <sc-for list="{{ c.research.stats }}" as="st" hint-placeholder-count="3">
+          <div style="border-top:1px solid var(--mind);padding-top:18px">
+            <div style="{{ st.numStyle }}">{{ st.n }}</div>
+            <p style="font-size:14.5px;line-height:1.55;color:var(--dim);margin:0;font-weight:300">{{ st.t }}</p>
+          </div>
+        </sc-for>
+      </div>
+      <div style="border:1px solid var(--line);border-radius:14px;padding:28px 30px;background:var(--surface);max-width:760px">
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--dimmer);margin-bottom:14px">{{ t.questionsAsked }}</div>
+        <div style="display:grid;gap:12px">
+          <sc-for list="{{ c.research.questions }}" as="q" hint-placeholder-count="3">
+            <p style="font-size:16px;line-height:1.55;color:var(--dim);margin:0;font-weight:300">{{ q.text }}</p>
+          </sc-for>
+        </div>
+        <p style="font-size:14px;line-height:1.6;color:var(--dimmer);margin:18px 0 0;font-weight:300">{{ c.research.note }}</p>
+      </div>
+    </div>
+    </sc-if>
+
+    <div id="hallazgos" style="scroll-margin-top:100px;margin-bottom:72px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+        <span style="font-size:11px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--mind)">{{ kick3 }}</span>
+        <span style="flex:1;height:1px;background:var(--line)"></span>
+      </div>
+      <h2 style="font-weight:500;font-size:34px;line-height:1.15;letter-spacing:-0.03em;margin:0 0 32px;max-width:720px;text-wrap:pretty">{{ c.findings.h2 }}</h2>
+      <div style="display:grid;gap:20px;max-width:820px">
+        <sc-for list="{{ findings }}" as="f" hint-placeholder-count="3">
+          <div style="border:1px solid var(--line);border-radius:14px;padding:30px 32px;background:var(--surface)">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+              <span style="{{ f.dot }}"></span>
+              <span style="{{ f.tagStyle }}">{{ f.tag }}</span>
+            </div>
+            <h3 style="font-weight:500;font-size:23px;line-height:1.3;letter-spacing:-0.02em;margin:0 0 14px">{{ f.h3 }}</h3>
+            <p style="{{ f.pStyle }}">{{ f.p }}</p>
+            <sc-if value="{{ f.hasEv }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ f.toggle }}" style="{{ evBtn }}">{{ f.evLabel }}</button>
+              <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:18px;border-left:2px solid var(--mind);padding:2px 0 2px 20px;display:grid;gap:14px;animation:riseIn .35s ease both">
+                  <p style="{{ f.quoteStyle }}">{{ f.quote }}</p>
+                  <p style="font-size:14px;color:var(--dimmer);margin:0;font-weight:300">{{ f.caveat }}</p>
+                </div>
+              </sc-if>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div id="decisiones" style="scroll-margin-top:100px;margin-bottom:72px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+        <span style="font-size:11px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--mind)">{{ kick4 }}</span>
+        <span style="flex:1;height:1px;background:var(--line)"></span>
+      </div>
+      <h2 style="font-weight:500;font-size:34px;line-height:1.15;letter-spacing:-0.03em;margin:0 0 32px;max-width:720px;text-wrap:pretty">{{ c.decisions.h2 }}</h2>
+      <div style="display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;max-width:820px">
+        <sc-for list="{{ decisions }}" as="d" hint-placeholder-count="4">
+          <div style="{{ d.rowStyle }}">
+            <span style="{{ d.numStyle }}">{{ d.n }}</span>
+            <div>
+              <h3 style="font-weight:500;font-size:19px;line-height:1.3;letter-spacing:-0.02em;margin:0 0 8px">{{ d.h3 }}</h3>
+              <p style="font-size:15.5px;line-height:1.6;color:var(--dim);margin:0;font-weight:300">{{ d.p }}</p>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div id="solucion" style="scroll-margin-top:100px;margin-bottom:72px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+        <span style="font-size:11px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--mind)">{{ kick5 }}</span>
+        <span style="flex:1;height:1px;background:var(--line)"></span>
+      </div>
+      <h2 style="font-weight:500;font-size:34px;line-height:1.15;letter-spacing:-0.03em;margin:0 0 28px;max-width:720px;text-wrap:pretty">{{ t.howItTurnedOut }}</h2>
+      <div class="lighten" style="height:520px;border-radius:16px;overflow:hidden;margin-bottom:20px">
+        <image-slot id="{{ c.hero.id }}" shape="rect" fit="contain" src="{{ c.hero.src }}" placeholder="{{ c.hero.ph }}"></image-slot>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-bottom:20px">
+        <sc-for list="{{ c.pairs }}" as="p" hint-placeholder-count="2">
+          <div>
+            <div class="lighten" style="height:330px;border-radius:14px;overflow:hidden;margin-bottom:12px">
+              <image-slot id="{{ p.id }}" shape="rect" fit="contain" src="{{ p.src }}" placeholder="{{ p.ph }}"></image-slot>
+            </div>
+            <p style="font-size:14px;color:var(--dimmer);margin:0;font-weight:300">{{ p.cap }}</p>
+          </div>
+        </sc-for>
+      </div>
+      <sc-if value="{{ hasFlowImg }}" hint-placeholder-val="{{ false }}">
+        <div style="border:1px solid var(--line);border-radius:14px;padding:8px;background:var(--bg-2);margin-bottom:14px">
+          <img src="assets/diag/qs-flujo.svg" alt="{{ c.flow.cap }}" style="display:block;width:100%;height:auto;border-radius:10px">
+        </div>
+        <p style="font-size:14px;color:var(--dimmer);margin:0;font-weight:300;text-align:center">{{ c.flow.cap }}</p>
+      </sc-if>
+      <sc-if value="{{ hasFlowSlot }}" hint-placeholder-val="{{ false }}">
+        <div style="border:1px dashed var(--line);border-radius:14px;padding:22px">
+          <div class="lighten" style="height:280px;border-radius:10px;overflow:hidden;margin-bottom:14px">
+            <image-slot id="{{ c.flow.id }}" shape="rect" fit="contain" src="{{ c.flow.src }}" placeholder="{{ c.flow.ph }}"></image-slot>
+          </div>
+          <p style="font-size:14px;color:var(--dimmer);margin:0;font-weight:300;text-align:center">{{ c.flow.cap }}</p>
+        </div>
+      </sc-if>
+    </div>
+
+    <div id="resultado" style="scroll-margin-top:100px;margin-bottom:72px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+        <span style="font-size:11px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--clarity)">{{ kick6 }}</span>
+        <span style="flex:1;height:1px;background:var(--line)"></span>
+      </div>
+      <div style="{{ resultBox }}">
+        <div style="{{ resultGlow }}"></div>
+        <div style="position:relative">
+          <div style="{{ c.result.bigStyle }}">{{ c.result.big }}</div>
+          <p style="font-size:20px;line-height:1.5;color:var(--text);margin:0 0 26px;max-width:580px;font-weight:300;text-wrap:pretty">{{ c.result.p }}</p>
+          <div style="height:1px;background:var(--line);margin-bottom:26px"></div>
+          <p style="font-size:16px;line-height:1.65;color:var(--dim);margin:0;font-weight:300;max-width:620px">{{ c.result.secondary }}</p>
+        </div>
+      </div>
+    </div>
+
+    <sc-if value="{{ deep }}" hint-placeholder-val="{{ true }}">
+    <div id="aprendizaje" style="scroll-margin-top:100px;margin-bottom:56px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+        <span style="font-size:11px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--mind)">{{ kick7 }}</span>
+        <span style="flex:1;height:1px;background:var(--line)"></span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;max-width:820px">
+        <sc-for list="{{ takeaways }}" as="tk" hint-placeholder-count="2">
+          <div style="border:1px solid var(--line);border-radius:14px;padding:26px 28px;background:var(--surface)">
+            <div style="{{ tk.labelStyle }}">{{ tk.label }}</div>
+            <p style="font-size:16px;line-height:1.6;color:var(--dim);margin:0;font-weight:300">{{ tk.p }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;border-top:1px solid var(--line);padding-top:32px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:12px;color:var(--dimmer);margin-bottom:6px">{{ t.nextCase }}</div>
+        <button onClick="{{ goNext }}" style="background:transparent;border:0;padding:0;font-size:24px;font-weight:500;letter-spacing:-0.025em;color:var(--text);text-align:left" style-hover="color:var(--clarity)">{{ nextLabel }}</button>
+      </div>
+      <a href="#contacto" style="padding:12px 24px;border-radius:8px;border:1px solid var(--clarity);color:var(--clarity);font-weight:500;font-size:15px;white-space:nowrap" style-hover="background:color-mix(in srgb,#22D3EE 14%,transparent)">{{ t.letsTalk }}</a>
+    </div>
+
+  </div>
+</div>
+
+<sc-if value="{{ deep }}" hint-placeholder-val="{{ true }}">
+  <div style="padding:0 40px 84px">
+    <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:22px;align-items:start">
+      <dc-import name="Puzzle" variant="casos" lang="{{ lang }}" accent="#22D3EE" hint-size="100%,520px"></dc-import>
+      <dc-import name="Canvas Emociones" lang="{{ lang }}" hint-size="100%,640px"></dc-import>
+    </div>
+  </div>
+</sc-if>
+
+<div id="contacto" style="position:relative;overflow:hidden;padding:88px 40px;border-top:1px solid var(--line);background:var(--bg-2)">
+  <div style="position:absolute;left:-120px;bottom:-200px;width:520px;height:520px;border-radius:999px;background:radial-gradient(circle, color-mix(in srgb,#22D3EE 15%,transparent) 0%, transparent 66%);animation:breathe 13s ease-in-out infinite;pointer-events:none"></div>
+  <div style="position:relative;max-width:1180px;margin:0 auto">
+    <h2 style="font-weight:500;font-size:44px;line-height:1.08;letter-spacing:-0.04em;margin:0 0 18px;max-width:720px;text-wrap:pretty">{{ t.ctaTitle }}</h2>
+    <p style="font-size:18px;line-height:1.6;color:var(--dim);margin:0 0 32px;max-width:560px;font-weight:300">{{ t.ctaSub }}</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <a href="https://wa.me/573142543651" target="_blank" rel="noopener" style="padding:13px 26px;border-radius:8px;background:var(--clarity);color:#04222B;font-weight:500;font-size:15px">WhatsApp · +57 314 254 3651</a>
+      <a href="mailto:emilio.romerog@outlook.com" style="padding:13px 26px;border-radius:8px;border:1px solid var(--clarity);color:var(--clarity);font-weight:500;font-size:15px" style-hover="background:color-mix(in srgb,#22D3EE 14%,transparent)">emilio.romerog@outlook.com</a>
+      <a href="https://www.linkedin.com/in/emilio-romero-gutierrez" target="_blank" rel="noopener" style="padding:13px 26px;border-radius:8px;border:1px solid var(--line);color:var(--dim);font-weight:500;font-size:15px" style-hover="border-color:var(--mind);color:var(--text)">LinkedIn</a>
+      <a href="{{ homeHref }}" style="padding:13px 26px;border-radius:8px;border:1px solid var(--line);color:var(--dim);font-weight:500;font-size:15px" style-hover="border-color:var(--mind);color:var(--text)">{{ t.backHome }}</a>
+    </div>
+  </div>
+</div>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const UI = {
+  es: {
+    back: "← Todos los casos", researchMode: "Modo investigador", quick: "Al grano", explore: "Explorar",
+    shortcuts: "Atajos", onThisPage: "En esta página", designNote: "Nota de diseño",
+    theBrief: "El encargo", realProblem: "El problema real", questionsAsked: "Las preguntas que hice",
+    howItTurnedOut: "Cómo quedó", nextCase: "Siguiente caso", letsTalk: "Hablemos",
+    backHome: "Volver al inicio", evOpen: "Ver la evidencia", evClose: "Cerrar la evidencia",
+    shortcutsHint: "El modo Al grano deja la decisión y el resultado. Explorar abre la evidencia.",
+    ctaTitle: "¿Te suena el problema? Hablemos del tuyo.",
+    ctaSub: "Si estás en el punto en que nadie sabe todavía cómo enunciarlo, es justo donde me gusta empezar.",
+    kickers: ["01 · El encargo", "02 · Investigación", "03 · Hallazgos", "04 · Decisiones", "05 · La solución", "06 · Resultado", "07 · Qué me dejó"],
+    rail: ["El encargo", "Investigación", "Hallazgos", "Decisiones", "La solución", "Resultado", "Qué me dejó"],
+    keys: [["Cambiar de modo de lectura", "E"], ["Cambiar de idioma", "L"], ["Pausar el movimiento", "M"], ["Modo investigador", "R"], ["Cerrar", "Esc"]]
+  },
+  en: {
+    back: "← All case studies", researchMode: "Researcher mode", quick: "Quick read", explore: "Explore",
+    shortcuts: "Shortcuts", onThisPage: "On this page", designNote: "Design note",
+    theBrief: "The brief", realProblem: "The real problem", questionsAsked: "The questions I asked",
+    howItTurnedOut: "How it turned out", nextCase: "Next case", letsTalk: "Let's talk",
+    backHome: "Back to home", evOpen: "See the evidence", evClose: "Hide the evidence",
+    shortcutsHint: "Quick read keeps the decision and the outcome. Explore opens the evidence.",
+    ctaTitle: "Does the problem sound familiar? Let's talk about yours.",
+    ctaSub: "If you're at the point where nobody can quite name it yet, that's exactly where I like to start.",
+    kickers: ["01 · The brief", "02 · Research", "03 · Findings", "04 · Decisions", "05 · The solution", "06 · Outcome", "07 · What it taught me"],
+    rail: ["The brief", "Research", "Findings", "Decisions", "The solution", "Outcome", "What it taught me"],
+    keys: [["Switch reading mode", "E"], ["Switch language", "L"], ["Pause motion", "M"], ["Researcher mode", "R"], ["Close", "Esc"]]
+  }
+};
+
+const ORDER = ["ropofy", "qstrauss", "bid"];
+
+const CASES = {
+  ropofy: {
+    tab: "Ropofy", accent: "#22D3EE",
+    es: {
+      chips: [["SaaS · CRM", "clarity"], ["Diseño + Consultoría estratégica", "line"], ["Jun 2025 – Abr 2026", "line"]],
+      title: "Me contrataron para rediseñar una web. El problema estaba en el silencio.",
+      sub: "Ropofy vendía bien y perdía clientes sin saber dónde. El sitio no era el cuello de botella: lo era el tiempo que tardaban en responder.",
+      cols: [
+        ["Mi rol", "Investigación, rediseño y, después, acompañamiento estratégico del proceso comercial."],
+        ["La decisión", "Diseñar el sitio alrededor del contacto —no del catálogo— y ordenar los canales de entrada."],
+        ["El resultado", "+15% en ventas y permanencia de clientes. La empresa alcanzó su curva de estabilización.", true]
+      ],
+      note: "El caso abre con el resultado, no con el proceso. Quien decide contratarme casi nunca llega al final de la página — pero si el resultado lo engancha, sí lee el método.",
+      brief: {
+        h2: "Lo que me pidieron y lo que realmente necesitaban",
+        p1: "Ropofy es una empresa pequeña que vende por varios canales a la vez. El encargo llegó formulado como un problema de imagen: la web se veía vieja y no reflejaba lo que la empresa era. Rediseñarla, entonces.",
+        p2: "Antes de abrir Figma pregunté algo distinto: ¿de dónde vienen las ventas que sí se cierran, y dónde se caen las que no? Nadie tenía la respuesta completa. Ese vacío fue el verdadero punto de partida.",
+        asked: "\u201CNecesitamos una web nueva, más moderna.\u201D",
+        real: "\u201CNos escriben por tres canales y no sabemos a quién dejamos esperando.\u201D"
+      },
+      research: {
+        h2: "Poco presupuesto, así que fui a lo que ya existía",
+        p: "No había plata para un estudio grande ni tiempo para esperarlo. Usé dos fuentes que la empresa ya tenía y que nadie había mirado como datos: las conversaciones entrantes y la memoria de los clientes recientes.",
+        stats: [["6", "entrevistas a clientes que compraron en los últimos tres meses"], ["3 meses", "de conversaciones entrantes revisadas canal por canal"], ["3", "canales de entrada sin dueño: WhatsApp, web e Instagram"]],
+        questions: ["¿Cómo nos encontraste y por dónde escribiste primero?", "¿Cuánto esperaste y qué pensaste mientras esperabas?", "¿Miraste otras opciones en ese rato? ¿Qué te hizo volver o no volver?"],
+        note: "Ninguna pregunta sobre el diseño de la web. Si el problema hubiera estado ahí, habría salido solo."
+      },
+      findings: {
+        h2: "El abandono no pasaba en el checkout. Pasaba en la espera.",
+        items: [
+          { tag: "Hallazgo 1 · Espera", color: "feel", h3: "El silencio se lee como desinterés", p: "La decisión de compra no se rompía por precio ni por producto: se rompía en las horas que pasaban sin respuesta. Para el cliente, no contestar significa \u201Cno me quieren vender\u201D.", quote: "\u201CEscribí el viernes y me contestaron el martes. Ya había comprado en otro lado.\u201D", caveat: "Cita representativa — pendiente de reemplazar por el verbatim exacto de la entrevista." },
+          { tag: "Hallazgo 2 · Dispersión", color: "mind", h3: "Tres canales, ningún dueño", p: "La misma consulta podía entrar por WhatsApp, por el formulario de la web y por Instagram. Nadie sabía cuál era la fuente de verdad, así que algunas se respondían dos veces y otras ninguna.", quote: "Al cruzar los tres canales aparecieron consultas duplicadas y consultas sin ninguna respuesta. El equipo no era negligente: no tenía forma de ver el total.", plain: true, caveat: "Volumen exacto de duplicados y de no respondidas — por confirmar con los datos del proyecto." },
+          { tag: "Hallazgo 3 · Catálogo", color: "clarity", h3: "La web tenía que abrir conversaciones, no cerrar ventas", p: "Casi nadie compraba sin hablar antes con alguien. Un sitio pensado como vitrina de catálogo estaba resolviendo un paso que en este negocio no existía." }
+        ]
+      },
+      decisions: {
+        h2: "Tres decisiones y una que descarté",
+        items: [
+          ["La web se organiza alrededor del contacto", "Contacto visible en cada pantalla, con el canal que el cliente ya prefiere y una expectativa clara de cuándo le responden."],
+          ["Un solo lugar donde caen todas las consultas", "Los tres canales confluyen en una bandeja con dueño y con estado. Deja de importar por dónde entró: importa si ya se respondió."],
+          ["El tiempo de respuesta se vuelve la métrica del equipo", "Lo que no se mide no se defiende. Acordamos medirlo antes de tocar nada, para poder comparar después."],
+          ["Lo que descarté: un chatbot", "Era la solución que todos esperaban. La descarté: la empresa no tenía el volumen para justificarlo y habría añadido una espera más, con una respuesta menos útil. El problema era organizativo, no tecnológico.", true]
+        ]
+      },
+      hero: { id: "c-ropofy-hero", src: "assets/diag/ropofy-espera.svg", ph: "El hallazgo: la espera, día por día" },
+      pairs: [
+        { id: "c-ropofy-antes", src: "assets/diag/ropofy-antes.svg", ph: "ANTES — arquitectura original", cap: "Antes: el catálogo al frente, el contacto al final." },
+        { id: "c-ropofy-despues", src: "assets/diag/ropofy-despues.svg", ph: "DESPUÉS — arquitectura rediseñada", cap: "Después: el contacto es parte del recorrido, no un pie de página." }
+      ],
+      flow: { id: "c-ropofy-flujo", src: "assets/diag/ropofy-flujo.svg", ph: "Diagrama del flujo de consultas: WhatsApp / web / Instagram → bandeja única → respuesta", cap: "El flujo que ordenó los tres canales de entrada." },
+      result: {
+        big: "+15%", tone: "clarity",
+        p: "en ventas y en permanencia de clientes. Con eso la empresa alcanzó su curva de estabilización — el punto en que deja de depender de cada venta suelta.",
+        secondary: "La consecuencia que no estaba en el encargo: el rediseño terminó siendo la parte pequeña. Lo que movió el número fue dejar de perder conversaciones."
+      },
+      takeaways: [
+        ["Lo que aprendí", "Que un encargo mal formulado no es un obstáculo: es el primer hallazgo. Y que negociar el alcance a mitad del proyecto es parte del trabajo, no un fracaso de la propuesta.", "clarity"],
+        ["Qué haría distinto", "Medir el tiempo de respuesta desde la primera semana, no desde que tuve la sospecha. Habría podido mostrar el costo del silencio con números propios en vez de con citas.", "feel"]
+      ]
+    },
+    en: {
+      chips: [["SaaS · CRM", "clarity"], ["Design + Strategy consulting", "line"], ["Jun 2025 – Apr 2026", "line"]],
+      title: "They hired me to redesign a website. The problem was the silence.",
+      sub: "Ropofy was selling well and losing customers without knowing where. The site wasn't the bottleneck — how long they took to reply was.",
+      cols: [
+        ["My role", "Research, redesign, and afterwards strategic support of the sales process."],
+        ["The decision", "Build the site around getting in touch — not around the catalogue — and put the inbound channels in order."],
+        ["The outcome", "+15% in sales and customer retention. The company reached its stabilisation curve.", true]
+      ],
+      note: "The case opens with the outcome, not the process. Whoever decides to hire me rarely reaches the bottom of the page — but if the outcome hooks them, they do read the method.",
+      brief: {
+        h2: "What they asked for, and what they actually needed",
+        p1: "Ropofy is a small company selling across several channels at once. The brief arrived framed as an image problem: the site looked dated and didn't reflect what the company had become. So, redesign it.",
+        p2: "Before opening Figma I asked something else: where do the sales that close actually come from, and where do the others fall apart? Nobody had the full answer. That gap was the real starting point.",
+        asked: "\u201CWe need a new site, something more modern.\u201D",
+        real: "\u201CPeople write to us on three channels and we don't know who we've left waiting.\u201D"
+      },
+      research: {
+        h2: "Little budget, so I went to what already existed",
+        p: "There was no money for a large study and no time to wait for one. I used two sources the company already had and nobody had treated as data: the inbound conversations and the memory of recent customers.",
+        stats: [["6", "interviews with customers who bought in the last three months"], ["3 months", "of inbound conversations reviewed channel by channel"], ["3", "inbound channels with no owner: WhatsApp, web and Instagram"]],
+        questions: ["How did you find us, and where did you write first?", "How long did you wait, and what went through your head while waiting?", "Did you look at other options in that time? What made you come back — or not?"],
+        note: "Not a single question about the website's design. If the problem had been there, it would have surfaced on its own."
+      },
+      findings: {
+        h2: "Drop-off wasn't happening at checkout. It happened in the wait.",
+        items: [
+          { tag: "Finding 1 · Waiting", color: "feel", h3: "Silence reads as indifference", p: "The purchase decision didn't break on price or product: it broke in the hours that passed without a reply. To the customer, no answer means \u201Cthey don't want to sell to me\u201D.", quote: "\u201CI wrote on Friday and they replied on Tuesday. I'd already bought elsewhere.\u201D", caveat: "Representative quote — to be replaced with the exact interview verbatim." },
+          { tag: "Finding 2 · Scatter", color: "mind", h3: "Three channels, no owner", p: "The same enquiry could arrive via WhatsApp, the web form or Instagram. Nobody knew which was the source of truth, so some were answered twice and others not at all.", quote: "Cross-referencing the three channels surfaced duplicate enquiries and enquiries with no reply at all. The team wasn't negligent — it had no way of seeing the whole.", plain: true, caveat: "Exact volume of duplicates and unanswered enquiries — to be confirmed against project data." },
+          { tag: "Finding 3 · Catalogue", color: "clarity", h3: "The site had to open conversations, not close sales", p: "Almost nobody bought without talking to someone first. A site built as a catalogue window was solving a step that doesn't exist in this business." }
+        ]
+      },
+      decisions: {
+        h2: "Three decisions, and one I ruled out",
+        items: [
+          ["The site is organised around getting in touch", "Contact visible on every screen, through the channel the customer already prefers, with a clear expectation of when they'll hear back."],
+          ["One place where every enquiry lands", "All three channels converge in a single inbox with an owner and a status. Where it came from stops mattering: whether it's been answered starts to."],
+          ["Response time becomes the team's metric", "What isn't measured can't be defended. We agreed to measure it before touching anything, so we could compare afterwards."],
+          ["What I ruled out: a chatbot", "It was the solution everyone expected. I ruled it out: the company didn't have the volume to justify it and it would have added one more wait, with a less useful answer. The problem was organisational, not technological.", true]
+        ]
+      },
+      hero: { id: "c-ropofy-hero", src: "assets/diag/ropofy-espera.svg", ph: "The finding: the wait, day by day" },
+      pairs: [
+        { id: "c-ropofy-antes", src: "assets/diag/ropofy-antes.svg", ph: "BEFORE — original architecture", cap: "Before: catalogue up front, contact at the very end." },
+        { id: "c-ropofy-despues", src: "assets/diag/ropofy-despues.svg", ph: "AFTER — redesigned architecture", cap: "After: contact is part of the journey, not a footer." }
+      ],
+      flow: { id: "c-ropofy-flujo", src: "assets/diag/ropofy-flujo.svg", ph: "Enquiry flow diagram: WhatsApp / web / Instagram → single inbox → reply", cap: "The flow that put the three inbound channels in order." },
+      result: {
+        big: "+15%", tone: "clarity",
+        p: "in sales and in customer retention. With that the company reached its stabilisation curve — the point where it stops depending on each individual sale.",
+        secondary: "The consequence that wasn't in the brief: the redesign turned out to be the small part. What moved the number was stopping the loss of conversations."
+      },
+      takeaways: [
+        ["What I learned", "That a badly framed brief isn't an obstacle: it's the first finding. And that renegotiating scope mid-project is part of the job, not a failure of the proposal.", "clarity"],
+        ["What I'd do differently", "Measure response time from week one, not from the moment I had a suspicion. I could have shown the cost of silence with my own numbers instead of with quotes.", "feel"]
+      ]
+    }
+  },
+
+  qstrauss: {
+    tab: "QStrauss", accent: "#8B7BF0",
+    es: {
+      chips: [["Consultoría · Enterprise", "mind"], ["Diseño de servicios + Documentación", "line"], ["2026 – Actualidad", "line"]],
+      title: "Entregábamos la plataforma configurada. El conocimiento se quedaba con nosotros.",
+      sub: "Las implementaciones salían bien. Meses después, el cliente seguía llamando para preguntar cómo funcionaba lo que ya tenía.",
+      cols: [
+        ["Mi rol", "Consultoría de implementación, diagnóstico de configuración y diseño de la documentación como producto."],
+        ["La decisión", "Tratar la documentación como un sistema reutilizable, no como un anexo que se escribe al final de cada proyecto."],
+        ["El resultado", "Menos tiempo en capacitaciones, reuniones y aclaraciones dentro de implementaciones que corren de 3 a más de 6 meses.", true]
+      ],
+      note: "Es el caso más reciente y el que menos puedo mostrar: hay NDA. Lo resuelvo con un diagrama abstracto en vez de capturas — un caso honesto sin imágenes convence más que uno ilustrado con material que no debería estar ahí.",
+      brief: {
+        h2: "Lo que me pidieron y lo que realmente necesitaban",
+        p1: "Trabajo en consultoría de implementación de Adobe Workfront para clientes enterprise. El encargo, proyecto tras proyecto, llegaba formulado igual: resolver dudas puntuales de configuración y ajustar lo que no estaba quedando.",
+        p2: "Pero las dudas se repetían. No entre clientes distintos: dentro del mismo cliente, con los mismos equipos, meses después de la entrega. Eso no es un problema de configuración. Es un problema de transferencia de conocimiento.",
+        asked: "\u201CNecesitamos ajustar unos flujos que no están funcionando.\u201D",
+        real: "\u201CNo sabemos cómo quedó configurado lo nuestro ni a quién preguntarle.\u201D"
+      },
+      research: {
+        h2: "No hice un estudio: revisé lo que ya estaba pasando",
+        p: "No había presupuesto ni margen para una investigación formal. Usé lo que la operación ya generaba y que nadie estaba mirando como dato: las sesiones de capacitación que se repetían, las preguntas que volvían por correo, y la propia herramienta de documentación que estábamos usando por dentro.",
+        stats: [["3 a 6+", "meses que dura una implementación típica, con ajustes y diálogos de por medio"], ["3", "capas de navegación compitiendo entre sí dentro de nuestra propia herramienta de documentación"], ["4", "niveles distintos de peso visual usados sin jerarquía definida en la interfaz"]],
+        questions: ["¿Qué pregunta el cliente después de la entrega, y cuántas veces?", "¿Dónde vive hoy la respuesta: en un documento, o en la cabeza de alguien?", "¿Cuánto de cada capacitación es contenido nuevo y cuánto es lo mismo de la vez pasada?"],
+        note: "Ninguna pregunta sobre la configuración de Workfront. Si el problema hubiera estado ahí, habría salido en los tickets."
+      },
+      findings: {
+        h2: "El cuello de botella no era la implementación. Era lo que pasaba después.",
+        items: [
+          { tag: "Hallazgo 1 · Dependencia", color: "feel", h3: "El conocimiento nunca salía de la reunión", p: "Todo lo que el cliente necesitaba saber se explicaba en sesiones en vivo. Cuando la persona capacitada rotaba de rol o salía de la empresa, ese conocimiento se iba con ella y el ciclo empezaba otra vez." },
+          { tag: "Hallazgo 2 · Reproceso", color: "mind", h3: "Cada entregable se armaba desde cero", p: "Los materiales de entrenamiento no se reutilizaban entre proyectos, aunque una parte importante del contenido fuera equivalente. El costo no era el diseño: era volver a tomar las decisiones ya tomadas." },
+          { tag: "Hallazgo 3 · La herramienta", color: "clarity", h3: "La herramienta para documentar necesitaba documentación", p: "Al auditar el Custom Canvas encontré tres capas de navegación compitiendo, cuatro pesos visuales sin jerarquía y estados de componente inconsistentes. La herramienta que debía ordenar el conocimiento tenía el mismo desorden que quería resolver." }
+        ]
+      },
+      decisions: {
+        h2: "Tres decisiones y una que descarté",
+        items: [
+          ["La documentación se trata como producto, no como anexo", "Deja de ser lo último que se escribe cuando el proyecto ya se entregó, y pasa a diseñarse con criterio de usuario: quién la va a leer, en qué momento y con qué pregunta en la cabeza."],
+          ["El contenido se organiza en dominios y slots reutilizables", "En vez de un deck por cliente, un sistema de bloques que se producen una vez y se adaptan. Lo que cambia entre clientes es la configuración específica, no la estructura del material."],
+          ["La refactorización va del sistema hacia los componentes", "Primero la base visual (espaciado y color), después la estructura (navegación y sidebar), y solo al final los componentes individuales. Es lo contrario de lo intuitivo, y es lo que evita retocar cada pieza dos veces."],
+          ["Lo que descarté: empezar por rediseñar los componentes", "Era lo obvio y lo más visible: los slots y los botones eran lo que peor se veía. Lo descarté porque construir componentes sobre un sistema de espaciado y color que todavía no existía obligaba a rehacerlos después. El desorden se veía en los componentes, pero vivía en el sistema.", true]
+        ]
+      },
+      hero: { id: "c-qs-hero", src: "assets/diag/qs-dominios.svg", ph: "Esquema del sistema de dominios y slots" },
+      pairs: [
+        { id: "c-qs-antes", src: "assets/diag/qs-nav-antes.svg", ph: "ANTES — las tres capas de navegación compitiendo", cap: "Tres formas de llegar al mismo sitio, ninguna clara." },
+        { id: "c-qs-despues", src: "assets/diag/qs-nav-despues.svg", ph: "DESPUÉS — navegación consolidada en dos niveles", cap: "Dos niveles, una acción primaria por pantalla." }
+      ],
+      flow: { img: true, cap: "El ciclo que se rompió: de la sesión repetida al material que se produce una vez." },
+      result: {
+        big: "De 3 a 6+ meses", tone: "mind", small: true,
+        p: "es lo que dura una implementación enterprise, con sus ajustes y diálogos de por medio. Los entregables de documentación redujeron el tiempo dedicado a capacitaciones, reuniones y aclaraciones dentro de ese ciclo.",
+        secondary: "La consecuencia que no estaba en el encargo: el trabajo dejó de medirse en sesiones dictadas y pasó a medirse en cuánto podía avanzar el cliente sin nosotros."
+      },
+      takeaways: [
+        ["Lo que aprendí", "Que la parte más frágil de una implementación no es la configuración: es lo que el cliente entiende de ella. Y que en consultoría, la documentación no es el cierre del proyecto — es parte del producto.", "clarity"],
+        ["Qué haría distinto", "Medir desde el primer día cuántas horas se van en capacitaciones y aclaraciones por implementación. Tenía el problema clarísimo y no tenía con qué demostrarlo.", "feel"]
+      ]
+    },
+    en: {
+      chips: [["Consulting · Enterprise", "mind"], ["Service design + Documentation", "line"], ["2026 – Present", "line"]],
+      title: "We delivered the platform configured. The knowledge stayed with us.",
+      sub: "The implementations went well. Months later the client was still calling to ask how the thing they already owned worked.",
+      cols: [
+        ["My role", "Implementation consulting, configuration diagnosis, and designing documentation as a product."],
+        ["The decision", "Treat documentation as a reusable system, not as an appendix written at the end of each project."],
+        ["The outcome", "Less time spent on training, meetings and clarifications inside implementations that run from 3 to 6+ months.", true]
+      ],
+      note: "It's the most recent case and the one I can show least of: there's an NDA. I solve it with an abstract diagram instead of screenshots — an honest case with no images is more convincing than one illustrated with material that shouldn't be there.",
+      brief: {
+        h2: "What they asked for, and what they actually needed",
+        p1: "I work in Adobe Workfront implementation consulting for enterprise clients. Project after project, the brief arrived framed the same way: resolve specific configuration questions and fix what wasn't landing.",
+        p2: "But the questions repeated. Not across different clients: within the same client, with the same teams, months after delivery. That isn't a configuration problem. It's a knowledge-transfer problem.",
+        asked: "\u201CWe need to adjust some workflows that aren't working.\u201D",
+        real: "\u201CWe don't know how ours ended up configured, or who to ask.\u201D"
+      },
+      research: {
+        h2: "I didn't run a study: I looked at what was already happening",
+        p: "There was no budget and no room for formal research. I used what the operation already produced and nobody was reading as data: the training sessions that kept repeating, the questions coming back over email, and the documentation tool we were using internally.",
+        stats: [["3 to 6+", "months a typical implementation runs, with adjustments and reviews along the way"], ["3", "navigation layers competing with each other inside our own documentation tool"], ["4", "different levels of visual weight used with no defined hierarchy in the interface"]],
+        questions: ["What does the client ask after delivery, and how many times?", "Where does the answer live today: in a document, or in someone's head?", "How much of each training session is new content, and how much is last time's?"],
+        note: "Not a single question about Workfront configuration. If the problem had been there, it would have shown up in the tickets."
+      },
+      findings: {
+        h2: "The bottleneck wasn't the implementation. It was what happened afterwards.",
+        items: [
+          { tag: "Finding 1 · Dependency", color: "feel", h3: "Knowledge never left the meeting", p: "Everything the client needed to know was explained in live sessions. When the trained person changed roles or left the company, that knowledge went with them and the cycle started over." },
+          { tag: "Finding 2 · Rework", color: "mind", h3: "Every deliverable was built from scratch", p: "Training materials weren't reused across projects, even though a significant share of the content was equivalent. The cost wasn't the design: it was re-making decisions that had already been made." },
+          { tag: "Finding 3 · The tool", color: "clarity", h3: "The tool for documenting needed documentation", p: "Auditing the Custom Canvas I found three competing navigation layers, four visual weights with no hierarchy, and inconsistent component states. The tool meant to organise knowledge had exactly the disorder it was supposed to solve." }
+        ]
+      },
+      decisions: {
+        h2: "Three decisions, and one I ruled out",
+        items: [
+          ["Documentation is treated as a product, not an appendix", "It stops being the last thing written once the project has shipped, and starts being designed with user criteria: who will read it, at what moment, and with what question in mind."],
+          ["Content is organised into reusable domains and slots", "Instead of one deck per client, a system of blocks produced once and adapted. What changes between clients is the specific configuration, not the structure of the material."],
+          ["Refactoring runs from the system towards the components", "First the visual base (spacing and colour), then the structure (navigation and sidebar), and only at the end the individual components. It's the opposite of intuitive, and it's what stops you reworking every piece twice."],
+          ["What I ruled out: starting by redesigning the components", "It was the obvious, most visible move: the slots and buttons looked worst. I ruled it out because building components on a spacing and colour system that didn't exist yet would force a rebuild later. The disorder showed in the components, but it lived in the system.", true]
+        ]
+      },
+      hero: { id: "c-qs-hero", src: "assets/diag/qs-dominios.svg", ph: "Diagram of the domain and slot system" },
+      pairs: [
+        { id: "c-qs-antes", src: "assets/diag/qs-nav-antes.svg", ph: "BEFORE — three navigation layers competing", cap: "Three ways to reach the same place, none of them clear." },
+        { id: "c-qs-despues", src: "assets/diag/qs-nav-despues.svg", ph: "AFTER — navigation consolidated into two levels", cap: "Two levels, one primary action per screen." }
+      ],
+      flow: { img: true, cap: "The cycle that broke: from the repeated session to material produced once." },
+      result: {
+        big: "3 to 6+ months", tone: "mind", small: true,
+        p: "is how long an enterprise implementation runs, adjustments and reviews included. The documentation deliverables cut the time spent on training, meetings and clarifications inside that cycle.",
+        secondary: "The consequence that wasn't in the brief: the work stopped being measured in sessions delivered and started being measured in how far the client could get without us."
+      },
+      takeaways: [
+        ["What I learned", "That the most fragile part of an implementation isn't the configuration: it's what the client understands of it. And that in consulting, documentation isn't the close of the project — it's part of the product.", "clarity"],
+        ["What I'd do differently", "Measure from day one how many hours go into training and clarifications per implementation. I had the problem crystal clear and nothing to prove it with.", "feel"]
+      ]
+    }
+  },
+
+  bid: {
+    tab: "BID", accent: "#8B7BF0",
+    es: {
+      chips: [["Fintech público", "mind"], ["UX/UI Designer", "line"], ["Techsprint BID", "line"]],
+      title: "Tenían toda la información. Ninguna forma de compararla.",
+      sub: "En compras públicas la transparencia se mide en documentos publicados. Pero un PDF disponible no es un dato utilizable: la decisión estaba ocurriendo fuera del sistema.",
+      cols: [
+        ["Mi rol", "Research con funcionarios de compras, definición del problema y diseño de la interfaz de comparación."],
+        ["La decisión", "Dejar de digitalizar documentos y diseñar la comparación: oferentes, montos y productos en una sola vista."],
+        ["El resultado", "2.º lugar del Techsprint, con mención especial por democratización de datos.", true]
+      ],
+      note: "Este caso se cuenta en el mismo orden que los otros a propósito. Un formato repetido hace que el lector compare decisiones, no estéticas.",
+      brief: {
+        h2: "Transparencia no es publicar. Es poder entender.",
+        p1: "El reto del Techsprint hablaba de acceso a la información de contratación pública. La lectura fácil era construir un buscador mejor. Pero el acceso ya existía: los documentos estaban publicados.",
+        p2: "La pregunta que abrí fue otra: ¿qué hace realmente un funcionario cuando tiene que elegir entre tres propuestas?",
+        asked: "\u201CHacer más accesible la información de las licitaciones.\u201D",
+        real: "\u201CEstá toda publicada y aun así comparo de memoria, en un papel.\u201D"
+      },
+      research: {
+        h2: "Ver el proceso real, no el documentado",
+        p: "Acompañé el proceso de evaluación tal como ocurre y lo contrasté con cómo está escrito en el manual. La distancia entre los dos era el hallazgo.",
+        stats: [["Observación", "del proceso de evaluación con funcionarios de compras públicas"], ["Benchmark", "de portales de contratación de la región, mirando qué permiten comparar"], ["Análisis", "de la estructura de los PDF publicados y de qué campos son comparables entre sí"]],
+        questions: ["¿Qué mira primero cuando abre una propuesta?", "¿Qué anota fuera del sistema, y por qué ahí?", "¿Qué tendría que ver para quedarse tranquilo con la decisión?"],
+        note: "Número de sesiones y perfiles exactos — por confirmar con la documentación del proyecto."
+      },
+      findings: {
+        h2: "Nadie lee un PDF completo. Se comparan pestañas.",
+        items: [
+          { tag: "Hallazgo 1 · Sobrecarga", color: "feel", h3: "La decisión se toma fuera del sistema", p: "Tres propuestas abiertas en tres pestañas y las cifras anotadas a mano. El sistema guardaba la información, pero el trabajo cognitivo quedaba entero del lado de la persona.", quote: "\u201CAbro las tres propuestas en pestañas y anoto en un papel. El sistema no me deja comparar.\u201D", caveat: "Cita representativa — pendiente de reemplazar por el verbatim exacto." },
+          { tag: "Hallazgo 2 · Miedo a equivocarse", color: "mind", h3: "Cuando la decisión es auditable, la duda paraliza", p: "Elegir mal en compras públicas tiene consecuencias personales. Sin una comparación que respalde el criterio, la gente se protege revisando de más — y aun así no queda tranquila." },
+          { tag: "Hallazgo 3 · Público", color: "clarity", h3: "El ciudadano tampoco puede leer eso", p: "Si el funcionario experto no logra comparar, la vigilancia ciudadana es teórica. La legibilidad no es una comodidad: es la condición de la transparencia." }
+        ]
+      },
+      decisions: {
+        h2: "Diseñar la comparación, no el archivo",
+        items: [
+          ["Una sola vista con los criterios que deciden", "Oferentes, montos y productos lado a lado. Lo que antes vivía en un papel ahora es la pantalla principal."],
+          ["El documento pasa a ser el respaldo, no la interfaz", "El PDF sigue estando, un clic más abajo, para cuando hay que citar la fuente exacta."],
+          ["Legible para dos públicos a la vez", "La misma vista sirve al funcionario que evalúa y al ciudadano que vigila. No se hicieron dos productos."],
+          ["Lo que descarté: un ranking automático", "Tentador y peligroso: una puntuación oculta el criterio y traslada la responsabilidad a un algoritmo. En una decisión auditable, la persona tiene que poder explicar por qué eligió.", true]
+        ]
+      },
+      hero: { id: "c-bid-hero", src: "assets/diag/bid-comparacion.svg", ph: "Wireframe de la vista de comparación de licitaciones" },
+      pairs: [
+        { id: "c-bid-detalle", src: "assets/diag/bid-detalle.svg", ph: "Detalle de un oferente", cap: "El detalle, cuando hace falta citar la fuente." },
+        { id: "c-bid-flujo", src: "assets/diag/bid-flujo.svg", ph: "Flujo de evaluación: buscar → comparar → sustentar", cap: "El recorrido de evaluación, de la búsqueda al sustento." }
+      ],
+      result: {
+        big: "2.º lugar", tone: "mind", small: true,
+        p: "en el Techsprint del BID, con mención especial por democratización de datos — el jurado premió justamente el cambio de enfoque: pasar del acceso a la comprensión.",
+        secondary: "Es el caso donde más claro tengo el aporte del research: la solución técnica era casi la misma que la de los demás equipos. La diferencia fue haber redefinido el problema."
+      },
+      takeaways: [
+        ["Lo que aprendí", "Que redefinir el problema es la parte del trabajo que más valor genera y la que menos se ve en un entregable. Hay que aprender a contarla.", "clarity"],
+        ["Qué haría distinto", "Probar la vista de comparación con ciudadanos, no solo con funcionarios. Diseñamos para dos públicos y solo validamos con uno.", "feel"]
+      ]
+    },
+    en: {
+      chips: [["Public fintech", "mind"], ["UX/UI Designer", "line"], ["IDB Techsprint", "line"]],
+      title: "They had all the information. No way to compare it.",
+      sub: "In public procurement, transparency is measured in documents published. But an available PDF isn't usable data: the decision was happening outside the system.",
+      cols: [
+        ["My role", "Research with procurement officers, problem definition, and design of the comparison interface."],
+        ["The decision", "Stop digitising documents and design the comparison instead: bidders, amounts and products in a single view."],
+        ["The outcome", "2nd place in the Techsprint, with a special mention for data democratisation.", true]
+      ],
+      note: "This case is told in the same order as the others on purpose. A repeated format makes the reader compare decisions, not aesthetics.",
+      brief: {
+        h2: "Transparency isn't publishing. It's being able to understand.",
+        p1: "The Techsprint challenge talked about access to public procurement information. The easy reading was to build a better search. But access already existed: the documents were published.",
+        p2: "The question I opened was a different one: what does an officer actually do when they have to choose between three proposals?",
+        asked: "\u201CMake tender information more accessible.\u201D",
+        real: "\u201CIt's all published and I still compare from memory, on paper.\u201D"
+      },
+      research: {
+        h2: "See the real process, not the documented one",
+        p: "I shadowed the evaluation process as it actually happens and contrasted it with how the manual describes it. The distance between the two was the finding.",
+        stats: [["Shadowing", "of the evaluation process with public procurement officers"], ["Benchmark", "of procurement portals across the region, looking at what they let you compare"], ["Analysis", "of the structure of published PDFs and which fields are comparable at all"]],
+        questions: ["What do you look at first when you open a proposal?", "What do you write down outside the system, and why there?", "What would you need to see to feel settled about the decision?"],
+        note: "Exact number of sessions and profiles — to be confirmed against project documentation."
+      },
+      findings: {
+        h2: "Nobody reads a full PDF. People compare browser tabs.",
+        items: [
+          { tag: "Finding 1 · Overload", color: "feel", h3: "The decision is made outside the system", p: "Three proposals open in three tabs and the figures written down by hand. The system stored the information, but the cognitive work stayed entirely on the person's side.", quote: "\u201CI open the three proposals in tabs and write on paper. The system won't let me compare.\u201D", caveat: "Representative quote — to be replaced with the exact verbatim." },
+          { tag: "Finding 2 · Fear of getting it wrong", color: "mind", h3: "When a decision is auditable, doubt paralyses", p: "Choosing badly in public procurement has personal consequences. Without a comparison that backs the criteria, people protect themselves by over-reviewing — and still don't feel settled." },
+          { tag: "Finding 3 · The public", color: "clarity", h3: "Citizens can't read it either", p: "If the expert officer can't compare, citizen oversight is theoretical. Legibility isn't a convenience: it's the condition of transparency." }
+        ]
+      },
+      decisions: {
+        h2: "Design the comparison, not the archive",
+        items: [
+          ["One view with the criteria that decide", "Bidders, amounts and products side by side. What used to live on a sheet of paper is now the main screen."],
+          ["The document becomes the backup, not the interface", "The PDF is still there, one click deeper, for when you have to cite the exact source."],
+          ["Legible for two audiences at once", "The same view serves the officer evaluating and the citizen watching. We didn't build two products."],
+          ["What I ruled out: an automatic ranking", "Tempting and dangerous: a score hides the criteria and shifts responsibility onto an algorithm. In an auditable decision, the person has to be able to explain why they chose.", true]
+        ]
+      },
+      hero: { id: "c-bid-hero", src: "assets/diag/bid-comparacion.svg", ph: "Wireframe of the tender comparison view" },
+      pairs: [
+        { id: "c-bid-detalle", src: "assets/diag/bid-detalle.svg", ph: "Detail of one bidder", cap: "The detail, for when you need to cite the source." },
+        { id: "c-bid-flujo", src: "assets/diag/bid-flujo.svg", ph: "Evaluation flow: search → compare → justify", cap: "The evaluation journey, from search to justification." }
+      ],
+      result: {
+        big: "2nd place", tone: "mind", small: true,
+        p: "in the IDB Techsprint, with a special mention for data democratisation — the jury rewarded precisely the shift in framing: from access to comprehension.",
+        secondary: "It's the case where research's contribution is clearest to me: the technical solution was nearly the same as the other teams'. The difference was having redefined the problem."
+      },
+      takeaways: [
+        ["What I learned", "That redefining the problem is the part of the work that creates the most value and shows up least in a deliverable. You have to learn to narrate it.", "clarity"],
+        ["What I'd do differently", "Test the comparison view with citizens, not only with officers. We designed for two audiences and validated with one.", "feel"]
+      ]
+    }
+  }
+};
+
+const CHIP = {
+  clarity: "padding:5px 12px;border-radius:6px;background:var(--clarity-deep);color:#A5F3FC;font-size:12px;font-weight:500",
+  mind: "padding:5px 12px;border-radius:6px;background:var(--mind-deep);color:#C7BFFA;font-size:12px;font-weight:500",
+  feel: "padding:5px 12px;border-radius:6px;background:var(--feel-deep);color:#FCA5B8;font-size:12px;font-weight:500",
+  line: "padding:5px 12px;border-radius:6px;border:1px solid var(--line);color:var(--dim);font-size:12px;font-weight:500"
+};
+const HUE = { mind: "#8B7BF0", clarity: "#22D3EE", feel: "#F0466B" };
+
+class Component extends DCLogic {
+  state = {
+    which: (() => {
+      const h = (location.hash || "").replace("#", "").toLowerCase();
+      return ORDER.indexOf(h) >= 0 ? h : "ropofy";
+    })(),
+    lang: (() => { try { return localStorage.getItem("em-lang") === "en" ? "en" : "es"; } catch (e) { return "es"; } })(),
+    deep: (() => { try { return localStorage.getItem("em-mode") !== "grano"; } catch (e) { return true; } })(),
+    still: false, keys: false, research: false,
+    open: {}, prog: 0, active: "reto"
+  };
+
+  componentDidMount() {
+    try {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) this.setState({ still: true });
+    } catch (e) {}
+    this._key = ev => {
+      const t = ev.target;
+      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA")) return;
+      const k = ev.key;
+      if (k === "?") this.setState(p => ({ keys: !p.keys }));
+      else if (k === "Escape") this.setState({ keys: false });
+      else if (k === "m" || k === "M") this.setState(p => ({ still: !p.still }));
+      else if (k === "e" || k === "E") this.setMode(!this.state.deep);
+      else if (k === "r" || k === "R") this.setState(p => ({ research: !p.research }));
+      else if (k === "l" || k === "L") this.setLang(this.state.lang === "es" ? "en" : "es");
+    };
+    this._scroll = () => {
+      const d = document.documentElement;
+      const prog = d.scrollTop / Math.max(1, d.scrollHeight - d.clientHeight);
+      let active = this.state.active;
+      ["reto", "investigacion", "hallazgos", "decisiones", "solucion", "resultado", "aprendizaje"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= 160) active = id;
+      });
+      if (prog !== this.state.prog || active !== this.state.active) this.setState({ prog, active });
+    };
+    this._hash = () => {
+      const h = (location.hash || "").replace("#", "").toLowerCase();
+      if (ORDER.indexOf(h) >= 0) this.setState({ which: h, open: {} });
+    };
+    document.addEventListener("keydown", this._key);
+    window.addEventListener("scroll", this._scroll, { passive: true });
+    window.addEventListener("hashchange", this._hash);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this._key);
+    window.removeEventListener("scroll", this._scroll);
+    window.removeEventListener("hashchange", this._hash);
+  }
+
+  setLang(lang) {
+    try { localStorage.setItem("em-lang", lang); } catch (e) {}
+    this.setState({ lang });
+  }
+
+  go(which) {
+    this.setState({ which, open: {}, active: "reto" });
+    try { history.replaceState(null, "", "#" + which); } catch (e) {}
+    window.scrollTo({ top: 0, behavior: this.state.still ? "auto" : "smooth" });
+  }
+
+  pill(active) {
+    return active
+      ? "padding:7px 15px;border-radius:999px;border:0;background:var(--surface-2);color:var(--text);font-size:13px;font-weight:500"
+      : "padding:7px 15px;border-radius:999px;border:0;background:transparent;color:var(--dimmer);font-size:13px;font-weight:400";
+  }
+
+  setMode(deep) {
+    this.setState({ deep });
+    try { localStorage.setItem("em-mode", deep ? "explorar" : "grano"); } catch (e) {}
+  }
+
+  mini(active) {
+    return active
+      ? "padding:5px 11px;border-radius:999px;border:0;background:var(--clarity-deep);color:#A5F3FC;font-size:12px;font-weight:600;letter-spacing:0.04em"
+      : "padding:5px 11px;border-radius:999px;border:0;background:transparent;color:var(--dimmer);font-size:12px;font-weight:500;letter-spacing:0.04em";
+  }
+
+  tabStyle(active) {
+    return active
+      ? "padding:6px 15px;border-radius:999px;border:0;background:var(--clarity-deep);color:#A5F3FC;font-size:13px;font-weight:500"
+      : "padding:6px 15px;border-radius:999px;border:0;background:transparent;color:var(--dimmer);font-size:13px;font-weight:400";
+  }
+
+  renderVals() {
+    const s = this.state;
+    const t = UI[s.lang];
+    const meta = CASES[s.which];
+    const c = meta[s.lang];
+    const nextKey = ORDER[(ORDER.indexOf(s.which) + 1) % ORDER.length];
+    const evBtn = "display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;border:1px dashed var(--line);background:transparent;color:var(--dim);font-size:13.5px;font-weight:500";
+
+    const railIds = ["reto", "investigacion", "hallazgos", "decisiones", "solucion", "resultado", "aprendizaje"];
+    const rail = railIds
+      .map((id, i) => ({ id, label: t.rail[i], deep: id === "investigacion" || id === "aprendizaje" }))
+      .filter(r => s.deep || !r.deep)
+      .map(r => ({
+        href: "#" + r.id,
+        label: r.label,
+        style: (s.active === r.id
+          ? "color:var(--text);border-left:1px solid var(--clarity);"
+          : "color:var(--dimmer);border-left:1px solid var(--line);") +
+          "padding:8px 0 8px 14px;font-size:13.5px;font-weight:400;transition:color .2s ease,border-color .2s ease"
+      }));
+
+    const tone = c.result.tone;
+    return {
+      t,
+      lang: s.lang,
+      tutorialDelay: 2600,
+      homeHref: "Portafolio Emilio - Mente.dc.html",
+      shortcutRows: t.keys.map(k => ({ label: k[0], key: k[1] })),
+      tabs: ORDER.map(k => ({
+        label: CASES[k].tab,
+        go: () => this.go(k),
+        style: this.tabStyle(k === s.which)
+      })),
+      c: {
+        chips: c.chips.map(ch => ({ label: ch[0], style: CHIP[ch[1]] })),
+        title: c.title, sub: c.sub, note: c.note,
+        cols: c.cols.map(col => ({
+          label: col[0], text: col[2] ? col[1] : col[1],
+          labelStyle: "font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:12px;color:" + (col[2] ? "var(--clarity)" : "var(--dimmer)"),
+          textStyle: "font-size:16px;line-height:1.55;margin:0;" + (col[2] ? "color:#A5F3FC;font-weight:400" : "color:var(--dim);font-weight:300")
+        })),
+        brief: c.brief,
+        research: {
+          h2: c.research.h2, p: c.research.p, note: c.research.note,
+          stats: c.research.stats.map(st => ({
+            n: st[0], t: st[1],
+            numStyle: "font-weight:500;letter-spacing:-0.03em;margin-bottom:8px;font-size:" + (st[0].length > 8 ? "22px" : "32px")
+          })),
+          questions: c.research.questions.map(q => ({ text: q }))
+        },
+        findings: { h2: c.findings.h2 },
+        decisions: { h2: c.decisions.h2 },
+        hero: c.hero,
+        pairs: c.pairs,
+        flow: c.flow || { cap: "" },
+        result: {
+          big: c.result.big, p: c.result.p, secondary: c.result.secondary,
+          bigStyle: "font-weight:500;letter-spacing:-0.04em;line-height:1.05;margin-bottom:18px;font-size:" +
+            (c.result.small ? "50px" : "72px") + ";color:" + (tone === "mind" ? "#C7BFFA" : "#A5F3FC")
+        }
+      },
+      findings: c.findings.items.map((f, i) => ({
+        tag: f.tag, h3: f.h3, p: f.p,
+        dot: "width:9px;height:9px;border-radius:999px;background:" + HUE[f.color] + ";box-shadow:0 0 12px " + HUE[f.color],
+        tagStyle: "font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:" + HUE[f.color],
+        pStyle: "font-size:16.5px;line-height:1.65;color:var(--dim);font-weight:300;text-wrap:pretty;margin:0 0 " + (f.quote ? "20px" : "0"),
+        hasEv: !!f.quote,
+        open: !!s.open[s.which + i],
+        toggle: () => this.setState(p => {
+          const o = Object.assign({}, p.open);
+          o[s.which + i] = !o[s.which + i];
+          return { open: o };
+        }),
+        evLabel: s.open[s.which + i] ? t.evClose : t.evOpen,
+        quote: f.quote,
+        quoteStyle: f.plain
+          ? "font-size:16px;line-height:1.6;color:var(--dim);margin:0;font-weight:300"
+          : "font-size:18px;line-height:1.5;color:var(--text);margin:0;font-weight:300;font-style:italic",
+        caveat: f.caveat || ""
+      })),
+      decisions: c.decisions.items.map((d, i) => ({
+        n: d[2] ? "✕" : "0" + (i + 1),
+        h3: d[0], p: d[1],
+        rowStyle: "display:grid;grid-template-columns:40px minmax(0,1fr);gap:20px;padding:26px 30px;background:" +
+          (d[2] ? "color-mix(in srgb,#F0466B 7%,transparent)" : "var(--surface)"),
+        numStyle: "font-size:14px;font-weight:500;color:" + (d[2] ? "var(--feel)" : "var(--clarity)")
+      })),
+      takeaways: c.takeaways.map(tk => ({
+        label: tk[0], p: tk[1],
+        labelStyle: "font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:12px;color:" + (tk[2] === "feel" ? "var(--feel)" : "var(--clarity)")
+      })),
+      hasFlowImg: !!(c.flow && c.flow.img),
+      hasFlowSlot: !!(c.flow && !c.flow.img),
+      kick1: t.kickers[0], kick2: t.kickers[1], kick3: t.kickers[2], kick4: t.kickers[3],
+      kick5: t.kickers[4], kick6: t.kickers[5], kick7: t.kickers[6],
+      heroGlow: "position:absolute;top:-180px;right:-60px;width:600px;height:600px;border-radius:999px;pointer-events:none;animation:drift 21s ease-in-out infinite;background:radial-gradient(circle, color-mix(in srgb," + meta.accent + " 20%,transparent) 0%, transparent 66%)",
+      resultBox: "position:relative;overflow:hidden;border-radius:16px;padding:44px 46px;max-width:820px;border:1px solid " +
+        (tone === "mind" ? "var(--mind-deep)" : "var(--clarity-deep)") + ";background:color-mix(in srgb," + (tone === "mind" ? "#8B7BF0 7%" : "#22D3EE 6%") + ",transparent)",
+      resultGlow: "position:absolute;top:-140px;right:-80px;width:400px;height:400px;border-radius:999px;pointer-events:none;animation:breathe 14s ease-in-out infinite;background:radial-gradient(circle, color-mix(in srgb," + (tone === "mind" ? "#8B7BF0" : "#22D3EE") + " 22%,transparent) 0%, transparent 68%)",
+      rail,
+      deep: s.deep,
+      quickBtn: this.pill(!s.deep),
+      deepBtn: this.pill(s.deep),
+      setQuick: () => this.setMode(false),
+      setDeep: () => this.setMode(true),
+      openTutorial: () => window.dispatchEvent(new Event("em-open-tutorial")),
+      esBtn: this.mini(s.lang === "es"),
+      enBtn: this.mini(s.lang === "en"),
+      setEs: () => this.setLang("es"),
+      setEn: () => this.setLang("en"),
+      still: s.still || undefined,
+      stillLabel: s.still ? (s.lang === "es" ? "Reanudar movimiento" : "Resume motion") : (s.lang === "es" ? "Pausar movimiento" : "Pause motion"),
+      toggleStill: () => this.setState(p => ({ still: !p.still })),
+      keys: s.keys,
+      toggleKeys: () => this.setState(p => ({ keys: !p.keys })),
+      research: s.research,
+      researchLabel: t.researchMode,
+      toggleResearch: () => this.setState(p => ({ research: !p.research })),
+      noteBox: "position:relative;margin:0 0 40px;border:1px dashed var(--feel-deep);border-left:2px solid var(--feel);border-radius:0 12px 12px 0;padding:16px 20px;background:color-mix(in srgb,#F0466B 6%,transparent);max-width:620px",
+      evBtn,
+      goNext: () => this.go(nextKey),
+      nextLabel: CASES[nextKey].tab + " · " + CASES[nextKey][s.lang].title.split(".")[0] + " →",
+      progStyle: "position:fixed;left:0;top:0;height:2px;z-index:60;pointer-events:none;background:linear-gradient(90deg,#8B7BF0,#22D3EE);width:" + (s.prog * 100).toFixed(2) + "%"
+    };
+  }
+}
+
+</script>
+</body>
+</html>

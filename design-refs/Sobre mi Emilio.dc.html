@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#080B16; }
+  a { color:#67E8F9; text-decoration:none; }
+  a:hover { color:#A5F3FC; }
+  #ab {
+    --bg:#080B16; --bg-2:#0C1020; --surface:#141A2E; --surface-2:#1B2240;
+    --text:#E9EBF4; --dim:#A2A8C2; --dimmer:#767C99; --line:#232A44;
+    --mind:#8B7BF0; --clarity:#22D3EE; --feel:#F0466B;
+    --mind-deep:#2A2352; --clarity-deep:#123A4A; --feel-deep:#4A1B2C;
+    color:var(--text); font-family:"Inter", system-ui, sans-serif; -webkit-font-smoothing:antialiased;
+  }
+  #ab ::selection { background:#2A2352; }
+  #ab :focus-visible { outline:2px solid #22D3EE; outline-offset:3px; }
+  #ab button { font:inherit; cursor:pointer; }
+  @keyframes breathe { 0%,100% { transform:scale(1); opacity:.5 } 50% { transform:scale(1.08); opacity:.85 } }
+  @keyframes riseIn { from { opacity:0; transform:translate3d(0,10px,0) } to { opacity:1; transform:none } }
+</style>
+</helmet>
+
+<div id="ab" style="min-height:100vh;background:#080B16">
+
+  <dc-import name="Intro" variant="sobre" lang="{{ lang }}" hint-size="100%,100%"></dc-import>
+  <dc-import name="Tutorial" lang="{{ lang }}" delay="{{ tutorialDelay }}" hint-size="100%,100%"></dc-import>
+
+  <div style="position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;gap:18px;padding:16px 34px;background:color-mix(in srgb,#080B16 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)">
+    <a href="Portafolio Emilio - Mente.dc.html" style="font-size:13px;color:var(--dim)">← {{ t.back }}</a>
+    <span style="flex:1"></span>
+    <div style="display:flex;align-items:center;gap:4px;padding:3px;border-radius:999px;border:1px solid var(--line);background:var(--bg-2)" title="{{ t.modeTitle }}">
+      <button onClick="{{ setGrano }}" style="{{ granoBtn }}">{{ t.modeQuick }}</button>
+      <button onClick="{{ setExplorar }}" style="{{ explorarBtn }}">{{ t.modeExplore }}</button>
+    </div>
+    <button onClick="{{ openTutorial }}" title="{{ t.tutorialTitle }}" aria-label="{{ t.tutorialTitle }}" style="display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;border:1px solid var(--line);background:var(--bg-2);color:var(--dim);font-size:13px" style-hover="border-color:var(--mind);color:var(--text)">?</button>
+    <a href="Casos Emilio.dc.html" style="font-size:13px;color:var(--dim)">{{ t.cases }}</a>
+    <button onClick="{{ toggleLang }}" style="border:1px solid var(--line);background:transparent;color:var(--dim);border-radius:999px;padding:6px 13px;font-size:12px;letter-spacing:0.06em">{{ t.langBtn }}</button>
+  </div>
+
+  <div style="max-width:1080px;margin:0 auto;padding:120px 34px 100px">
+
+    <div style="position:relative;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:56px;align-items:center;margin-bottom:110px">
+      <div style="position:absolute;top:-160px;left:-120px;width:520px;height:520px;border-radius:999px;pointer-events:none;animation:breathe 17s ease-in-out infinite;background:radial-gradient(circle, color-mix(in srgb,#8B7BF0 18%,transparent) 0%, transparent 66%)"></div>
+      <div style="position:relative;animation:riseIn .8s ease both">
+        <span style="font-size:11px;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--clarity)">{{ t.kicker }}</span>
+        <h1 style="font-weight:500;font-size:52px;line-height:1.06;letter-spacing:-0.035em;margin:16px 0 0">Emilio Romero Gutiérrez</h1>
+        <p style="font-size:20px;line-height:1.5;color:var(--mind);font-weight:400;margin:14px 0 0">{{ t.role }}</p>
+        <p style="font-size:17px;line-height:1.65;color:var(--dim);font-weight:300;margin:22px 0 0;max-width:520px;text-wrap:pretty">{{ t.hook }}</p>
+        <div style="display:flex;flex-wrap:wrap;gap:9px;margin-top:26px">
+          <sc-for list="{{ t.chips }}" as="ch" hint-placeholder-count="4">
+            <span style="font-size:12.5px;font-weight:400;padding:6px 13px;border-radius:999px;border:1px solid var(--line);color:var(--dim);background:var(--bg-2)">{{ ch }}</span>
+          </sc-for>
+        </div>
+      </div>
+      <div style="position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line);aspect-ratio:3/4;background:var(--bg-2)">
+        <img src="assets/fig/perfil-emilio.jpg" alt="Emilio Romero" style="width:100%;height:100%;object-fit:cover;object-position:50% 22%;display:block">
+        <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top, color-mix(in srgb,#080B16 62%,transparent) 0%, transparent 45%)"></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:104px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:22px">
+        <span style="font-size:11px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--mind)">{{ t.k1 }}</span>
+        <span style="flex:1;height:1px;background:var(--line)"></span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:34px">
+        <sc-for list="{{ t.who }}" as="p" hint-placeholder-count="3">
+          <p style="font-size:16.5px;line-height:1.72;color:var(--dim);font-weight:300;margin:0;text-wrap:pretty">{{ p }}</p>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;margin-bottom:104px">
+      <sc-for list="{{ t.essays }}" as="e" hint-placeholder-count="2">
+        <div style="border:1px solid var(--line);border-radius:16px;padding:32px 34px;background:var(--surface)">
+          <h2 style="font-weight:500;font-size:26px;line-height:1.18;letter-spacing:-0.025em;margin:0 0 16px;color:var(--clarity);text-wrap:pretty">{{ e.q }}</h2>
+          <p style="font-size:16px;line-height:1.7;color:var(--dim);font-weight:300;margin:0;text-wrap:pretty">{{ e.a }}</p>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-bottom:104px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:22px">
+        <span style="font-size:11px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--mind)">{{ t.k2 }}</span>
+        <span style="flex:1;height:1px;background:var(--line)"></span>
+      </div>
+      <h2 style="font-weight:500;font-size:34px;line-height:1.15;letter-spacing:-0.03em;margin:0 0 36px;max-width:680px;text-wrap:pretty">{{ t.jobsTitle }}</h2>
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <sc-for list="{{ jobs }}" as="j" hint-placeholder-count="4">
+          <div style="display:grid;grid-template-columns:210px minmax(0,1fr);gap:30px;padding:30px 0;border-top:1px solid var(--line)">
+            <div>
+              <div style="font-size:13px;color:var(--clarity);font-weight:400;margin-bottom:8px">{{ j.dates }}</div>
+              <div style="font-size:13.5px;color:var(--dimmer);font-weight:300;line-height:1.5">{{ j.org }}</div>
+            </div>
+            <div>
+              <h3 style="font-weight:500;font-size:22px;line-height:1.2;letter-spacing:-0.02em;margin:0 0 6px">{{ j.title }}</h3>
+              <p style="font-size:15px;line-height:1.6;color:var(--dim);font-weight:300;margin:0 0 16px;text-wrap:pretty">{{ j.lede }}</p>
+              <div style="display:flex;flex-direction:column;gap:11px">
+                <sc-for list="{{ j.bullets }}" as="b" hint-placeholder-count="3">
+                  <div style="display:grid;grid-template-columns:16px minmax(0,1fr);gap:12px;align-items:start">
+                    <span style="width:5px;height:5px;border-radius:999px;background:var(--mind);margin-top:8px"></span>
+                    <span style="font-size:15px;line-height:1.62;color:var(--dim);font-weight:300;text-wrap:pretty">{{ b }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ j.hasNote }}" hint-placeholder-val="{{ false }}">
+                <p style="font-size:13px;color:var(--dimmer);font-weight:300;font-style:italic;margin:16px 0 0">{{ j.note }}</p>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="margin-bottom:104px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:22px">
+        <span style="font-size:11px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--feel)">{{ t.k3 }}</span>
+        <span style="flex:1;height:1px;background:var(--line)"></span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px">
+        <sc-for list="{{ t.awards }}" as="a" hint-placeholder-count="2">
+          <div style="border:1px solid var(--line);border-radius:16px;padding:30px 32px;background:color-mix(in srgb,#F0466B 5%,transparent)">
+            <div style="font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--feel);margin-bottom:12px">{{ a.tag }}</div>
+            <h3 style="font-weight:500;font-size:21px;line-height:1.2;letter-spacing:-0.02em;margin:0 0 12px;text-wrap:pretty">{{ a.title }}</h3>
+            <p style="font-size:15px;line-height:1.65;color:var(--dim);font-weight:300;margin:0;text-wrap:pretty">{{ a.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="margin-bottom:104px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:22px">
+        <span style="font-size:11px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--mind)">{{ t.k4 }}</span>
+        <span style="flex:1;height:1px;background:var(--line)"></span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px">
+        <sc-for list="{{ t.skills }}" as="g" hint-placeholder-count="3">
+          <div style="border:1px solid var(--line);border-radius:16px;padding:26px 28px;background:var(--bg-2)">
+            <div style="font-size:13px;font-weight:500;color:var(--clarity);margin-bottom:16px">{{ g.label }}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="6">
+                <span style="font-size:13px;font-weight:300;padding:5px 11px;border-radius:8px;background:var(--surface);color:var(--dim)">{{ it }}</span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;margin-bottom:104px">
+      <div style="border:1px solid var(--line);border-radius:16px;padding:30px 32px;background:var(--surface)">
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--mind);margin-bottom:20px">{{ t.k5 }}</div>
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <sc-for list="{{ t.education }}" as="ed" hint-placeholder-count="3">
+            <div>
+              <div style="font-size:16px;font-weight:400;line-height:1.4;margin-bottom:4px;text-wrap:pretty">{{ ed.what }}</div>
+              <div style="font-size:13.5px;color:var(--dimmer);font-weight:300">{{ ed.where }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="border:1px solid var(--line);border-radius:16px;padding:30px 32px;background:var(--surface)">
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--mind);margin-bottom:20px">{{ t.k6 }}</div>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <sc-for list="{{ t.langs }}" as="lg" hint-placeholder-count="3">
+            <div style="display:flex;align-items:baseline;gap:12px">
+              <span style="font-size:16px;font-weight:400">{{ lg.name }}</span>
+              <span style="flex:1;height:1px;background:var(--line)"></span>
+              <span style="font-size:13.5px;color:var(--dimmer);font-weight:300">{{ lg.level }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:22px;align-items:start;margin-bottom:104px">
+      <sc-if value="{{ explore }}" hint-placeholder-val="{{ true }}">
+        <dc-import name="Puzzle" variant="sobre" lang="{{ lang }}" accent="#F0466B" hint-size="100%,480px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ explore }}" hint-placeholder-val="{{ true }}">
+        <dc-import name="Canvas Emociones" lang="{{ lang }}" hint-size="100%,640px"></dc-import>
+      </sc-if>
+    </div>
+
+    <div style="position:relative;border:1px solid var(--clarity-deep);border-radius:18px;padding:44px 46px;overflow:hidden;background:color-mix(in srgb,#22D3EE 5%,transparent)">
+      <div style="position:absolute;top:-150px;right:-90px;width:420px;height:420px;border-radius:999px;pointer-events:none;animation:breathe 15s ease-in-out infinite;background:radial-gradient(circle, color-mix(in srgb,#22D3EE 20%,transparent) 0%, transparent 68%)"></div>
+      <div style="position:relative">
+        <h2 style="font-weight:500;font-size:30px;line-height:1.16;letter-spacing:-0.03em;margin:0 0 12px;max-width:600px;text-wrap:pretty">{{ t.ctaTitle }}</h2>
+        <p style="font-size:16px;line-height:1.6;color:var(--dim);font-weight:300;margin:0 0 30px;max-width:560px;text-wrap:pretty">{{ t.ctaSub }}</p>
+        <div style="display:flex;flex-wrap:wrap;gap:12px">
+          <a href="https://wa.me/573142543651" target="_blank" rel="noopener" style="font-size:14.5px;font-weight:400;padding:13px 22px;border-radius:11px;background:var(--clarity);color:#04222B">WhatsApp · +57 314 254 3651</a>
+          <a href="mailto:emilio.romerog@outlook.com" style="font-size:14.5px;font-weight:400;padding:13px 22px;border-radius:11px;border:1px solid var(--line);color:var(--text);background:var(--surface)">emilio.romerog@outlook.com</a>
+          <a href="https://www.linkedin.com/in/emilio-romero-gutierrez" target="_blank" rel="noopener" style="font-size:14.5px;font-weight:400;padding:13px 22px;border-radius:11px;border:1px solid var(--line);color:var(--text);background:var(--surface)">LinkedIn</a>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:20px;margin-top:26px">
+          <a href="uploads/CV Emilio Romero ES.pdf" target="_blank" rel="noopener" style="font-size:14px">{{ t.cvEs }}</a>
+          <a href="uploads/CV Emilio Romero EN.pdf" target="_blank" rel="noopener" style="font-size:14px">{{ t.cvEn }}</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1240,&quot;height&quot;:900}}">
+const JOBS = [
+  {
+    dates: "Abr 2026 — Actualidad", datesEn: "Apr 2026 — Present",
+    org: "QStrauss Consulting · Code and Theory Network (Stagwell)",
+    title: "Technical Architect", titleEn: "Technical Architect",
+    lede: "Consultoría técnica sobre implementaciones de Adobe Workfront para clientes enterprise de retail, banca y consumo masivo.",
+    ledeEn: "Technical consulting on Adobe Workfront implementations for enterprise clients across retail, banking and consumer goods.",
+    bullets: [
+      "Diagnostico fallas de configuración y de adopción, y diseño la solución que las resuelve — no solo el informe que las describe.",
+      "Rediseño flujos de trabajo de cliente para bajar fricción y acortar ciclos de entrega.",
+      "Construyo la documentación técnica que le permite al equipo del cliente entender su propia instancia y depender menos de nosotros.",
+      "Desarrollo Custom Canvas, la herramienta interna de documentación; lideré su auditoría UX/UI completa y el plan de refactorización por fases.",
+      "Integro IA (Claude, Gemini, NotebookLM) en los flujos de documentación y análisis para producir entregables más rápido.",
+      "Entrego interfaces, decks de entrenamiento, propuestas comerciales y análisis de riesgo."
+    ],
+    bulletsEn: [
+      "I diagnose configuration and adoption failures, then design the solution that fixes them — not just the report describing them.",
+      "I redesign client workflows to cut friction and shorten delivery cycles.",
+      "I build the technical documentation that lets client teams understand their own instance and depend less on us.",
+      "I develop Custom Canvas, the internal documentation tool; I led its full UX/UI audit and phased refactoring plan.",
+      "I integrate AI (Claude, Gemini, NotebookLM) into documentation and analysis workflows to ship deliverables faster.",
+      "I deliver interfaces, training decks, commercial proposals and risk analyses."
+    ],
+    note: "Los nombres de cliente están cubiertos por acuerdos de confidencialidad.",
+    noteEn: "Client names are covered by non-disclosure agreements."
+  },
+  {
+    dates: "Jun 2025 — Abr 2026", datesEn: "Jun 2025 — Apr 2026",
+    org: "Ropofy · SaaS B2B (CRM y automatización)", orgEn: "Ropofy · B2B SaaS (CRM and automation)",
+    title: "Jr UX Consultant / UX Designer", titleEn: "Jr UX Consultant / UX Designer",
+    lede: "Adopción de la plataforma en toda la cartera de clientes, y el rediseño del sitio del producto.",
+    ledeEn: "Platform adoption across the whole client portfolio, plus the product website redesign.",
+    bullets: [
+      "Acompañé implementaciones, resolví incidencias y fui el puente entre cliente y equipo de desarrollo.",
+      "Rediseñé el sitio del producto partiendo de necesidades reales de usuario final; acompañó el crecimiento de tráfico y leads en la etapa de estabilización de la compañía.",
+      "Diseñé y dicté capacitaciones continuas en automatización de procesos y bots de IA.",
+      "Aporté a las estrategias de reactivación de clientes y generación de leads con el equipo comercial."
+    ],
+    bulletsEn: [
+      "I supported implementations, resolved issues and acted as the bridge between clients and the development team.",
+      "I redesigned the product website from real end-user needs; it accompanied traffic and lead growth during the company's stabilization stage.",
+      "I designed and delivered ongoing training on process automation and AI bots.",
+      "I contributed to client reactivation and lead generation strategy alongside the commercial team."
+    ]
+  },
+  {
+    dates: "Oct 2024 — Abr 2025", datesEn: "Oct 2024 — Apr 2025",
+    org: "genia · Freelance", orgEn: "genia · Freelance",
+    title: "Diseñador UX/UI", titleEn: "UX/UI Designer",
+    lede: "Sitios accesibles en Webflow y experiencias interactivas donde la narrativa era parte del producto.",
+    ledeEn: "Accessible Webflow sites and interactive experiences where narrative was part of the product.",
+    bullets: [
+      "Diseñé y construí sitios accesibles en Webflow.",
+      "Desarrollé experiencias interactivas y videojuegos aplicando gamificación y narrativa digital."
+    ],
+    bulletsEn: [
+      "I designed and built accessible websites in Webflow.",
+      "I developed interactive experiences and games applying gamification and digital storytelling."
+    ]
+  },
+  {
+    dates: "Feb 2024 — Ago 2024", datesEn: "Feb 2024 — Aug 2024",
+    org: "ETB · Telecomunicaciones", orgEn: "ETB · Telecommunications",
+    title: "Practicante UX/UI", titleEn: "UX/UI Design Intern",
+    lede: "Plataformas internas usadas por más de 500 personas al mes: el primer lugar donde vi que el problema casi nunca está en la pantalla.",
+    ledeEn: "Internal platforms used by 500+ people a month: the first place I saw that the problem is rarely on the screen.",
+    bullets: [
+      "Diseñé e implementé interfaces que mejoraron la eficiencia de navegación en 30% y redujeron el tiempo de interacción.",
+      "Participé en el rediseño de plataformas digitales internas con más de 500 usuarios mensuales, mejorando accesibilidad y capacidad de respuesta.",
+      "Ejecuté pruebas de usabilidad e incorporé los hallazgos en cada iteración, asegurando compatibilidad entre dispositivos."
+    ],
+    bulletsEn: [
+      "I designed and implemented interfaces that improved navigation efficiency by 30% and reduced interaction time.",
+      "I contributed to the redesign of internal digital platforms with 500+ monthly users, improving accessibility and responsiveness.",
+      "I ran usability tests and fed the findings into every iteration, ensuring cross-device compatibility."
+    ]
+  }
+];
+
+const T = {
+  es: {
+    back: "Inicio", cases: "Casos", langBtn: "EN",
+    modeQuick: "Al grano", modeExplore: "Explorar",
+    modeTitle: "Al grano deja solo el trabajo. Explorar añade el puzzle y el canvas. No se pierde información en ninguno.",
+    tutorialTitle: "Cómo se lee este portafolio",
+    kicker: "Sobre mí",
+    role: "Consultor UX · Diseño de servicios y experiencia",
+    hook: "Vengo del UX/UI y el game design, y me moví a la consultoría porque quería entender cómo ocurre la transformación por dentro de una organización, no solo cómo se ve la interfaz al final.",
+    chips: ["Bogotá, Colombia", "Remoto / Híbrido", "Inglés C1", "Adobe Workfront"],
+    k1: "Quién soy",
+    who: [
+      "Soy diseñador interactivo de la Universidad Jorge Tadeo Lozano. Lo que me mueve es crear experiencias nuevas: entender de verdad qué necesita la persona del otro lado y traducirlo en herramientas que funcionen, se puedan replicar y dejen un impacto medible.",
+      "Trabajo con diseño centrado en el usuario tanto en producto digital como en las operaciones internas de una empresa. Investigo, prototipo, valido, y me quedo hasta que la gente lo adopta — la parte que casi nunca aparece en un caso de estudio.",
+      "Sé programar lo suficiente para no pedir imposibles: HTML, CSS, algo de C#. Diseño y prototipo en Figma, y me interesa el terreno donde la tecnología todavía no tiene convenciones: AR, VR, videojuegos."
+    ],
+    essays: [
+      { q: "¿Por qué diseño interactivo?", a: "Pude ser un buen economista o dedicarme a las ventas en cualquier parte del mundo. Elegí un camino donde la curiosidad se paga sola. Al descubrir esta carrera entendí que mi objetivo era hacer de la tecnología una herramienta útil, que se integre en la vida diaria de la gente sin volverse un estorbo." },
+      { q: "¿Hacia dónde apunto?", a: "Siempre he sido de sueños grandes, pero en vez de quedarme en las nubes busco aterrizar cada meta. Mi intención ahora es abrir fronteras nuevas en la experiencia de las personas: crear historias y productos que no sean pasajeros, sino que se queden en la memoria. ¿Hacia dónde voy? Al corazón de la gente, explorando todo lo que la tecnología permita." }
+    ],
+    k2: "Trayectoria",
+    jobsTitle: "Cuatro trabajos, una misma pregunta: ¿qué necesita de verdad la persona del otro lado?",
+    k3: "Reconocimientos",
+    awards: [
+      { tag: "Segundo lugar · 2024", title: "TechSprint — BID y Alliance for Innovative Regulation", body: "Solución en Power BI para transparencia en procesos gubernamentales. Quedamos segundos: el equipo ganador tenía mejor demo, nosotros teníamos mejor pregunta." },
+      { tag: "Top 20 regional · 2025", title: "L'Oréal Brandstorm", body: "Semifinales de Colombia, Panamá, Perú y Ecuador con el equipo Apolo: un proyecto para acercar al consumidor masculino al cuidado personal a través de la tecnología." }
+    ],
+    k4: "Habilidades",
+    skills: [
+      { label: "Plataforma y procesos", items: ["Adobe Workfront", "Consultoría de implementación", "Diseño de servicios", "Rediseño y optimización de procesos", "Documentación técnica y enablement", "Análisis de riesgos", "Gestión de stakeholders"] },
+      { label: "Diseño y producto", items: ["UX Research", "Diseño UX/UI", "Prototipado", "Design systems", "Arquitectura de información", "Pruebas de usabilidad", "Accesibilidad (WCAG)", "Storytelling y gamificación"] },
+      { label: "Herramientas", items: ["Figma", "Webflow", "Adobe Creative Suite", "Power BI", "HubSpot", "HTML / CSS / JS", "Confluence / Jira", "Google Workspace", "Microsoft 365", "Claude, Gemini, NotebookLM"] }
+    ],
+    k5: "Formación",
+    education: [
+      { what: "Diseñador Interactivo, énfasis en UX/UI y Game Design", where: "Universidad Jorge Tadeo Lozano · 2020 – 2024" },
+      { what: "Bootcamp UX Front-End", where: "Cymetria · 2024" },
+      { what: "Certificación Adobe Workfront", where: "En curso" }
+    ],
+    k6: "Idiomas",
+    langs: [
+      { name: "Español", level: "Nativo" },
+      { name: "Inglés", level: "C1" },
+      { name: "Lengua de señas colombiana", level: "Básico" }
+    ],
+    ctaTitle: "¿Tienes un problema que todavía nadie sabe enunciar?",
+    ctaSub: "Esa es exactamente la parte que me gusta. Elige el canal que te quede más cómodo — contesto el mismo día.",
+    cvEs: "Descargar CV (español) ↓", cvEn: "Download CV (English) ↓"
+  },
+  en: {
+    back: "Home", cases: "Cases", langBtn: "ES",
+    modeQuick: "Quick read", modeExplore: "Explore",
+    modeTitle: "Quick read keeps only the work. Explore adds the puzzle and the canvas. Neither one loses information.",
+    tutorialTitle: "How to read this portfolio",
+    kicker: "About me",
+    role: "UX Consultant · Service & Experience Design",
+    hook: "My background is UX/UI and game design, and I moved into consulting because I wanted to understand how transformation happens inside an organization, not just how the interface looks at the end.",
+    chips: ["Bogotá, Colombia", "Remote / Hybrid", "English C1", "Adobe Workfront"],
+    k1: "Who I am",
+    who: [
+      "I'm an interactive designer from Universidad Jorge Tadeo Lozano. What drives me is building new experiences: genuinely understanding what the person on the other side needs, and turning that into tools that work, that can be replicated, and that leave measurable impact.",
+      "I apply user-centred design to digital products and to a company's internal operations alike. I research, prototype, validate — and stay until people actually adopt it, the part that rarely makes it into a case study.",
+      "I code enough not to ask for the impossible: HTML, CSS, some C#. I design and prototype in Figma, and I'm drawn to the ground where technology has no conventions yet: AR, VR, games."
+    ],
+    essays: [
+      { q: "Why interactive design?", a: "I could have been a decent economist or worked in sales anywhere in the world. I chose a path where curiosity pays for itself. When I found this degree I understood my goal: making technology a useful tool that fits into people's daily lives without getting in the way." },
+      { q: "Where am I aiming?", a: "I've always dreamt big, but instead of staying in the clouds I try to land every goal. What I want now is to open new frontiers in people's experience: stories and products that aren't fleeting, but stay in memory. Where am I going? To people's hearts, exploring everything technology allows." }
+    ],
+    k2: "Track record",
+    jobsTitle: "Four jobs, one question throughout: what does the person on the other side actually need?",
+    k3: "Awards",
+    awards: [
+      { tag: "Second place · 2024", title: "TechSprint — IDB and the Alliance for Innovative Regulation", body: "A Power BI solution for transparency in government processes. We came second: the winning team had the better demo, we had the better question." },
+      { tag: "Regional top 20 · 2025", title: "L'Oréal Brandstorm", body: "Semifinals for Colombia, Panama, Peru and Ecuador with team Apolo: a project connecting male consumers to personal care through technology." }
+    ],
+    k4: "Skills",
+    skills: [
+      { label: "Platform & process", items: ["Adobe Workfront", "Implementation consulting", "Service design", "Process redesign and optimization", "Technical documentation and enablement", "Risk analysis", "Stakeholder management"] },
+      { label: "Design & product", items: ["UX research", "UX/UI design", "Prototyping", "Design systems", "Information architecture", "Usability testing", "Accessibility (WCAG)", "Storytelling and gamification"] },
+      { label: "Tools", items: ["Figma", "Webflow", "Adobe Creative Suite", "Power BI", "HubSpot", "HTML / CSS / JS", "Confluence / Jira", "Google Workspace", "Microsoft 365", "Claude, Gemini, NotebookLM"] }
+    ],
+    k5: "Education",
+    education: [
+      { what: "BA Interactive Design, focus on UX/UI and Game Design", where: "Universidad Jorge Tadeo Lozano · 2020 – 2024" },
+      { what: "UX Front-End Bootcamp", where: "Cymetria · 2024" },
+      { what: "Adobe Workfront Certification", where: "In progress" }
+    ],
+    k6: "Languages",
+    langs: [
+      { name: "Spanish", level: "Native" },
+      { name: "English", level: "C1" },
+      { name: "Colombian Sign Language", level: "Basic" }
+    ],
+    ctaTitle: "Got a problem nobody can quite name yet?",
+    ctaSub: "That's exactly the part I enjoy. Pick whichever channel suits you — I reply the same day.",
+    cvEs: "Download CV (Spanish) ↓", cvEn: "Download CV (English) ↓"
+  }
+};
+
+class Component extends DCLogic {
+  state = {
+    lang: (() => { try { return localStorage.getItem("em-lang") === "en" ? "en" : "es"; } catch (e) { return "es"; } })(),
+    mode: (() => { try { return localStorage.getItem("em-mode") === "grano" ? "grano" : "explorar"; } catch (e) { return "explorar"; } })()
+  };
+
+  setMode(v) {
+    this.setState({ mode: v });
+    try { localStorage.setItem("em-mode", v); } catch (e) {}
+  }
+
+  pill(active) {
+    return active
+      ? "padding:5px 12px;border-radius:999px;border:0;background:#123A4A;color:#A5F3FC;font-size:12px;font-weight:600;cursor:pointer"
+      : "padding:5px 12px;border-radius:999px;border:0;background:transparent;color:#767C99;font-size:12px;font-weight:500;cursor:pointer";
+  }
+
+  componentDidMount() {
+    this._key = (e) => {
+      if (e.key === "l" || e.key === "L") this.toggle();
+    };
+    window.addEventListener("keydown", this._key);
+  }
+
+  componentWillUnmount() { window.removeEventListener("keydown", this._key); }
+
+  toggle() {
+    this.setState(p => {
+      const next = p.lang === "es" ? "en" : "es";
+      try { localStorage.setItem("em-lang", next); } catch (e) {}
+      return { lang: next };
+    });
+  }
+
+  renderVals() {
+    const L = this.state.lang;
+    const en = L === "en";
+    return {
+      t: T[L],
+      lang: L,
+      tutorialDelay: 2600,
+      explore: this.state.mode !== "grano",
+      openTutorial: () => window.dispatchEvent(new Event("em-open-tutorial")),
+      setGrano: () => this.setMode("grano"),
+      setExplorar: () => this.setMode("explorar"),
+      granoBtn: this.pill(this.state.mode === "grano"),
+      explorarBtn: this.pill(this.state.mode !== "grano"),
+      toggleLang: () => this.toggle(),
+      jobs: JOBS.map(j => ({
+        dates: en ? j.datesEn : j.dates,
+        org: en ? (j.orgEn || j.org) : j.org,
+        title: en ? j.titleEn : j.title,
+        lede: en ? j.ledeEn : j.lede,
+        bullets: en ? j.bulletsEn : j.bullets,
+        hasNote: !!j.note,
+        note: en ? j.noteEn : j.note
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { ROUTES } from '../content/ui';
+import { withBase } from '../lib/paths';
+
+/* Una sola 404 para los dos idiomas: no sabemos en cuál venía quien se perdió,
+   así que se dicen las dos cosas y se ofrecen las dos rutas. */
+---
+
+<BaseLayout
+  title="Página no encontrada — Emilio Romero"
+  description="Esta página no existe. Vuelve al inicio o mira los casos."
+  lang="es"
+  page="home"
+>
+  <section class="section notfound">
+    <div class="wrap wrap--read">
+      <p class="label code">404</p>
+
+      <h1>Esta página no existe.</h1>
+      <p class="lead">
+        Puede que el enlace esté roto o que la haya movido. Lo que sí existe está aquí abajo.
+      </p>
+
+      <p class="lead en" lang="en">This page doesn’t exist. What does exist is below.</p>
+
+      <nav class="links" aria-label="Rutas del sitio">
+        <a class="btn btn--primary" href={withBase(ROUTES.es.home)}>Inicio</a>
+        <a class="btn" href={withBase(ROUTES.es.cases)}>Casos</a>
+        <a class="btn" href={withBase(ROUTES.es.about)}>Sobre mí</a>
+        <a class="btn" href={withBase(ROUTES.en.home)} hreflang="en" lang="en">English</a>
+      </nav>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    padding-top: 140px;
+  }
+
+  .code {
+    color: var(--feel);
+    letter-spacing: 0.2em;
+    margin-bottom: 18px;
+  }
+
+  h1 {
+    font-size: var(--fs-h2);
+    line-height: var(--lh-h2);
+    letter-spacing: var(--ls-h2);
+    margin-bottom: 14px;
+  }
+
+  .lead + .lead {
+    margin-top: 10px;
+  }
+
+  .en {
+    color: var(--dimmer);
+    font-size: var(--fs-body-sm);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 12px 22px;
+    border-radius: var(--r-control);
+    border: var(--border);
+    color: var(--dim);
+    font-size: var(--fs-btn);
+    font-weight: var(--fw-medium);
+    transition: border-color var(--dur-hover) var(--ease-hover),
+      color var(--dur-hover) var(--ease-hover);
+  }
+
+  .btn:hover {
+    border-color: var(--line-strong);
+    color: var(--text);
+  }
+
+  .btn--primary {
+    border: 0;
+    background: var(--clarity);
+    color: var(--on-clarity-solid);
+  }
+
+  .btn--primary:hover {
+    color: var(--on-clarity-solid);
+  }
+</style>

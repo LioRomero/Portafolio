@@ -1,0 +1,748 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactSection from './ContactSection.astro';
+import HiddenNote from '../islands/HiddenNote.tsx';
+import EmotionMap from '../islands/EmotionMap.tsx';
+import Puzzle from '../islands/Puzzle.tsx';
+import EmotionCanvas from '../islands/EmotionCanvas.tsx';
+import Intro from '../islands/Intro.tsx';
+import Tutorial from '../islands/Tutorial.tsx';
+import CuriousLayer from '../islands/CuriousLayer.tsx';
+import { Image } from 'astro:assets';
+import proceso from '../images/carrusel-1.jpg';
+import { HOME, HOME_CASES } from '../content/home';
+import { UI, ROUTES, type Lang } from '../content/ui';
+import { withBase } from '../lib/paths';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = HOME[lang];
+const u = UI[lang];
+const r = ROUTES[lang];
+
+const title =
+  lang === 'es'
+    ? 'Emilio Romero — Diseñador UX en Bogotá'
+    : 'Emilio Romero — UX Designer in Bogotá';
+---
+
+<BaseLayout title={title} description={t.heroSub} lang={lang} page="home">
+  <Intro variant="home" lang={lang} client:load />
+  <Tutorial lang={lang} delay={6000} client:idle />
+  <CuriousLayer lang={lang} client:idle />
+
+  {/* --- Hero --------------------------------------------------------- */}
+  <section class="section hero" data-hue="mind">
+    <div class="wrap">
+      <p class="label kicker">{u.location}</p>
+
+      <h1 class="hero-title">
+        {t.heroA} <em class="em-mind">{t.heroB}</em>{' '}
+        <span class="em-clarity">{t.heroThinking}</span> {t.heroAnd}{' '}
+        <span class="em-feel">{t.heroFeeling}</span> {t.heroTail}
+      </h1>
+
+      <div class="note-row">
+        <p class="lead hero-sub">{t.heroSub}</p>
+        <HiddenNote index={0} lang={lang} client:visible />
+      </div>
+
+      <div class="actions">
+        <a class="btn btn--primary" href={withBase(r.cases)}>{t.seeCases}</a>
+        <a class="btn" href="#emociones">{t.readEmotion}</a>
+      </div>
+
+      <p class="find-hint" data-playful>
+        <span class="find-hint-dot" aria-hidden="true"></span>
+        {t.heroFindHint}
+      </p>
+
+      <ul class="proof">
+        {
+          t.proof.map((p) => (
+            <li>
+              <span class="proof-n tabular">{p.n}</span>
+              <span class="proof-l">{p.l}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  {/* --- Mapa de emociones -------------------------------------------- */}
+  <section class="section bordered" id="emociones" data-hue="feel">
+    <div class="wrap">
+      <div class="note-row">
+        <div>
+          <h2>{t.mapTitle}</h2>
+          <p class="lead map-sub">{t.mapSub}</p>
+        </div>
+        <HiddenNote index={1} lang={lang} client:visible />
+      </div>
+
+      <EmotionMap lang={lang} client:visible />
+
+      <p class="meta map-foot">{t.mapFoot}</p>
+    </div>
+  </section>
+
+  {/* --- Casos (resumen) ---------------------------------------------- */}
+  <section class="section bordered" id="casos" data-hue="feel">
+    <div class="wrap">
+      <h2>{t.casesTitle}</h2>
+      <p class="lead cases-hint">{t.casesHint}</p>
+
+      <div class="cases">
+        {
+          HOME_CASES.map((c) => {
+            const d = c[lang];
+            const shot = c.shots[0]!;
+            return (
+              <article class="case">
+                <div class="case-body">
+                  <div class="chips">
+                    {d.chips.map(([label, kind]) => (
+                      <span class={`chip chip--${kind}`}>{label}</span>
+                    ))}
+                  </div>
+                  <h3>{d.title}</h3>
+                  <p class="case-lede">{d.lede}</p>
+
+                  <dl class="rows">
+                    {d.rows.map(([label, text, tone]) => (
+                      <div class="row" data-tone={tone}>
+                        <dt class={`row-label row-label--${tone}`}>{label}</dt>
+                        <dd class={`row-text row-text--${tone}`}>{text}</dd>
+                      </div>
+                    ))}
+                  </dl>
+
+                  {/* Radiografía: al quitar la capa de research desaparecen los
+                      insights y queda solo el antes/después. Es el argumento del
+                      portafolio hecho interacción. */}
+                  <p class="xray-note">{t.xrayNote}</p>
+
+                  <div class="chips">
+                    {d.tags.map(([label, kind]) => (
+                      <span class={`chip chip--${kind}`}>{label}</span>
+                    ))}
+                  </div>
+
+                  <p class="meta case-method">{d.method}</p>
+                  <blockquote class="case-quote">{d.quote}</blockquote>
+                  <p class="meta case-discard">{d.discard}</p>
+
+                  {/* Las notas 5, 6 y 7 son una por caso: la conversación
+                      difícil, el NDA y el segundo lugar. */}
+                  <div class="note-row">
+                    <p class="case-more">
+                      <a href={`${withBase(r.cases)}#${c.key}`}>{t.readFull}</a>
+                    </p>
+                    <HiddenNote index={c.findIdx} lang={lang} client:visible />
+                  </div>
+                </div>
+
+                <figure class={`case-fig ${c.flip ? 'case-fig--flip' : ''}`}>
+                  <img src={withBase(shot.src)} alt={shot[lang][0]} loading="lazy" decoding="async" />
+                  <figcaption class="meta">{shot[lang][1]}</figcaption>
+                </figure>
+              </article>
+            );
+          })
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* --- Método -------------------------------------------------------- */}
+  <section class="section bordered" id="metodo" data-hue="clarity">
+    <div class="wrap">
+      <div class="note-row">
+        <div>
+          <h2>{t.methodTitle}</h2>
+          <p class="lead method-sub">{t.methodSub}</p>
+        </div>
+        <HiddenNote index={2} lang={lang} client:visible />
+      </div>
+
+      <ol class="steps">
+        {
+          t.steps.map(([n, title, body, tone]) => (
+            <li class={`step step--${tone}`}>
+              <span class="step-n tabular">{n}</span>
+              <h3 class="step-title">{title}</h3>
+              <p class="step-body">{body}</p>
+            </li>
+          ))
+        }
+      </ol>
+
+      <div class="ai">
+        <div class="label label--clarity">{t.aiTitle}</div>
+        <p class="lead">{t.aiBody}</p>
+      </div>
+
+      {/* Letra chica: está en el DOM desde el principio, apenas legible, y solo
+          se lee bajo el haz de la linterna. En táctil se muestra entera. */}
+      <aside class="ghost" data-ghost="metodo" data-playful>
+        <span class="ghost-label label">{u.finePrintLabel}</span>
+        <p>{t.ghost3}</p>
+      </aside>
+
+      <div data-playful class="puzzle-slot">
+        <Puzzle variant="proceso" lang={lang} client:visible />
+      </div>
+    </div>
+  </section>
+
+  {/* --- Sobre mí (resumen) -------------------------------------------- */}
+  <section class="section bordered" id="sobre" data-hue="mind">
+    <div class="wrap about">
+      <div>
+        <h2>{t.aboutTitleA}<br />{t.aboutTitleB}</h2>
+        <p class="lead about-p">{t.aboutP1}</p>
+        <div class="note-row">
+          <p class="lead about-p">{t.aboutP2}</p>
+          <HiddenNote index={3} lang={lang} client:visible />
+        </div>
+
+        <div class="chips">
+          {t.skills.map((s) => <span class="chip chip--plain">{s}</span>)}
+        </div>
+
+        <aside class="ghost" data-ghost="sobre" data-playful>
+          <span class="ghost-label label">{u.finePrintLabel}</span>
+          <p>{t.ghost1}</p>
+        </aside>
+
+        <p class="about-more"><a href={withBase(r.about)}>{t.aboutMore}</a></p>
+      </div>
+
+      <figure class="about-fig">
+        <Image
+          src={proceso}
+          alt={t.processPh}
+          widths={[640, 1280]}
+          sizes="(max-width: 900px) 100vw, 520px"
+          loading="lazy"
+          format="avif"
+        />
+      </figure>
+    </div>
+  </section>
+
+  {/* --- Canvas -------------------------------------------------------- */}
+  <section class="section bordered" data-playful data-hue="clarity">
+    <div class="wrap wrap--canvas">
+      <EmotionCanvas lang={lang} client:visible />
+    </div>
+  </section>
+
+  {/* La nota 4 ("Yo también odio los formularios de contacto") solo va en la home. */}
+  <ContactSection lang={lang} noteIndex={4} />
+</BaseLayout>
+
+<style>
+  .bordered {
+    border-top: var(--border);
+  }
+
+  .kicker {
+    color: var(--clarity);
+    letter-spacing: 0.2em;
+    font-size: var(--fs-kicker);
+    margin-bottom: 20px;
+  }
+
+  .hero-title {
+    font-size: var(--fs-intro);
+    font-weight: var(--fw-light);
+    line-height: var(--lh-intro);
+    letter-spacing: var(--ls-intro);
+    max-width: 900px;
+    margin-bottom: 22px;
+  }
+
+  .hero-title em {
+    font-style: normal;
+  }
+
+  .em-mind {
+    color: var(--on-mind);
+  }
+
+  .em-clarity {
+    color: var(--on-clarity);
+  }
+
+  .em-feel {
+    color: var(--on-feel);
+  }
+
+  /* Un párrafo con su punto de nota al lado. El punto se oculta en "grano". */
+  /* `HiddenNote` usa display:contents, así que su punto y su caja son hijos
+     directos de esta fila. La caja ocupa el 100% y necesita el wrap. */
+  .note-row {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  /* Sin esto el párrafo reclama su max-width completo y empuja el punto a la
+     línea siguiente, donde queda huérfano. */
+  .note-row > p,
+  .note-row > div {
+    flex: 1 1 240px;
+    min-width: 0;
+  }
+
+  .hero-sub,
+  .map-sub,
+  .method-sub,
+  .about-p {
+    max-width: var(--max-read);
+  }
+
+  .about-p + .about-p,
+  .note-row + .meta,
+  .about-p + .note-row,
+  .note-row + .note-row {
+    margin-top: 14px;
+  }
+
+  /* Aire entre el título de sección y su entradilla. */
+  .map-sub,
+  .method-sub {
+    margin-top: 12px;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 28px 0 14px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 22px;
+    border-radius: var(--r-control);
+    border: var(--border);
+    background: transparent;
+    color: var(--dim);
+    font-size: var(--fs-btn);
+    font-weight: var(--fw-medium);
+    transition: border-color var(--dur-hover) var(--ease-hover),
+      color var(--dur-hover) var(--ease-hover);
+  }
+
+  .btn:hover {
+    border-color: var(--line-strong);
+    color: var(--text);
+  }
+
+  .btn--primary {
+    border: 0;
+    background: var(--clarity);
+    color: var(--on-clarity-solid);
+  }
+
+  .btn--primary:hover {
+    color: var(--on-clarity-solid);
+    filter: brightness(1.08);
+  }
+
+  /* Es la instrucción que explica toda la capa lúdica: iba en gris de metadato
+     y era lo menos legible de la página. Sube a texto secundario y se marca
+     con el mismo punto violeta que hay que buscar. */
+  .find-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--dim);
+  }
+
+  .find-hint-dot {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--mind);
+    background: var(--mind-22);
+  }
+
+  .proof {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--gap-cards);
+    margin: 44px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .proof li {
+    border-left: 1px solid var(--line);
+    padding-left: 16px;
+  }
+
+  .proof-n {
+    display: block;
+    font-size: 26px;
+    font-weight: var(--fw-medium);
+    letter-spacing: -0.03em;
+    color: var(--on-clarity);
+    margin-bottom: 6px;
+  }
+
+  .proof-l {
+    font-size: var(--fs-meta);
+    line-height: var(--lh-meta);
+    color: var(--dimmer);
+  }
+
+  .map-foot,
+  .cases-hint,
+  .case-method,
+  .case-discard {
+    max-width: var(--max-read);
+  }
+
+  .map-foot {
+    margin-top: 24px;
+  }
+
+  .cases-hint {
+    margin: 12px 0 36px;
+  }
+
+  /* --- Casos --- */
+  .cases {
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+  }
+
+  .case {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+    gap: 40px;
+    align-items: start;
+  }
+
+  .case h3 {
+    margin: 12px 0 10px;
+  }
+
+  .case-lede {
+    font-size: var(--fs-body-lg);
+    line-height: var(--lh-body-lg);
+    color: var(--dim);
+    margin-bottom: 22px;
+  }
+
+  .rows {
+    margin: 0 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+
+  .row-label {
+    font-size: var(--fs-label);
+    font-weight: var(--fw-medium);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding-top: 3px;
+    color: var(--mind);
+  }
+
+  .row-label--win {
+    color: var(--clarity);
+  }
+
+  .row-text {
+    margin: 0;
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: var(--dim);
+  }
+
+  .row-text--win {
+    color: var(--on-clarity);
+    font-weight: var(--fw-regular);
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .chip {
+    padding: 5px 11px;
+    border-radius: var(--r-tag);
+    font-size: 11.5px;
+    font-weight: var(--fw-medium);
+  }
+
+  .chip--clarity {
+    background: var(--clarity-deep);
+    color: var(--on-clarity);
+  }
+
+  .chip--mind {
+    background: var(--mind-deep);
+    color: var(--on-mind);
+  }
+
+  .chip--feel {
+    background: var(--feel-deep);
+    color: var(--on-feel);
+  }
+
+  .chip--line {
+    border: var(--border);
+    color: var(--dim);
+  }
+
+  .chip--plain {
+    padding: 6px 13px;
+    background: var(--surface);
+    color: var(--dim);
+    font-size: 13px;
+    font-weight: var(--fw-light);
+  }
+
+  .case-quote {
+    margin: 14px 0;
+    padding-left: 18px;
+    border-left: 2px solid var(--feel);
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--on-feel);
+  }
+
+  .case-more {
+    margin-top: 18px;
+    font-size: var(--fs-body);
+  }
+
+  /* --- Radiografía (tecla X) --- */
+  .xray-note {
+    display: none;
+    margin-bottom: 20px;
+    border-left: 2px solid var(--feel);
+    padding-left: 16px;
+    font-size: var(--fs-body-sm);
+    line-height: var(--lh-body-sm);
+    color: var(--on-feel);
+    max-width: var(--max-read);
+  }
+
+  :global(html[data-xray]) .row[data-tone='insight'] {
+    display: none;
+  }
+
+  :global(html[data-xray]) .xray-note {
+    display: block;
+  }
+
+  /* --- Letra chica que revela la linterna --- */
+  .ghost {
+    margin: 26px 0 0;
+    max-width: var(--max-read);
+    border-left: 2px solid transparent;
+    padding-left: 16px;
+    font-size: var(--fs-body-sm);
+    line-height: var(--lh-body-sm);
+    color: var(--dim);
+    /* Apenas perceptible: se intuye que hay algo, no se puede leer. Sin borde
+       ni fondo, para que no parezca un bloque roto sino una marca de agua. */
+    opacity: calc(0.05 + 0.95 * var(--reveal, 0));
+    transition: opacity var(--dur-hover) var(--ease-hover);
+  }
+
+  /* Sobre el velo de la linterna, para que el haz la ilumine de verdad. */
+  :global(html[data-foco]) .ghost {
+    position: relative;
+    z-index: 81;
+    border-left-color: var(--mind);
+  }
+
+  .ghost-label {
+    display: none;
+    color: var(--on-mind);
+    margin-bottom: 6px;
+  }
+
+  /* Sin cursor no hay linterna, así que la letra chica se muestra entera:
+     ningún contenido queda accesible solo en escritorio. */
+  @media (pointer: coarse), (max-width: 900px) {
+    .ghost {
+      opacity: 1;
+      border-left-color: var(--mind);
+    }
+
+    .ghost-label {
+      display: block;
+    }
+  }
+
+  .case-fig {
+    margin: 0;
+    border: var(--border);
+    border-radius: var(--r-card-lg);
+    overflow: hidden;
+    background: var(--bg-2);
+  }
+
+  .case-fig--flip {
+    order: -1;
+  }
+
+  .case-fig img {
+    width: 100%;
+    height: auto;
+  }
+
+  .case-fig figcaption {
+    padding: 12px 16px;
+    border-top: var(--border);
+  }
+
+  /* --- Método --- */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--gap-cards);
+    margin: 36px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .step {
+    border: var(--border);
+    border-radius: var(--r-card);
+    padding: 22px 24px;
+    background: var(--surface);
+  }
+
+  .step-n {
+    font-size: var(--fs-label);
+    font-weight: var(--fw-medium);
+    letter-spacing: 0.12em;
+    color: var(--mind);
+  }
+
+  .step--clarity .step-n {
+    color: var(--clarity);
+  }
+
+  .step--feel .step-n {
+    color: var(--feel);
+  }
+
+  .step-title {
+    font-size: 17px;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    margin: 10px 0 8px;
+  }
+
+  .step-body {
+    font-size: var(--fs-body-sm);
+    line-height: var(--lh-body-sm);
+    color: var(--dim);
+  }
+
+  .ai {
+    margin-top: 32px;
+    border-left: 2px solid var(--clarity);
+    padding-left: 18px;
+    max-width: var(--max-read);
+  }
+
+  .ai .label {
+    color: var(--clarity);
+    margin-bottom: 8px;
+  }
+
+  .puzzle-slot {
+    margin-top: 44px;
+  }
+
+  /* --- Sobre mí --- */
+  .about {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+    gap: 44px;
+    align-items: start;
+  }
+
+  .about h2 {
+    margin-bottom: 18px;
+  }
+
+  .about-more {
+    margin-top: 24px;
+    font-size: var(--fs-body);
+  }
+
+  .about-fig {
+    margin: 0;
+    height: 420px;
+    border-radius: var(--r-card-lg);
+    overflow: hidden;
+    border: var(--border);
+  }
+
+  .about-fig img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (max-width: 900px) {
+    /* El punto de nota debe quedarse junto al párrafo, no caer solo a una
+       línea propia donde parece un elemento suelto. */
+    .note-row > p,
+    .note-row > div {
+      flex: 1 1 180px;
+    }
+
+    .case,
+    .about {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+    }
+
+    .case-fig--flip {
+      order: 0;
+    }
+
+    .row {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 4px;
+    }
+
+    .about-fig {
+      height: 260px;
+    }
+  }
+</style>

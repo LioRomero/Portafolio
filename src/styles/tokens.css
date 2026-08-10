@@ -1,0 +1,161 @@
+/* ==========================================================================
+   Design tokens — Portafolio Emilio Romero
+   Valores tomados literalmente de la sección "Design Tokens" del handoff.
+   ========================================================================== */
+
+:root {
+  /* --- Fondos ------------------------------------------------------------ */
+  --bg: #080b16;              /* fondo de página */
+  --bg-2: #0c1020;            /* barra, tarjetas elevadas */
+  --surface: #141a2e;         /* superficie de tarjeta */
+  --surface-2: #1b2240;       /* superficie interactiva (fichas de puzzle) */
+
+  /* --- Texto ------------------------------------------------------------- */
+  --text: #e9ebf4;            /* primario */
+  --dim: #a2a8c2;             /* cuerpo secundario */
+  --dimmer: #767c99;          /* metadatos, notas al pie — nunca por debajo de 12px */
+  --line: #232a44;            /* bordes, divisores */
+  --line-strong: #3a4468;     /* borde hover / activo */
+  --disabled: #4e5578;        /* texto deshabilitado */
+
+  /* --- Acentos semánticos ------------------------------------------------ */
+  /* Cada uno tiene significado, no son decorativos. */
+  --mind: #8b7bf0;            /* violeta — pensamiento, proceso, notas escondidas */
+  --clarity: #22d3ee;         /* cian — claridad, método, resultados */
+  --feel: #f0466b;            /* coral — emoción, casos, errores */
+
+  /* --- Variantes profundas (fondos de estados activos) ------------------- */
+  --mind-deep: #2a2352;
+  --clarity-deep: #123a4a;
+  --feel-deep: #4a1b2c;
+
+  /* --- Derivados --------------------------------------------------------- */
+  --on-mind: #c7bffa;         /* texto sobre fondo violeta */
+  --on-clarity: #a5f3fc;      /* texto sobre fondo cian, hover de enlaces */
+  --on-feel: #fca5b8;         /* texto sobre fondo coral */
+  --on-clarity-solid: #04222b; /* texto oscuro sobre botón cian sólido */
+
+  /* --- Tintes de acento --------------------------------------------------- */
+  /* Los acentos se usan casi siempre vía color-mix 12–22% para rellenos
+     y a plena opacidad para bordes y texto. */
+  --mind-12: color-mix(in srgb, var(--mind) 12%, transparent);
+  --mind-14: color-mix(in srgb, var(--mind) 14%, transparent);
+  --mind-16: color-mix(in srgb, var(--mind) 16%, transparent);
+  --mind-22: color-mix(in srgb, var(--mind) 22%, transparent);
+  --clarity-12: color-mix(in srgb, var(--clarity) 12%, transparent);
+  --clarity-16: color-mix(in srgb, var(--clarity) 16%, transparent);
+  --clarity-22: color-mix(in srgb, var(--clarity) 22%, transparent);
+  --feel-12: color-mix(in srgb, var(--feel) 12%, transparent);
+  --feel-16: color-mix(in srgb, var(--feel) 16%, transparent);
+  --feel-22: color-mix(in srgb, var(--feel) 22%, transparent);
+
+  /* --- Enlaces ----------------------------------------------------------- */
+  --link: var(--clarity);
+  --link-hover: var(--on-clarity);
+
+  /* --- Tipografía -------------------------------------------------------- */
+  --font: 'Inter', system-ui, sans-serif;
+
+  --fs-intro: 46px;           /* título de intro (home) — 300 / 1.16 / -0.035em */
+  --fs-h2: 34px;              /* título de sección — 500 / 1.15 / -0.03em */
+  --fs-h3: 27px;              /* título de tarjeta / tutorial — 500 / 1.18 / -0.03em */
+  --fs-h4: 24px;              /* título de puzzle — 500 / 1.20 / -0.025em */
+  --fs-body-lg: 16px;         /* cuerpo grande — 300 / 1.65 */
+  --fs-body: 15px;            /* cuerpo — 300 / 1.60–1.62 */
+  --fs-body-sm: 14.5px;       /* cuerpo pequeño / tarjeta — 300 / 1.60 */
+  --fs-btn: 14.5px;           /* botón — 500 */
+  --fs-meta: 12.5px;          /* metadatos — 300–400 / 1.55 */
+  --fs-label: 11px;           /* etiqueta en versalitas — 500 / 0.14em */
+  --fs-kicker: 11.5px;        /* kicker de intro — 500 / 0.20–0.22em */
+
+  --lh-intro: 1.16;
+  --lh-h2: 1.15;
+  --lh-h3: 1.18;
+  --lh-h4: 1.2;
+  --lh-body-lg: 1.65;
+  --lh-body: 1.62;
+  --lh-body-sm: 1.6;
+  --lh-meta: 1.55;
+
+  --ls-intro: -0.035em;
+  --ls-h2: -0.03em;
+  --ls-h3: -0.03em;
+  --ls-h4: -0.025em;
+  --ls-label: 0.14em;
+  --ls-kicker: 0.22em;
+
+  --fw-light: 300;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+
+  /* --- Espaciado y forma -------------------------------------------------- */
+  --pad-section: 84px 40px;
+  --pad-section-contact: 88px 40px;
+
+  --max-home: 1240px;         /* home */
+  --max-cases: 1180px;        /* rejilla de casos */
+  --max-canvas: 920px;        /* columna de canvas */
+  --max-read: 760px;          /* párrafos de lectura */
+
+  --gap-cards: 22px;
+  --gap-in-card: 12px;        /* rango 9–14px */
+
+  --r-pill: 999px;            /* píldoras, puntos */
+  --r-modal: 20px;
+  --r-card-lg: 18px;
+  --r-card: 13px;             /* rango 12–14px */
+  --r-control: 10px;          /* rango 10–11px */
+  --r-tag: 6px;
+
+  --border: 1px solid var(--line);
+  --border-strong: 1px solid var(--line-strong);
+  --border-empty: 1px dashed var(--line);
+
+  --shadow-modal: 0 30px 80px rgba(0, 0, 0, 0.7);
+
+  /* --- Movimiento --------------------------------------------------------- */
+  --dur-hover: 200ms;         /* hover, cambio de color */
+  --dur-state: 275ms;         /* cambio de estado, progreso — 250–300ms */
+  --dur-enter: 425ms;         /* entrada de elemento — 400–450ms */
+  --dur-intro-short: 1900ms;  /* barrido de intro corta */
+  --dur-intro-long: 5400ms;   /* secuencia de intro larga */
+
+  --ease-hover: ease;
+  --ease-state: ease;
+  --ease-enter: cubic-bezier(0.2, 0.8, 0.25, 1);
+  --ease-sweep: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* --- Capas -------------------------------------------------------------- */
+  --z-painted-bg: -1;
+  --z-bar: 90;
+  --z-tutorial: 110;
+  --z-intro: 120;
+}
+
+/* El movimiento se apaga desde una sola variable: el toggle manual pone
+   data-motion="off" en <html>, y prefers-reduced-motion hace lo mismo.
+   Las reglas que animan multiplican sus duraciones por --motion. */
+:root {
+  --motion: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion: 0;
+    --dur-hover: 0ms;
+    --dur-state: 0ms;
+    --dur-enter: 0ms;
+    --dur-intro-short: 0ms;
+    --dur-intro-long: 0ms;
+  }
+}
+
+:root[data-motion='off'] {
+  --motion: 0;
+  --dur-hover: 0ms;
+  --dur-state: 0ms;
+  --dur-enter: 0ms;
+  --dur-intro-short: 0ms;
+  --dur-intro-long: 0ms;
+}

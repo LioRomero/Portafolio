@@ -1,0 +1,211 @@
+---
+import { HOME } from '../content/home';
+import { CONTACT_EMAIL } from '../content/canvas';
+import HiddenNote from '../islands/HiddenNote.tsx';
+import { CV_PDFS, type Lang } from '../content/ui';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  sub?: string;
+  /** Solo la home reparte notas escondidas; las otras páginas omiten esto. */
+  noteIndex?: number;
+}
+
+const { lang, noteIndex } = Astro.props;
+const t = HOME[lang];
+const title = Astro.props.title ?? t.ctaTitle;
+const sub = Astro.props.sub ?? t.ctaSub;
+---
+
+{/* Sin formulario, deliberadamente: tres canales directos y qué pasa después. */}
+<section class="section section--contact contact" id="contacto">
+  <div class="wrap">
+    <h2 class="cta-title">{title}</h2>
+    <p class="cta-sub">{sub}</p>
+
+    <div class="channels">
+      <a class="card card--wa" href={t.waHref} target="_blank" rel="noopener">
+        <div class="label label--clarity">{t.waLabel}</div>
+        <div class="channel-title">{t.waTitle}</div>
+        <p class="channel-body">{t.waBody}</p>
+      </a>
+
+      <a class="card" href={`mailto:${CONTACT_EMAIL}?subject=Proyecto%20UX`}>
+        <div class="label label--mind">{t.mailLabel}</div>
+        <div class="channel-title channel-title--mail">{CONTACT_EMAIL}</div>
+        <p class="channel-body">{t.mailBody}</p>
+      </a>
+
+      {/* No es un `<a>` envolviendo todo: los CV son enlaces propios y no
+          pueden anidarse dentro del enlace a LinkedIn. */}
+      <div class="card card--linkedin">
+        <div class="label label--dim">{t.liLabel}</div>
+        <a class="channel-title channel-link" href={t.liHref} target="_blank" rel="noopener">
+          LinkedIn
+        </a>
+        {
+          (CV_PDFS.es || CV_PDFS.en) && (
+            <div class="cvs">
+              {CV_PDFS.es && (
+                <a href={CV_PDFS.es} download>
+                  {t.cvEs}
+                </a>
+              )}
+              {CV_PDFS.en && (
+                <a href={CV_PDFS.en} download>
+                  {t.cvEn}
+                </a>
+              )}
+            </div>
+          )
+        }
+        <p class="channel-body">{t.liBody}</p>
+      </div>
+    </div>
+
+    <div class="note-row">
+      <p class="what-happens">{t.whatHappens}</p>
+      {noteIndex !== undefined && <HiddenNote index={noteIndex} lang={lang} client:visible />}
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    position: relative;
+    border-top: var(--border);
+    background: color-mix(in srgb, var(--bg-2) 84%, transparent);
+  }
+
+  .cta-title {
+    font-size: 48px;
+    line-height: 1.06;
+    letter-spacing: -0.04em;
+    margin-bottom: 18px;
+    max-width: 760px;
+  }
+
+  .cta-sub {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--dim);
+    margin-bottom: 40px;
+    max-width: 560px;
+  }
+
+  .channels {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    max-width: 1040px;
+    margin-bottom: 36px;
+  }
+
+  .card {
+    border: var(--border);
+    border-radius: 16px;
+    padding: 28px 30px;
+    background: var(--surface);
+    color: var(--text);
+    transition: border-color var(--dur-hover) var(--ease-hover);
+  }
+
+  .card:hover {
+    color: var(--text);
+    border-color: var(--mind);
+  }
+
+  .card--wa {
+    border-color: var(--clarity-deep);
+    background: color-mix(in srgb, var(--clarity) 6%, transparent);
+  }
+
+  .card--wa:hover {
+    border-color: var(--clarity);
+  }
+
+  .label {
+    font-size: var(--fs-label);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .label--clarity {
+    color: var(--clarity);
+  }
+
+  .label--mind {
+    color: var(--mind);
+  }
+
+  .label--dim {
+    color: var(--dimmer);
+  }
+
+  .channel-title {
+    display: block;
+    font-size: 20px;
+    font-weight: var(--fw-medium);
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .channel-link {
+    color: var(--text);
+    width: fit-content;
+  }
+
+  .channel-link:hover {
+    color: var(--on-clarity);
+  }
+
+  .card--linkedin:hover {
+    border-color: var(--mind);
+  }
+
+  .channel-title--mail {
+    font-size: 19px;
+    overflow-wrap: anywhere;
+  }
+
+  .cvs {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: var(--link);
+  }
+
+  .channel-body {
+    font-size: var(--fs-body-sm);
+    line-height: var(--lh-body-sm);
+    color: var(--dim);
+  }
+
+  .note-row {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .what-happens {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body-lg);
+    color: var(--dimmer);
+    max-width: 680px;
+  }
+
+  @media (max-width: 900px) {
+    .cta-title {
+      font-size: 30px;
+    }
+
+    .cta-sub {
+      font-size: 16px;
+    }
+  }
+</style>

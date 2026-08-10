@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+  body { margin:0; background:#080B16; }
+  a { color:#67E8F9; text-decoration:none; }
+  a:hover { color:#A5F3FC; }
+  #page {
+    --bg:#080B16; --bg-2:#0C1020; --surface:#141A2E; --surface-2:#1B2240;
+    --text:#E9EBF4; --dim:#A2A8C2; --dimmer:#767C99; --line:#232A44;
+    --mind:#8B7BF0; --clarity:#22D3EE; --feel:#F0466B;
+    --mind-deep:#2A2352; --clarity-deep:#123A4A; --feel-deep:#4A1B2C;
+    color:var(--text);
+    font-family:"Inter", system-ui, sans-serif; -webkit-font-smoothing:antialiased;
+  }
+  #page ::selection { background:var(--mind-deep); }
+  #page :focus-visible { outline:2px solid var(--clarity); outline-offset:3px; }
+  #page .lighten { mix-blend-mode:lighten; overflow:hidden; min-width:0; }
+  #page button { font:inherit; cursor:pointer; }
+  @keyframes breathe { 0%,100% { transform:scale(1); opacity:.55 } 50% { transform:scale(1.09); opacity:.9 } }
+  @keyframes drift { 0%,100% { transform:translate3d(0,0,0) } 50% { transform:translate3d(18px,-14px,0) } }
+  @keyframes riseIn { from { opacity:0; transform:translate3d(0,10px,0) } to { opacity:1; transform:none } }
+  @keyframes popIn { 0% { opacity:0; transform:scale(.94) } 60% { transform:scale(1.02) } 100% { opacity:1; transform:scale(1) } }
+  @keyframes pulseRing { 0% { box-shadow:0 0 0 0 rgba(139,123,240,.5) } 70% { box-shadow:0 0 0 10px rgba(139,123,240,0) } 100% { box-shadow:0 0 0 0 rgba(139,123,240,0) } }
+  #page[data-still] *, #page[data-still] { animation:none !important; transition:none !important }
+  #page .ghost { color:rgba(233,235,244,.055); background-image:radial-gradient(circle 150px at var(--mx,-600px) var(--my,-600px), rgba(199,191,250,.92), rgba(199,191,250,0)); background-attachment:fixed; -webkit-background-clip:text; background-clip:text; cursor:default }
+  @keyframes shake { 10%,90%{transform:translateX(-2px)} 30%,70%{transform:translateX(3px)} 50%{transform:translateX(-4px)} }
+</style>
+</helmet>
+
+<div id="page" data-still="{{ still }}" style="min-height:100vh">
+
+<canvas id="em-paint" style="position:fixed;inset:0;z-index:-1;pointer-events:none;width:100vw;height:100vh"></canvas>
+<sc-if value="{{ foco }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:52;pointer-events:none;background:radial-gradient(circle 220px at var(--mx,50vw) var(--my,50vh), rgba(4,6,14,0) 0%, rgba(4,6,14,.55) 55%, rgba(4,6,14,.9) 100%)"></div>
+</sc-if>
+<div style="{{ progStyle }}"></div>
+
+<dc-import name="Intro" variant="home" lang="{{ lang }}" hint-size="100%,100%"></dc-import>
+<dc-import name="Tutorial" lang="{{ lang }}" delay="{{ tutorialDelay }}" hint-size="100%,100%"></dc-import>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;top:80px;transform:translateX(-50%);z-index:88;display:flex;align-items:center;gap:12px;padding:13px 22px;border-radius:999px;border:1px solid var(--mind);background:color-mix(in srgb,#0C1020 95%,transparent);box-shadow:0 18px 44px rgba(0,0,0,.6);animation:popIn .35s ease both">
+    <span style="width:8px;height:8px;border-radius:999px;background:var(--mind);box-shadow:0 0 12px var(--mind)"></span>
+    <span style="font-size:14px;font-weight:500;color:var(--text)">{{ toastText }}</span>
+    <span style="font-size:12.5px;color:var(--dimmer);font-variant-numeric:tabular-nums">{{ toastMeta }}</span>
+  </div>
+</sc-if>
+
+<div style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px 40px;background:color-mix(in srgb, #080B16 88%, transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);flex-wrap:wrap">
+  <div style="display:flex;align-items:baseline;gap:12px">
+    <span style="font-size:15px;font-weight:500;letter-spacing:-0.01em">Emilio Romero</span>
+    <span style="font-size:12.5px;color:var(--dimmer)">{{ t.role }}</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:18px">
+    <a href="#casos" style="font-size:13.5px;color:var(--dim)" style-hover="color:var(--clarity)">{{ t.navCases }}</a>
+    <a href="#metodo" style="font-size:13.5px;color:var(--dim)" style-hover="color:var(--clarity)">{{ t.navMethod }}</a>
+    <a href="#sobre" style="font-size:13.5px;color:var(--dim)" style-hover="color:var(--clarity)">{{ t.navAbout }}</a>
+    <div style="display:flex;align-items:center;gap:2px;padding:3px;border-radius:999px;border:1px solid var(--line);background:var(--bg-2)" title="{{ t.modeTitle }}">
+      <button onClick="{{ setGrano }}" style="{{ granoBtn }}">{{ t.modeQuick }}</button>
+      <button onClick="{{ setExplorar }}" style="{{ explorarBtn }}">{{ t.modeExplore }}</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:2px;padding:3px;border-radius:999px;border:1px solid var(--line);background:var(--bg-2)" title="{{ t.langTitle }}">
+      <button onClick="{{ setEs }}" aria-label="Español" style="{{ esBtn }}">ES</button>
+      <button onClick="{{ setEn }}" aria-label="English" style="{{ enBtn }}">EN</button>
+    </div>
+    <sc-if value="{{ explore }}" hint-placeholder-val="{{ true }}">
+      <button onClick="{{ togglePanel }}" title="{{ t.curiousTitle }}" aria-label="{{ t.curiousTitle }}" style="{{ curiousBtn }}">
+        <span style="width:7px;height:7px;border-radius:999px;background:var(--mind);box-shadow:0 0 10px var(--mind)"></span>
+        <span style="font-variant-numeric:tabular-nums">{{ foundLabel }}</span>
+      </button>
+    </sc-if>
+    <button onClick="{{ openTutorial }}" title="{{ t.tutorialTitle }}" aria-label="{{ t.tutorialTitle }}" style="display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;border:1px solid var(--line);background:var(--bg-2);color:var(--dim);font-size:13px" style-hover="border-color:var(--mind);color:var(--text)">?</button>
+    <a href="#contacto" style="padding:8px 18px;border-radius:8px;border:1px solid var(--clarity);color:var(--clarity);font-size:13.5px;font-weight:500" style-hover="background:color-mix(in srgb,#22D3EE 14%,transparent)">{{ t.letsTalk }}</a>
+  </div>
+</div>
+
+<sc-if value="{{ spotify }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:26px;bottom:26px;z-index:78;width:352px;animation:riseIn .35s ease both">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:9px;padding:0 4px">
+      <span style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--clarity)">{{ t.nowPlaying }}</span>
+      <button onClick="{{ toggleSpotify }}" aria-label="{{ t.close }}" style="border:0;background:transparent;color:var(--dimmer);font-size:14px;padding:0">✕</button>
+    </div>
+    <iframe src="{{ t.spotifySrc }}" width="352" height="152" frameBorder="0" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" title="{{ t.nowPlaying }}" style="border-radius:14px;border:1px solid var(--line);display:block;background:var(--surface)"></iframe>
+    <p style="font-size:12px;line-height:1.5;color:var(--dimmer);margin:9px 4px 0;font-weight:300">{{ t.spotifyNote }}</p>
+  </div>
+</sc-if>
+
+<sc-if value="{{ panel }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;right:26px;bottom:26px;z-index:80;width:346px;border:1px solid var(--line);border-radius:16px;padding:24px;background:var(--surface);box-shadow:0 24px 60px rgba(0,0,0,.6);animation:riseIn .3s ease both">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px">
+      <div style="font-size:11.5px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--mind)">{{ t.curious }}</div>
+      <button onClick="{{ togglePanel }}" aria-label="{{ t.close }}" style="border:0;background:transparent;color:var(--dimmer);font-size:15px;padding:0">✕</button>
+    </div>
+    <p style="font-size:14px;line-height:1.6;color:var(--dim);margin:0 0 14px;font-weight:300">{{ t.panelIntro }}</p>
+    <p style="font-size:13px;line-height:1.55;color:var(--dimmer);margin:0 0 12px;font-weight:300">{{ t.paintHint }}</p>
+    <p style="font-size:13px;line-height:1.55;color:var(--dimmer);margin:0 0 12px;font-weight:300">{{ t.playHint }}</p>
+    <p style="font-size:13px;line-height:1.55;color:var(--dimmer);margin:0 0 14px;font-weight:300">{{ t.senseHint }}</p>
+    <button onClick="{{ openTutorial }}" style="border:0;background:transparent;color:var(--clarity);font-size:13px;padding:0;margin:0 0 18px;cursor:pointer">{{ t.tutorialLink }}</button>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <div style="flex:1;height:4px;border-radius:999px;background:var(--surface-2);overflow:hidden">
+        <div style="{{ barStyle }}"></div>
+      </div>
+      <span style="font-size:12.5px;color:var(--dim);font-variant-numeric:tabular-nums">{{ foundLabel }}</span>
+    </div>
+    <p style="font-size:13px;line-height:1.55;color:var(--dimmer);margin:0 0 20px;font-weight:300">{{ progressHint }}</p>
+    <div style="height:1px;background:var(--line);margin-bottom:18px"></div>
+    <div style="display:grid;gap:10px">
+      <button onClick="{{ toggleXray }}" style="{{ rowBtn }}">
+        <span>{{ t.xray }}</span>
+        <span style="{{ xraySwitch }}">{{ xrayState }}</span>
+      </button>
+      <button onClick="{{ toggleStill }}" style="{{ rowBtn }}">
+        <span>{{ t.reduceMotion }}</span>
+        <span style="{{ stillSwitch }}">{{ stillState }}</span>
+      </button>
+      <button onClick="{{ toggleFoco }}" style="{{ rowBtn }}">
+        <span>{{ t.foco }}</span>
+        <span style="{{ focoSwitch }}">{{ focoState }}</span>
+      </button>
+      <button onClick="{{ toggleSpotify }}" style="{{ rowBtn }}">
+        <span>{{ t.spotifyRow }}</span>
+        <span style="{{ spotifySwitch }}">{{ spotifyState }}</span>
+      </button>
+      <button onClick="{{ toggleMusic }}" style="{{ rowBtn }}">
+        <span>{{ t.music }}</span>
+        <span style="{{ musicSwitch }}">{{ musicState }}</span>
+      </button>
+      <button onClick="{{ togglePulse }}" style="{{ rowBtn }}">
+        <span>{{ t.pulse }}</span>
+        <span style="{{ pulseSwitch }}">{{ pulseState }}</span>
+      </button>
+      <button onClick="{{ clearPaint }}" style="{{ rowBtn }}">
+        <span>{{ t.clearPaint }}</span>
+        <span style="font-size:12.5px;color:var(--dimmer)">◌</span>
+      </button>
+      <button onClick="{{ resetFinds }}" style="{{ rowBtn }}">
+        <span>{{ t.resetFinds }}</span>
+        <span style="font-size:12.5px;color:var(--dimmer)">↺</span>
+      </button>
+    </div>
+    <p style="font-size:12.5px;line-height:1.55;color:var(--dimmer);margin:16px 0 0;font-weight:300">{{ t.panelKeys }}</p>
+  </div>
+</sc-if>
+
+<div onMouseEnter="{{ hueMind }}" style="position:relative;overflow:hidden;padding:96px 40px 72px">
+  <div style="position:absolute;top:-160px;right:-80px;width:620px;height:620px;border-radius:999px;background:radial-gradient(circle, color-mix(in srgb,#8B7BF0 26%,transparent) 0%, transparent 66%);animation:drift 18s ease-in-out infinite;pointer-events:none"></div>
+  <div style="position:absolute;top:120px;right:340px;width:420px;height:420px;border-radius:999px;background:radial-gradient(circle, color-mix(in srgb,#22D3EE 18%,transparent) 0%, transparent 66%);animation:drift 24s ease-in-out infinite reverse;pointer-events:none"></div>
+
+  <div style="position:relative;max-width:1240px;margin:0 auto">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:26px">
+      <span style="width:30px;height:1px;background:var(--clarity)"></span>
+      <span style="font-size:11.5px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--clarity)">{{ t.location }}</span>
+    </div>
+    <h1 style="font-weight:500;font-size:78px;line-height:1;letter-spacing:-0.04em;margin:0 0 28px;max-width:1000px;text-wrap:pretty">{{ t.heroA }}<br>{{ t.heroB }} <span style="color:var(--mind)">{{ t.heroThinking }}</span> {{ t.heroAnd }} <span style="color:var(--feel)">{{ t.heroFeeling }}</span> {{ t.heroTail }}</h1>
+    <div style="display:flex;align-items:flex-start;gap:14px;max-width:700px;margin-bottom:24px">
+      <p style="font-size:21px;line-height:1.6;color:var(--dim);margin:0;font-weight:300;text-wrap:pretty">{{ t.heroSub }}</p>
+      <button onClick="{{ f0.reveal }}" title="{{ f0.title }}" aria-label="{{ f0.title }}" style="{{ f0.style }}">{{ f0.glyph }}</button>
+    </div>
+    <sc-if value="{{ f0.open }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ findBox }}">
+        <div style="{{ findLabelStyle }}">{{ f0.tag }}</div>
+        <p style="font-size:15.5px;line-height:1.6;color:var(--text);margin:0;font-weight:300">{{ f0.text }}</p>
+      </div>
+    </sc-if>
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <a href="#casos" style="padding:13px 26px;border-radius:8px;border:1px solid var(--clarity);color:var(--clarity);font-weight:500;font-size:15px" style-hover="background:color-mix(in srgb,#22D3EE 14%,transparent)">{{ t.seeCases }}</a>
+      <a href="#mapa" style="padding:13px 26px;border-radius:8px;border:1px solid var(--line);color:var(--dim);font-weight:500;font-size:15px" style-hover="border-color:var(--mind);color:var(--text)">{{ t.readEmotion }}</a>
+      <span style="font-size:13px;color:var(--dimmer);font-weight:300;max-width:340px">{{ t.heroFindHint }}</span>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:26px;margin-top:38px;padding-top:26px;border-top:1px solid var(--line);max-width:900px">
+      <sc-for list="{{ t.proof }}" as="pr" hint-placeholder-count="3">
+        <div style="min-width:150px">
+          <div style="font-size:27px;font-weight:500;letter-spacing:-0.03em;color:var(--clarity)">{{ pr.n }}</div>
+          <div style="font-size:13.5px;line-height:1.45;color:var(--dim);font-weight:300;margin-top:5px">{{ pr.l }}</div>
+        </div>
+      </sc-for>
+    </div>
+    <p class="ghost" style="font-size:15.5px;line-height:1.6;margin:36px 0 0;max-width:580px;font-weight:300">{{ t.ghost1 }}</p>
+  </div>
+</div>
+
+<div id="mapa" onMouseEnter="{{ hueSel }}" style="padding:84px 40px;border-top:1px solid var(--line);background:color-mix(in srgb,#0C1020 84%,transparent)">
+  <div style="max-width:1240px;margin:0 auto">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:40px;margin-bottom:12px;flex-wrap:wrap">
+      <h2 style="font-weight:500;font-size:40px;letter-spacing:-0.035em;margin:0">{{ t.mapTitle }}</h2>
+      <span style="font-size:13px;color:var(--dimmer);white-space:nowrap">{{ t.mapHint }}</span>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:14px;max-width:680px;margin-bottom:36px">
+      <p style="font-size:17px;line-height:1.6;color:var(--dim);margin:0;font-weight:300;text-wrap:pretty">{{ t.mapSub }}</p>
+      <button onClick="{{ f1.reveal }}" title="{{ f1.title }}" aria-label="{{ f1.title }}" style="{{ f1.style }}">{{ f1.glyph }}</button>
+    </div>
+    <sc-if value="{{ f1.open }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ findBox }}">
+        <div style="{{ findLabelStyle }}">{{ f1.tag }}</div>
+        <p style="font-size:15.5px;line-height:1.6;color:var(--text);margin:0;font-weight:300">{{ f1.text }}</p>
+      </div>
+    </sc-if>
+
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:44px;align-items:start">
+      <div style="display:flex;flex-wrap:wrap;gap:12px;align-content:flex-start">
+        <sc-for list="{{ emotions }}" as="e" hint-placeholder-count="5">
+          <button onClick="{{ e.pick }}" onMouseDown="{{ e.down }}" onMouseUp="{{ e.up }}" onMouseLeave="{{ e.up }}" onTouchStart="{{ e.down }}" onTouchEnd="{{ e.up }}" style="{{ e.style }}">
+            <span style="{{ e.dot }}"></span>
+            <span style="font-size:15px;font-weight:500">{{ e.label }}</span>
+          </button>
+        </sc-for>
+        <p style="width:100%;font-size:13.5px;line-height:1.6;color:var(--dimmer);margin:8px 0 0;font-weight:300">{{ t.mapFoot }}</p>
+      </div>
+
+      <div style="position:relative;border:1px solid var(--line);border-radius:16px;padding:34px 36px;background:var(--surface);overflow:hidden">
+        <div style="{{ selGlow }}"></div>
+        <div style="position:relative">
+          <div style="font-size:11.5px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--dimmer);margin-bottom:16px">{{ t.whatYouSee }}</div>
+          <p style="font-size:23px;line-height:1.35;letter-spacing:-0.02em;margin:0 0 26px;font-weight:400;text-wrap:pretty">{{ selCue }}</p>
+          <div style="height:1px;background:var(--line);margin-bottom:26px"></div>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px">
+            <div>
+              <div style="font-size:11.5px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--mind);margin-bottom:10px">{{ t.whatItMeans }}</div>
+              <p style="font-size:15.5px;line-height:1.55;color:var(--dim);margin:0;font-weight:300">{{ selSignal }}</p>
+            </div>
+            <div>
+              <div style="font-size:11.5px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--clarity);margin-bottom:10px">{{ t.whatIDo }}</div>
+              <p style="font-size:15.5px;line-height:1.55;color:var(--dim);margin:0;font-weight:300">{{ selMove }}</p>
+            </div>
+          </div>
+          <sc-if value="{{ raw }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:26px;border-top:1px solid var(--line);padding-top:22px;animation:riseIn .4s ease both">
+              <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--feel);margin-bottom:10px">{{ t.originalQuote }}</div>
+              <p style="font-size:17px;line-height:1.55;color:var(--text);margin:0;font-weight:300;font-style:italic">{{ selRaw }}</p>
+            </div>
+          </sc-if>
+          <div style="margin-top:26px;display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;border:1px solid var(--line);font-size:13px;color:var(--dim)">{{ t.seenIn }} <span style="color:var(--text);font-weight:500">{{ selCase }}</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="casos" onMouseEnter="{{ hueFeel }}" style="padding:84px 40px;border-top:1px solid var(--line)">
+  <div style="max-width:1240px;margin:0 auto">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px;gap:24px;flex-wrap:wrap">
+      <h2 style="font-weight:500;font-size:40px;letter-spacing:-0.035em;margin:0">{{ t.casesTitle }}</h2>
+      <span style="font-size:13px;color:var(--dimmer)">{{ t.casesHint }}</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:40px;flex-wrap:wrap">
+      <button onClick="{{ toggleXray }}" style="{{ xrayBtn }}">{{ xrayLabel }}</button>
+      <span style="font-size:13.5px;color:var(--dimmer);font-weight:300;max-width:640px">{{ xrayHint }}</span>
+      <p class="ghost" style="font-size:15px;line-height:1.6;margin:0;max-width:420px;font-weight:300">{{ t.ghost2 }}</p>
+    </div>
+
+    <div style="display:grid;gap:26px">
+      <sc-for list="{{ cases }}" as="k" hint-placeholder-count="3">
+        <div style="{{ k.cardStyle }}">
+          <div style="{{ k.textCol }}">
+            <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
+              <sc-for list="{{ k.chips }}" as="ch" hint-placeholder-count="2">
+                <span style="{{ ch.style }}">{{ ch.label }}</span>
+              </sc-for>
+              <button onClick="{{ k.find.reveal }}" title="{{ k.find.title }}" aria-label="{{ k.find.title }}" style="{{ k.find.style }}">{{ k.find.glyph }}</button>
+            </div>
+            <sc-if value="{{ k.find.open }}" hint-placeholder-val="{{ false }}">
+              <div style="{{ findBox }}">
+                <div style="{{ findLabelStyle }}">{{ k.find.tag }}</div>
+                <p style="font-size:15.5px;line-height:1.6;color:var(--text);margin:0;font-weight:300">{{ k.find.text }}</p>
+              </div>
+            </sc-if>
+            <h3 style="font-weight:500;font-size:34px;line-height:1.1;letter-spacing:-0.03em;margin:0 0 16px">{{ k.title }}</h3>
+            <p style="font-size:17px;line-height:1.6;color:var(--dim);margin:0 0 28px;font-weight:300;text-wrap:pretty">{{ k.lede }}</p>
+            <div style="display:grid;gap:16px;margin-bottom:26px">
+              <sc-for list="{{ k.rows }}" as="rw" hint-placeholder-count="3">
+                <div style="{{ rw.wrapStyle }}">
+                  <span style="{{ rw.labelStyle }}">{{ rw.label }}</span>
+                  <span style="{{ rw.textStyle }}">{{ rw.text }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <sc-if value="{{ xray }}" hint-placeholder-val="{{ false }}">
+              <div style="border:1px dashed var(--feel-deep);border-left:2px solid var(--feel);border-radius:0 12px 12px 0;padding:16px 20px;margin-bottom:26px;background:color-mix(in srgb,#F0466B 6%,transparent);animation:riseIn .3s ease both">
+                <p style="font-size:14.5px;line-height:1.6;color:var(--dim);margin:0;font-weight:300">{{ t.xrayNote }}</p>
+              </div>
+            </sc-if>
+            <div style="border-top:1px solid var(--line);padding-top:24px;margin-bottom:22px">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+                <span style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--feel)">{{ t.emotionBehind }}</span>
+                <span style="flex:1;height:1px;background:var(--line)"></span>
+              </div>
+              <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+                <sc-for list="{{ k.tags }}" as="tg" hint-placeholder-count="3">
+                  <span style="{{ tg.style }}">{{ tg.label }}</span>
+                </sc-for>
+              </div>
+              <button onClick="{{ k.toggle }}" style="{{ evBtn }}">{{ k.evLabel }}</button>
+              <sc-if value="{{ k.open }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:18px;border-left:2px solid var(--mind);padding:2px 0 2px 20px;display:grid;gap:14px;animation:riseIn .35s ease both">
+                  <p style="font-size:15px;line-height:1.6;color:var(--dim);margin:0;font-weight:300">{{ k.method }}</p>
+                  <p style="font-size:18px;line-height:1.5;color:var(--text);margin:0;font-weight:300;font-style:italic">{{ k.quote }}</p>
+                  <p style="font-size:15px;line-height:1.6;color:var(--dim);margin:0;font-weight:300">{{ k.discard }}</p>
+                </div>
+              </sc-if>
+            </div>
+            <a href="{{ k.href }}" style="display:inline-flex;align-items:center;gap:8px;font-weight:500;font-size:15px;color:var(--clarity)">{{ t.readFull }}</a>
+          </div>
+
+          <div style="{{ k.mediaCol }}">
+            <div class="lighten" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:18px 18px 64px">
+              <image-slot id="{{ k.shot.id }}" shape="rect" fit="contain" src="{{ k.shot.src }}" placeholder="{{ k.shot.ph }}" style="width:100%;aspect-ratio:12/7;max-height:100%;height:auto"></image-slot>
+            </div>
+            <div style="position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:12px;padding:16px 18px;background:linear-gradient(to top, color-mix(in srgb,#080B16 94%,transparent), transparent)">
+              <div style="display:flex;align-items:center;gap:8px">
+                <button onClick="{{ k.prev }}" aria-label="{{ t.prev }}" style="{{ navBtn }}">‹</button>
+                <button onClick="{{ k.next }}" aria-label="{{ t.next }}" style="{{ navBtn }}">›</button>
+              </div>
+              <span style="font-size:12.5px;color:var(--dim);font-weight:300;flex:1;min-width:0">{{ k.shot.cap }}</span>
+              <div style="display:flex;gap:6px">
+                <sc-for list="{{ k.dots }}" as="dt" hint-placeholder-count="3">
+                  <button onClick="{{ dt.go }}" aria-label="{{ dt.aria }}" style="{{ dt.style }}"></button>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+
+<div id="metodo" onMouseEnter="{{ hueClarity }}" style="padding:84px 40px;border-top:1px solid var(--line);background:color-mix(in srgb,#0C1020 84%,transparent)">
+  <div style="max-width:1240px;margin:0 auto">
+    <h2 style="font-weight:500;font-size:40px;letter-spacing:-0.035em;margin:0 0 14px">{{ t.methodTitle }}</h2>
+    <div style="display:flex;align-items:flex-start;gap:14px;max-width:680px;margin-bottom:40px">
+      <p style="font-size:17px;line-height:1.6;color:var(--dim);margin:0;font-weight:300;text-wrap:pretty">{{ t.methodSub }}</p>
+      <button onClick="{{ f2.reveal }}" title="{{ f2.title }}" aria-label="{{ f2.title }}" style="{{ f2.style }}">{{ f2.glyph }}</button>
+    </div>
+    <sc-if value="{{ f2.open }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ findBox }}">
+        <div style="{{ findLabelStyle }}">{{ f2.tag }}</div>
+        <p style="font-size:15.5px;line-height:1.6;color:var(--text);margin:0;font-weight:300">{{ f2.text }}</p>
+      </div>
+    </sc-if>
+    <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:26px">
+      <sc-for list="{{ steps }}" as="sp" hint-placeholder-count="4">
+        <div style="{{ sp.wrapStyle }}">
+          <div style="{{ sp.numStyle }}">{{ sp.n }}</div>
+          <h3 style="font-weight:500;font-size:21px;line-height:1.2;letter-spacing:-0.02em;margin:0 0 10px">{{ sp.h3 }}</h3>
+          <p style="font-size:14.5px;line-height:1.6;color:var(--dim);margin:0;font-weight:300">{{ sp.p }}</p>
+        </div>
+      </sc-for>
+    </div>
+    <div style="margin-top:32px;display:flex;gap:26px;align-items:center;border:1px solid var(--mind-deep);border-radius:16px;padding:24px 30px;background:color-mix(in srgb,#8B7BF0 7%,transparent);flex-wrap:wrap">
+      <div style="font-size:19px;font-weight:500;letter-spacing:-0.02em;color:#C7BFFA;white-space:nowrap">{{ t.aiTitle }}</div>
+      <p style="font-size:15.5px;line-height:1.6;color:var(--dim);margin:0;font-weight:300;min-width:280px;flex:1">{{ t.aiBody }}</p>
+    </div>
+    <p class="ghost" style="font-size:15px;line-height:1.6;margin:30px 0 0;max-width:600px;font-weight:300">{{ t.ghost3 }}</p>
+  </div>
+</div>
+
+<div id="sobre" onMouseEnter="{{ hueMind }}" style="padding:84px 40px;border-top:1px solid var(--line)">
+  <div style="max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:56px;align-items:center">
+    <div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+        <span style="width:30px;height:1px;background:var(--feel)"></span>
+        <span style="font-size:11.5px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--feel)">{{ t.navAbout }}</span>
+      </div>
+      <h2 style="font-weight:500;font-size:38px;line-height:1.1;letter-spacing:-0.035em;margin:0 0 20px">{{ t.aboutTitleA }}<br>{{ t.aboutTitleB }}</h2>
+      <p style="font-size:16.5px;line-height:1.7;color:var(--dim);margin:0 0 16px;font-weight:300;text-wrap:pretty">{{ t.aboutP1 }}</p>
+      <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:26px">
+        <p style="font-size:16.5px;line-height:1.7;color:var(--dim);margin:0;font-weight:300;text-wrap:pretty">{{ t.aboutP2 }}</p>
+        <button onClick="{{ f3.reveal }}" title="{{ f3.title }}" aria-label="{{ f3.title }}" style="{{ f3.style }}">{{ f3.glyph }}</button>
+      </div>
+      <sc-if value="{{ f3.open }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ findBox }}">
+          <div style="{{ findLabelStyle }}">{{ f3.tag }}</div>
+          <p style="font-size:15.5px;line-height:1.6;color:var(--text);margin:0;font-weight:300">{{ f3.text }}</p>
+        </div>
+      </sc-if>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <sc-for list="{{ skills }}" as="sk" hint-placeholder-count="8">
+          <span style="padding:6px 13px;border-radius:6px;background:var(--surface);color:var(--dim);font-size:13px">{{ sk.label }}</span>
+        </sc-for>
+      </div>
+      <p style="margin:24px 0 0;font-size:15px"><a href="Sobre mí Emilio.dc.html">{{ t.aboutMore }}</a></p>
+    </div>
+    <div class="lighten" style="position:relative;height:420px;border-radius:18px;overflow:hidden;border:1px solid var(--line)">
+      <image-slot id="m-proceso" shape="rect" fit="cover" src="assets/fig/carrusel-1.jpg" placeholder="{{ t.processPh }}"></image-slot>
+    </div>
+  </div>
+  <sc-if value="{{ explore }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width:1240px;margin:44px auto 0">
+      <dc-import name="Puzzle" variant="proceso" lang="{{ lang }}" accent="#8B7BF0" hint-size="100%,520px"></dc-import>
+    </div>
+  </sc-if>
+</div>
+
+<sc-if value="{{ explore }}" hint-placeholder-val="{{ true }}">
+  <div id="canvas" onMouseEnter="{{ hueClarity }}" style="padding:84px 40px;border-top:1px solid var(--line)">
+    <div style="max-width:920px;margin:0 auto">
+      <dc-import name="Canvas Emociones" lang="{{ lang }}" hint-size="100%,640px"></dc-import>
+    </div>
+  </div>
+</sc-if>
+
+<div id="contacto" onMouseEnter="{{ hueClarity }}" style="position:relative;overflow:hidden;padding:96px 40px;border-top:1px solid var(--line);background:color-mix(in srgb,#0C1020 84%,transparent)">
+  <div style="position:absolute;left:-120px;bottom:-200px;width:560px;height:560px;border-radius:999px;background:radial-gradient(circle, color-mix(in srgb,#22D3EE 16%,transparent) 0%, transparent 66%);animation:breathe 12s ease-in-out infinite;pointer-events:none"></div>
+  <div style="position:relative;max-width:1240px;margin:0 auto">
+    <h2 style="font-weight:500;font-size:48px;line-height:1.06;letter-spacing:-0.04em;margin:0 0 18px;max-width:760px;text-wrap:pretty">{{ t.ctaTitle }}</h2>
+    <p style="font-size:18px;line-height:1.6;color:var(--dim);margin:0 0 40px;max-width:560px;font-weight:300">{{ t.ctaSub }}</p>
+
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;max-width:1040px;margin-bottom:36px">
+      <a href="{{ t.waHref }}" target="_blank" rel="noopener" style="border:1px solid var(--clarity-deep);border-radius:16px;padding:28px 30px;background:color-mix(in srgb,#22D3EE 6%,transparent);color:var(--text)" style-hover="border-color:var(--clarity)">
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--clarity);margin-bottom:12px">{{ t.waLabel }}</div>
+        <div style="font-size:20px;font-weight:500;letter-spacing:-0.02em;margin-bottom:8px">{{ t.waTitle }}</div>
+        <p style="font-size:14.5px;line-height:1.6;color:var(--dim);margin:0;font-weight:300">{{ t.waBody }}</p>
+      </a>
+      <a href="mailto:emilio.romerog@outlook.com?subject=Proyecto%20UX" style="border:1px solid var(--line);border-radius:16px;padding:28px 30px;background:var(--surface);color:var(--text)" style-hover="border-color:var(--mind)">
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--mind);margin-bottom:12px">{{ t.mailLabel }}</div>
+        <div style="font-size:19px;font-weight:500;letter-spacing:-0.02em;margin-bottom:8px">emilio.romerog@outlook.com</div>
+        <p style="font-size:14.5px;line-height:1.6;color:var(--dim);margin:0;font-weight:300">{{ t.mailBody }}</p>
+      </a>
+      <a href="{{ t.liHref }}" target="_blank" rel="noopener" style="border:1px solid var(--line);border-radius:16px;padding:28px 30px;background:var(--surface);color:var(--text)" style-hover="border-color:var(--mind)">
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--dimmer);margin-bottom:12px">{{ t.liLabel }}</div>
+        <div style="font-size:20px;font-weight:500;letter-spacing:-0.02em;margin-bottom:8px">LinkedIn</div>
+        <div style="display:flex;gap:14px;margin-bottom:10px"><a href="uploads/CV Emilio Romero ES.pdf" target="_blank" rel="noopener" style="font-size:13px">{{ t.cvEs }}</a><a href="uploads/CV Emilio Romero EN.pdf" target="_blank" rel="noopener" style="font-size:13px">{{ t.cvEn }}</a></div>
+        <p style="font-size:14.5px;line-height:1.6;color:var(--dim);margin:0;font-weight:300">{{ t.liBody }}</p>
+      </a>
+    </div>
+
+    <div style="display:flex;align-items:flex-start;gap:14px;max-width:680px">
+      <p style="font-size:15px;line-height:1.65;color:var(--dimmer);margin:0;font-weight:300">{{ t.whatHappens }}</p>
+      <button onClick="{{ f4.reveal }}" title="{{ f4.title }}" aria-label="{{ f4.title }}" style="{{ f4.style }}">{{ f4.glyph }}</button>
+    </div>
+    <sc-if value="{{ f4.open }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ findBox }}">
+        <div style="{{ findLabelStyle }}">{{ f4.tag }}</div>
+        <p style="font-size:15.5px;line-height:1.6;color:var(--text);margin:0;font-weight:300">{{ f4.text }}</p>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ songOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:40px;border:1px solid var(--clarity-deep);border-radius:16px;padding:30px 32px;background:color-mix(in srgb,#22D3EE 5%,transparent);max-width:780px;animation:riseIn .4s ease both">
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--clarity);margin-bottom:12px">{{ t.songLabel }}</div>
+        <div style="font-size:22px;font-weight:500;letter-spacing:-0.025em;margin-bottom:10px">{{ t.songTitle }}</div>
+        <p style="font-size:15px;line-height:1.6;color:var(--dim);margin:0 0 22px;font-weight:300;max-width:560px">{{ t.songBody }}</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px">
+          <input value="{{ songDraft }}" onChange="{{ onSongInput }}" onKeyDown="{{ onSongKey }}" placeholder="{{ t.songPlaceholder }}" aria-label="{{ t.songPlaceholder }}" style="flex:1;min-width:280px;padding:12px 16px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:15px;font-weight:300;font-family:inherit" />
+          <button onClick="{{ addSong }}" style="padding:12px 22px;border-radius:10px;border:1px solid var(--clarity);background:transparent;color:var(--clarity);font-size:14.5px;font-weight:500">{{ t.songAdd }}</button>
+        </div>
+        <sc-if value="{{ hasSongs }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px">
+            <sc-for list="{{ songs }}" as="sg" hint-placeholder-count="2">
+              <span style="display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;border:1px solid var(--clarity-deep);color:#A5F3FC;font-size:13.5px">♪ {{ sg.label }}</span>
+            </sc-for>
+          </div>
+        </sc-if>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <a href="{{ t.playlistHref }}" style="font-size:14px;font-weight:500">{{ t.playlistLink }}</a>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ allFound }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:40px;border:1px solid var(--mind);border-radius:16px;padding:32px 34px;background:color-mix(in srgb,#8B7BF0 9%,transparent);max-width:780px;animation:popIn .5s ease both">
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#C7BFFA;margin-bottom:14px">{{ t.unlockedLabel }}</div>
+        <p style="font-size:19px;line-height:1.55;color:var(--text);margin:0 0 16px;font-weight:300;text-wrap:pretty">{{ t.unlockedBody }}</p>
+        <p style="font-size:15px;line-height:1.6;color:var(--dim);margin:0;font-weight:300">{{ t.unlockedTip }}</p>
+      </div>
+    </sc-if>
+  </div>
+</div>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const T = {
+  es: {
+    role: "Consultoría UX · Investigación · Diseño de servicios",
+    navCases: "Casos", navMethod: "Método", navAbout: "Sobre mí",
+    modeQuick: "Al grano", modeExplore: "Explorar",
+    modeTitle: "Al grano deja solo el trabajo: problema, decisión, resultado. Explorar añade los puzzles, las notas escondidas, la luz y el sonido. No se pierde información en ninguno.",
+    tutorialTitle: "Cómo se lee este portafolio",
+    letsTalk: "Hablemos", close: "Cerrar", curious: "Modo curioso",
+    curiousTitle: "Modo curioso — notas escondidas y ajustes de la página",
+    langTitle: "Cambia todo el contenido del portafolio entre español e inglés — no solo los menús. Los casos, las citas y las notas están escritos en los dos idiomas.",
+    panelIntro: "Hay ocho notas escondidas en la página: por qué tomé cada decisión de diseño, manías de trabajo y cosas que normalmente solo salen en una entrevista. Busca los puntos que laten.",
+    xray: "Quitar la capa de research", reduceMotion: "Reducir movimiento", resetFinds: "Empezar de nuevo",
+    foco: "Linterna", music: "Vals sintetizado", clearPaint: "Limpiar el fondo pintado",
+    pulse: "Latido en el rastro", spotifyRow: "Mi playlist en Spotify",
+    nowPlaying: "Suena ahora",
+    spotifyNote: "Cámbiala si no te gusta. Si te gusta, ábrela en Spotify — es mi playlist de trabajo real.",
+    spotifySrc: "https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgRdKQ?utm_source=generator&theme=0",
+    senseHint: "Nada de esto es decorado: la linterna existe porque todo proyecto tiene letra chica que nadie mira; el vals es el contexto emocional de trabajar; el fondo pintado dice que quien está del otro lado deja huella aunque no la vea.",
+    tutorialLink: "Ver el tour completo →",
+    playHint: "Hay tres puzzles repartidos entre las páginas (uno aquí, uno en Casos, uno en Sobre mí) y un canvas abierto al final de cada una para que dejes lo que pensaste.",
+    paintHint: "El fondo se pinta según la sección donde estés: violeta en lo que pienso, coral en los casos, cian en el método. Cada trazo se borra en menos de un segundo, así que el lienzo nunca se satura.",
+    ghost1: "Lo que no pongo en el CV: tardé dos años en aprender a decir “no sé todavía” en una reunión. Sigue siendo la frase más útil que tengo.",
+    ghost2: "Enciende la linterna y verás que este portafolio tiene más letra chica de la que muestra. Igual que un proyecto.",
+    ghost3: "Mi primer journey map lo hice en Excel porque no sabía que existía otra forma. Funcionó. Todavía creo que la herramienta importa menos de lo que decimos.",
+    puzzleLabel: "Ordena mi proceso",
+    puzzleHint: "Toca los seis pasos en el orden en que trabajo — del negocio a la métrica — y aparece la foto.",
+    puzzleWrong: "Ese no va ahí. Empieza otra vez.",
+    puzzleOf: " de 6. Sigue.",
+    puzzleSteps: ["Negocio", "Entrevistas", "Patrones", "Problema", "Prototipo", "Métrica"],
+    puzzleSolvedLabel: "Bien",
+    puzzleSolved: "Ese es el orden. Los seis pasos importan, pero el que casi nadie hace es el cuarto: enunciar el problema antes de dibujar nada.",
+    songLabel: "Descubrimiento", songTitle: "Déjame una canción",
+    songBody: "Si llegaste hasta aquí, te debo algo. Dime qué debería estar en mi playlist mientras trabajo — la escucho de verdad.",
+    songPlaceholder: "Canción y artista", songAdd: "Sumar", songThanks: "Anotada. Gracias.",
+    playlistLink: "Abrir mi playlist en Spotify →", playlistHref: "https://open.spotify.com/",
+    on: "Activado", off: "Desactivado",
+    panelKeys: "Teclas: X research · F linterna · S vals · P playlist · M movimiento · L idioma · ? este panel.",
+    introLineA: "Antes de la pantalla,", introLineB: "hay alguien pensando.",
+    introHint: "Pulsa cualquier tecla para entrar",
+    location: "Bogotá · Remoto global",
+    heroA: "Antes de la pantalla, hay", heroB: "una persona",
+    heroThinking: "pensando", heroAnd: "y", heroFeeling: "sintiendo", heroTail: "algo.",
+    heroSub: "Soy Emilio. Investigo esa parte: qué entiende alguien, qué le da miedo, dónde se rinde. Ahí está casi siempre el problema del negocio — y la solución que sí se usa.",
+    heroFindHint: "Los puntos que laten esconden notas mías. Encuentra las ocho.",
+    seeCases: "Ver los casos", readEmotion: "Qué leo en una emoción",
+    mapTitle: "Una emoción es un dato de negocio", mapHint: "Toca una emoción",
+    mapSub: "Los usuarios rara vez dicen \u201Cel flujo tiene un problema\u201D. Dicen que se cansaron, que no entendieron, que prefirieron llamar. Mi trabajo es traducir eso a una decisión que alguien pueda tomar el lunes.",
+    mapFoot: "Cinco señales que aparecen en casi todo proyecto. Cada una apunta a un costo o a una oportunidad concreta. Mantén pulsada una para leer la cita original.",
+    whatYouSee: "Lo que se ve", whatItMeans: "Lo que significa", whatIDo: "Lo que hago con eso",
+    originalQuote: "Cita original", seenIn: "Visto en",
+    casesTitle: "Tres casos, tres decisiones difíciles",
+    casesHint: "Insight → Decisión → Resultado. Y la evidencia debajo.",
+    xrayOn: "Devolver la capa de research", xrayOff: "Quitar la capa de research",
+    xrayHintOff: "Un botón honesto: apaga los insights y déjame solo el \u201Cantes y después\u201D. Es como se ve la mayoría de los portafolios.",
+    xrayHintOn: "Esto es lo que queda sin research: pantallas bonitas y ninguna razón. Vuelve a encenderlo.",
+    xrayNote: "Sin el insight, este caso es \u201Chicimos una web nueva\u201D. La decisión no se puede defender y el resultado parece suerte.",
+    emotionBehind: "La emoción detrás", readFull: "Leer el caso completo →",
+    evOpen: "Ver la evidencia y lo que descarté", evClose: "Cerrar la evidencia",
+    prev: "Imagen anterior", next: "Imagen siguiente", slide: "Imagen",
+    methodTitle: "Cómo trabajo",
+    methodSub: "La consultoría me enseñó que la fricción vive en los procesos y en la comunicación, no en el botón. Así que empiezo ahí — y termino con una métrica que alguien más pueda defender.",
+    aiTitle: "IA como aliada",
+    aiBody: "La uso para sintetizar entrevistas, explorar variantes y automatizar lo repetitivo — para gastar el tiempo en analizar y decidir, que es donde aporto.",
+    aboutTitleA: "Curioso de oficio,", aboutTitleB: "estratega por costumbre.",
+    aboutP1: "Soy diseñador interactivo de la Universidad Jorge Tadeo Lozano. Pude ser economista o dedicarme a las ventas; elegí un camino donde la curiosidad se paga sola.",
+    aboutP2: "Trabajo mejor cuando puedo preguntar mucho antes de proponer algo. Me interesan los proyectos donde nadie tiene todavía claro cuál es el problema.",
+    proof: [
+      { n: "+15%", l: "en ventas y permanencia de clientes (Ropofy)" },
+      { n: "30%", l: "más eficiencia de navegación (ETB, 500+ usuarios/mes)" },
+      { n: "2.º lugar", l: "TechSprint del BID 2024" },
+      { n: "3 a 6+ meses", l: "duración de las implementaciones que documento hoy" }
+    ],
+    processPh: "Foto de proceso sobre fondo oscuro — taller, entrevista, pizarra",
+    aboutMore: "Toda la historia: trayectoria, formación y hoja de vida →",
+    ctaTitle: "¿Tienes un problema que todavía nadie sabe enunciar?",
+    ctaSub: "Esa es exactamente la parte que me gusta. Elige el canal que te quede más cómodo.",
+    waLabel: "Lo más rápido", waTitle: "WhatsApp · +57 314 254 3651", waHref: "https://wa.me/573142543651", liHref: "https://www.linkedin.com/in/emilio-romero-gutierrez", waBody: "Escríbeme directo. Contesto el mismo día — después de Ropofy no puedo permitirme lo contrario.",
+    cvEs: "CV en español ↓", cvEn: "CV in English ↓",
+    mailLabel: "Para algo con detalle", mailBody: "Si ya tienes un brief o un documento, mándalo por aquí y lo leo antes de responder.",
+    liLabel: "Para revisar antes", liBody: "Perfil, recomendaciones y el CV en PDF si necesitas pasarlo a alguien más.",
+    whatHappens: "Qué pasa después: te respondo con dos o tres preguntas antes de proponer nada. Si el problema no es de UX, te lo digo — y te digo qué sí creo que es.",
+    unlockedLabel: "Ocho de ocho",
+    unlockedBody: "Encontraste las ocho notas. Nadie te pidió hacerlo — y eso es exactamente la clase de curiosidad que busco en la gente con la que trabajo.",
+    unlockedTip: "Si llegaste hasta aquí, escríbeme y menciona la palabra \u201Cocho\u201D. Sabré con quién estoy hablando.",
+    findHint: "Nota escondida", findLabel: "Nota de Emilio", findFound: "Encontraste una nota",
+    progress: ["Aún no has abierto ninguna. Los puntos laten.", "Vas empezando. Quedan siete.", "Dos. Hay más en los casos.", "Tres. El método y el contacto también esconden.", "Cuatro, la mitad.", "Cinco. Faltan tres.", "Seis. Estás cerca.", "Siete. Falta una.", "Las ocho. Baja al final de la página."],
+    steps: [
+      ["01", "Entender el negocio", "Objetivos, procesos, quién decide y qué se mide. Antes de hablar de pantallas.", "clarity"],
+      ["02", "Escuchar de verdad", "Entrevistas y observación. Registro lo que se dice, lo que se evita y lo que se hace de otra forma.", "mind"],
+      ["03", "Traducir a decisiones", "Un problema bien enunciado y una lista corta. Lo demás se documenta y se deja ir.", "feel"],
+      ["04", "Validar y medir", "Pruebas con usuarios reales y una métrica acordada antes de empezar.", "clarity"]
+    ],
+    skills: ["Entrevistas", "Desk research", "Journey maps", "Usability testing", "Diseño de servicios", "Figma", "Power BI", "Adobe Workfront"],
+    finds: [
+      ["Por qué esta frase y no \u201CUX Designer\u201D", "Cambié el titular tres veces. \u201CUX Designer\u201D describe un puesto; esto describe una creencia. Si alguien no está de acuerdo con la frase, probablemente tampoco quiera contratarme — y eso también ahorra tiempo a los dos."],
+      ["Este bloque es un truco de entrevista", "Cuando explico mi trabajo en una llamada, siempre acabo dibujando esto: la emoción a la izquierda, la decisión de negocio a la derecha. Lo puse interactivo porque leerlo no convence; probarlo sí."],
+      ["Cuatro pasos, no siete", "Tenía un método de siete pasos y lo usaba nadie, ni yo. Un proceso que no se recuerda no se puede contratar. Los tres que quité no eran malos: eran los que nunca hacía igual dos veces."],
+      ["La verdad sobre la curiosidad", "Pregunto demasiado. En mi primer trabajo me lo dijeron como defecto y tardé años en entenderlo como herramienta. Todavía me cuesta callarme cuando algo no me cuadra — ya dejé de intentarlo."],
+      ["Yo también odio los formularios de contacto", "Por eso no hay ninguno. Tres canales, todos directos, y ninguno pide tu cargo ni el tamaño de tu empresa antes de dejarte hablar."],
+      ["Ropofy: la conversación difícil", "A los dos meses tuve que decirle al cliente que le estaba cobrando por lo equivocado. Rediseñar la web no iba a mover su número. Fue incómodo y fue el momento en que el proyecto empezó a servir."],
+      ["QStrauss: lo que no puedo mostrar", "Este caso tiene NDA, así que no hay capturas — solo un diagrama que dibujé yo. Prefiero un caso honesto sin imágenes que uno ilustrado con material que no debería estar aquí."],
+      ["BID: perdimos y está bien", "Quedamos segundos. El equipo ganador tenía mejor demo; nosotros teníamos mejor pregunta. Lo pongo en el portafolio porque el segundo lugar con criterio enseña más que un primero con suerte."]
+    ]
+  },
+  en: {
+    role: "UX consulting · Research · Service design",
+    navCases: "Cases", navMethod: "Method", navAbout: "About",
+    modeQuick: "Quick read", modeExplore: "Explore",
+    modeTitle: "Quick read keeps only the work: problem, decision, result. Explore adds the puzzles, hidden notes, light and sound. Neither one loses information.",
+    tutorialTitle: "How to read this portfolio",
+    letsTalk: "Let's talk", close: "Close", curious: "Curious mode",
+    curiousTitle: "Curious mode — hidden notes and page settings",
+    langTitle: "Switches all the portfolio's content between Spanish and English — not just the menus. The cases, quotes and notes are written in both languages.",
+    panelIntro: "There are eight notes hidden across the page: why I made each design decision, working habits, and things that normally only come up in an interview. Look for the pulsing dots.",
+    xray: "Strip the research layer", reduceMotion: "Reduce motion", resetFinds: "Start over",
+    foco: "Flashlight", music: "Synthesised waltz", clearPaint: "Clear the painted background",
+    pulse: "Heartbeat in the trail", spotifyRow: "My Spotify playlist",
+    nowPlaying: "Now playing",
+    spotifyNote: "Skip it if you don't like it. If you do, open it in Spotify — it's my real working playlist.",
+    spotifySrc: "https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgRdKQ?utm_source=generator&theme=0",
+    senseHint: "None of this is decoration: the flashlight exists because every project has fine print nobody reads; the waltz is the emotional context of working; the painted background says the person on the other side leaves a mark even when they can't see it.",
+    tutorialLink: "See the full tour →",
+    playHint: "There are three puzzles across the pages (one here, one in Cases, one in About) and an open canvas at the end of each, for whatever you thought.",
+    paintHint: "The background paints itself by section: violet where I think, coral in the cases, cyan in the method. Every stroke fades in under a second, so the canvas never saturates.",
+    ghost1: "What's not on my CV: it took me two years to learn to say “I don't know yet” in a meeting. It's still the most useful sentence I have.",
+    ghost2: "Switch the flashlight on and you'll find this portfolio has more fine print than it shows. Same as any project.",
+    ghost3: "I built my first journey map in Excel because I didn't know there was another way. It worked. I still think the tool matters less than we say.",
+    puzzleLabel: "Put my process in order",
+    puzzleHint: "Tap the six steps in the order I work — from business to metric — and the photo appears.",
+    puzzleWrong: "That one doesn't go there. Start again.",
+    puzzleOf: " of 6. Keep going.",
+    puzzleSteps: ["Business", "Interviews", "Patterns", "Problem", "Prototype", "Metric"],
+    puzzleSolvedLabel: "Right",
+    puzzleSolved: "That's the order. All six matter, but the one almost nobody does is the fourth: state the problem before drawing anything.",
+    songLabel: "A discovery", songTitle: "Leave me a song",
+    songBody: "If you got this far, I owe you something. Tell me what should be on my working playlist — I actually listen to it.",
+    songPlaceholder: "Song and artist", songAdd: "Add", songThanks: "Noted. Thank you.",
+    playlistLink: "Open my playlist on Spotify →", playlistHref: "https://open.spotify.com/",
+    on: "On", off: "Off",
+    panelKeys: "Keys: X research · F flashlight · S waltz · P playlist · M motion · L language · ? this panel.",
+    introLineA: "Before the screen,", introLineB: "there's someone thinking.",
+    introHint: "Press any key to enter",
+    location: "Bogotá · Remote worldwide",
+    heroA: "Before the screen, there's", heroB: "a person",
+    heroThinking: "thinking", heroAnd: "and", heroFeeling: "feeling", heroTail: "something.",
+    heroSub: "I'm Emilio. I research that part: what someone understands, what scares them, where they give up. That's almost always where the business problem lives — and the solution people actually use.",
+    heroFindHint: "The pulsing dots hide notes of mine. Find all eight.",
+    seeCases: "See the cases", readEmotion: "What I read in an emotion",
+    mapTitle: "An emotion is business data", mapHint: "Tap an emotion",
+    mapSub: "Users rarely say \u201Cthe flow has a problem\u201D. They say they got tired, they didn't understand, they'd rather call. My job is to translate that into a decision someone can act on Monday morning.",
+    mapFoot: "Five signals that show up in almost every project. Each one points at a concrete cost or opportunity. Press and hold one to read the original quote.",
+    whatYouSee: "What you see", whatItMeans: "What it means", whatIDo: "What I do with it",
+    originalQuote: "Original quote", seenIn: "Seen in",
+    casesTitle: "Three cases, three hard decisions",
+    casesHint: "Insight → Decision → Outcome. With the evidence underneath.",
+    xrayOn: "Put the research layer back", xrayOff: "Strip the research layer",
+    xrayHintOff: "An honest button: switch the insights off and leave only the before-and-after. That's how most portfolios look.",
+    xrayHintOn: "This is what's left without research: pretty screens and no reasons. Switch it back on.",
+    xrayNote: "Without the insight, this case reads as \u201Cwe built a new website\u201D. The decision can't be defended and the outcome looks like luck.",
+    emotionBehind: "The emotion behind it", readFull: "Read the full case →",
+    evOpen: "See the evidence and what I ruled out", evClose: "Hide the evidence",
+    prev: "Previous image", next: "Next image", slide: "Image",
+    methodTitle: "How I work",
+    methodSub: "Consulting taught me that friction lives in processes and communication, not in the button. So I start there — and finish with a metric someone else can defend.",
+    aiTitle: "AI as an ally",
+    aiBody: "I use it to synthesise interviews, explore variants and automate the repetitive — so the time goes into analysing and deciding, which is where I add value.",
+    aboutTitleA: "Curious by trade,", aboutTitleB: "strategist by habit.",
+    aboutP1: "I'm an interactive designer from Universidad Jorge Tadeo Lozano. I could have gone into economics or sales; I chose a path where curiosity pays for itself.",
+    aboutP2: "I work best when I get to ask a lot before proposing anything. I'm drawn to projects where nobody is yet clear on what the problem is.",
+    proof: [
+      { n: "+15%", l: "in sales and customer retention (Ropofy)" },
+      { n: "30%", l: "better navigation efficiency (ETB, 500+ users/month)" },
+      { n: "2nd place", l: "IDB TechSprint 2024" },
+      { n: "3 to 6+ months", l: "length of the implementations I document today" }
+    ],
+    processPh: "Process photo on a dark background — workshop, interview, whiteboard",
+    aboutMore: "The whole story: track record, education and CV →",
+    ctaTitle: "Got a problem nobody can quite name yet?",
+    ctaSub: "That's exactly the part I enjoy. Pick whichever channel suits you.",
+    waLabel: "Fastest", waTitle: "WhatsApp · +57 314 254 3651", waHref: "https://wa.me/573142543651", liHref: "https://www.linkedin.com/in/emilio-romero-gutierrez", waBody: "Message me directly. I reply the same day — after Ropofy I can't afford to do otherwise.",
+    cvEs: "CV in Spanish ↓", cvEn: "CV in English ↓",
+    mailLabel: "For something detailed", mailBody: "If you already have a brief or a document, send it here and I'll read it before replying.",
+    liLabel: "To check me out first", liBody: "Profile, recommendations, and the CV as a PDF if you need to pass it along.",
+    whatHappens: "What happens next: I reply with two or three questions before proposing anything. If the problem isn't a UX one, I'll tell you — and tell you what I think it actually is.",
+    unlockedLabel: "Eight of eight",
+    unlockedBody: "You found all eight notes. Nobody asked you to — and that's exactly the kind of curiosity I look for in the people I work with.",
+    unlockedTip: "If you made it this far, write to me and mention the word \u201Ceight\u201D. I'll know who I'm talking to.",
+    findHint: "Hidden note", findLabel: "Note from Emilio", findFound: "You found a note",
+    progress: ["You haven't opened any yet. The dots are pulsing.", "You're off. Seven to go.", "Two. There are more in the cases.", "Three. The method and contact hide some too.", "Four — halfway.", "Five. Three left.", "Six. You're close.", "Seven. One to go.", "All eight. Scroll to the bottom of the page."],
+    steps: [
+      ["01", "Understand the business", "Goals, processes, who decides and what gets measured. Before any talk of screens.", "clarity"],
+      ["02", "Listen properly", "Interviews and observation. I record what's said, what's avoided, and what's done another way.", "mind"],
+      ["03", "Translate into decisions", "One well-framed problem and a short list. The rest gets documented and let go.", "feel"],
+      ["04", "Validate and measure", "Testing with real users and a metric agreed before we start.", "clarity"]
+    ],
+    skills: ["Interviews", "Desk research", "Journey maps", "Usability testing", "Service design", "Figma", "Power BI", "Adobe Workfront"],
+    finds: [
+      ["Why this line and not \u201CUX Designer\u201D", "I rewrote this headline three times. \u201CUX Designer\u201D describes a job title; this describes a belief. If someone disagrees with the line they probably don't want to hire me either — which saves us both time."],
+      ["This block is an interview trick", "Whenever I explain my work on a call I end up drawing this: the emotion on the left, the business decision on the right. I made it interactive because reading it doesn't convince anyone; trying it does."],
+      ["Four steps, not seven", "I had a seven-step method and nobody used it, including me. A process you can't remember can't be hired. The three I cut weren't bad: they were the ones I never did the same way twice."],
+      ["The truth about the curiosity", "I ask too much. In my first job it was framed as a flaw and it took me years to understand it as a tool. I still struggle to stay quiet when something doesn't add up — I've stopped trying."],
+      ["I hate contact forms too", "Which is why there isn't one. Three channels, all direct, and none of them ask for your job title or company size before letting you speak."],
+      ["Ropofy: the hard conversation", "Two months in I had to tell the client I was charging them for the wrong thing. Redesigning the site wasn't going to move their number. It was uncomfortable, and it's the moment the project started to be useful."],
+      ["QStrauss: what I can't show", "This case is under NDA, so there are no screenshots — only a diagram I drew myself. I'd rather have an honest case with no images than one illustrated with material that shouldn't be here."],
+      ["IDB: we lost, and that's fine", "We came second. The winning team had the better demo; we had the better question. It's in the portfolio because second place with judgement teaches more than first place with luck."]
+    ]
+  }
+};
+
+const EMOTIONS = [
+  {
+    key: "espera", hue: "#F0466B", deep: "#4A1B2C", caseRef: "Ropofy",
+    es: { label: "Espera", cue: "\u201CEscribí y me contestaron tres días después.\u201D", signal: "El silencio se interpreta como desinterés. La persona ya decidió antes de que respondas.", move: "Mido el tiempo real de respuesta por canal y rediseño el flujo alrededor del contacto, no del catálogo.", raw: "\u201CYo ya estaba lista para comprar. Lo que me hizo dudar fue el silencio, no el precio.\u201D — cliente, entrevista 4" },
+    en: { label: "Waiting", cue: "\u201CI wrote and they got back to me three days later.\u201D", signal: "Silence reads as indifference. The person has already decided before you reply.", move: "I measure real response time per channel and rebuild the flow around getting in touch, not around the catalogue.", raw: "\u201CI was ready to buy. What made me hesitate was the silence, not the price.\u201D — customer, interview 4" }
+  },
+  {
+    key: "confusion", hue: "#8B7BF0", deep: "#2A2352", caseRef: "BID",
+    es: { label: "Confusión", cue: "\u201CTengo toda la información y aun así no sé qué elegir.\u201D", signal: "El problema no es acceso, es legibilidad. La decisión se toma fuera del sistema, en un papel.", move: "Dejo de digitalizar documentos y diseño la comparación: los criterios de decisión en una sola vista.", raw: "\u201CSí está todo, pero no me sirve así. Yo necesito verlo lado a lado.\u201D — funcionaria de compras" },
+    en: { label: "Confusion", cue: "\u201CI have all the information and still don't know what to choose.\u201D", signal: "The problem isn't access, it's legibility. The decision happens outside the system, on paper.", move: "I stop digitising documents and design the comparison: the decision criteria in a single view.", raw: "\u201CIt's all there, but not in a way I can use. I need to see it side by side.\u201D — procurement officer" }
+  },
+  {
+    key: "incertidumbre", hue: "#22D3EE", deep: "#123A4A", caseRef: "QStrauss",
+    es: { label: "Incertidumbre", cue: "\u201CNo sé cómo quedó configurado lo nuestro ni a quién preguntarle.\u201D", signal: "Sin un lugar donde viva la respuesta, cada duda vuelve al consultor. El cliente no avanza solo.", move: "Convierto la documentación en producto: dominios reutilizables que responden antes de que pregunten.", raw: "\u201CTengo un Excel aparte porque en el sistema no confío.\u201D — coordinadora de operaciones" },
+    en: { label: "Uncertainty", cue: "\u201CI don't know how ours ended up configured, or who to ask.\u201D", signal: "With no place for the answer to live, every question comes back to the consultant. The client can't move alone.", move: "I turn documentation into a product: reusable domains that answer before anyone asks.", raw: "\u201CI keep a separate spreadsheet because I don't trust the system.\u201D — operations coordinator" }
+  },
+  {
+    key: "sobrecarga", hue: "#8B7BF0", deep: "#2A2352", caseRef: "QStrauss",
+    es: { label: "Sobrecarga", cue: "\u201CPara hacer esto tengo que abrir cuatro herramientas.\u201D", signal: "El costo no aparece en ningún reporte, pero se paga todos los días en horas del equipo.", move: "Mapeo la operación real, no la documentada, y elimino pasos antes de automatizar nada.", raw: "\u201CCada vez que entra alguien nuevo, la capacitación se dicta otra vez desde cero.\u201D — líder de implementación" },
+    en: { label: "Overload", cue: "\u201CTo do this I have to open four different tools.\u201D", signal: "The cost shows up in no report, but it's paid every day in the team's hours.", move: "I map the real operation, not the documented one, and remove steps before automating anything.", raw: "\u201CEvery time someone new joins, the training gets delivered from scratch again.\u201D — implementation lead" }
+  },
+  {
+    key: "alivio", hue: "#22D3EE", deep: "#123A4A", caseRef: "Ropofy · +15%",
+    es: { label: "Alivio", cue: "\u201CYa no necesito preguntarle a nadie para hacerlo.\u201D", signal: "La señal de que funcionó. Adopción real, no capacitación repetida.", move: "Es la métrica que acuerdo al inicio: menos soporte, más permanencia, más repetición.", raw: "\u201CAhora entro, veo y pido. Ya no tengo que escribirle a nadie.\u201D — cliente recurrente" },
+    en: { label: "Relief", cue: "\u201CI don't need to ask anyone to get this done anymore.\u201D", signal: "The sign that it worked. Real adoption, not repeated training.", move: "It's the metric I agree on at the start: less support, more retention, more repeat business.", raw: "\u201CNow I log in, look and order. I don't have to write to anyone.\u201D — repeat customer" }
+  }
+];
+
+const CHIP = {
+  clarity: "padding:5px 11px;border-radius:6px;background:var(--clarity-deep);color:#A5F3FC;font-size:11.5px;font-weight:500",
+  mind: "padding:5px 11px;border-radius:6px;background:var(--mind-deep);color:#C7BFFA;font-size:11.5px;font-weight:500",
+  feel: "padding:5px 11px;border-radius:6px;background:var(--feel-deep);color:#FCA5B8;font-size:11.5px;font-weight:500",
+  line: "padding:5px 11px;border-radius:6px;border:1px solid var(--line);color:var(--dim);font-size:11.5px;font-weight:500"
+};
+
+const CASES = [
+  {
+    key: "ropofy", flip: false, findIdx: 5,
+    shots: [
+      { id: "m-ropofy-1", src: "assets/diag/ropofy-despues.svg", es: ["Esquema de la arquitectura después", "La home después: el contacto es parte del recorrido."], en: ["Redesigned architecture diagram", "The home after: contact is part of the journey."] },
+      { id: "m-ropofy-2", src: "assets/diag/ropofy-antes.svg", es: ["Esquema del sitio original antes del rediseño", "Antes: el catálogo al frente, el contacto al final."], en: ["Ropofy — original site before the redesign", "Before: catalogue up front, contact at the very end."] },
+      { id: "m-ropofy-3", src: "assets/diag/ropofy-flujo.svg", es: ["Diagrama de los tres canales entrando a una bandeja", "El flujo que ordenó WhatsApp, web e Instagram."], en: ["Diagram of three channels feeding one inbox", "The flow that put WhatsApp, web and Instagram in order."] }
+    ],
+    es: {
+      chips: [["SaaS · CRM", "clarity"], ["Diseño + Consultoría", "line"], ["Caso principal", "feel"]],
+      title: "Ropofy · Del rediseño a la estrategia",
+      lede: "Me contrataron para rediseñar la web. A los pocos meses el encargo cambió solo: el sitio no era el cuello de botella — la espera del cliente sí lo era.",
+      rows: [
+        ["Insight", "Las consultas entraban por WhatsApp, web e Instagram a la vez y se perdían entre canales. El abandono no pasaba en el checkout: pasaba en la espera.", "insight"],
+        ["Decisión", "Rediseñé la web alrededor del contacto, no del catálogo, y pasé a acompañar la estrategia para que ninguna conversación quedara suelta.", "insight"],
+        ["Resultado", "+15% en ventas y permanencia de clientes. La empresa alcanzó su curva de estabilización.", "win"]
+      ],
+      tags: [["Espera", "feel"], ["Desconfianza", "line"], ["→ Hábito", "clarity"]],
+      method: "Método: 6 entrevistas a clientes recientes y revisión de tres meses de conversaciones entrantes, canal por canal.",
+      quote: "\u201CEscribí el viernes y me contestaron el martes. Ya había comprado en otro lado.\u201D",
+      discard: "Lo que descarté: un chatbot. La empresa no tenía el volumen para justificarlo y habría añadido una espera más — con una respuesta menos útil."
+    },
+    en: {
+      chips: [["SaaS · CRM", "clarity"], ["Design + Consulting", "line"], ["Lead case", "feel"]],
+      title: "Ropofy · From redesign to strategy",
+      lede: "They hired me to redesign the website. Within months the brief changed on its own: the site wasn't the bottleneck — the customer's wait was.",
+      rows: [
+        ["Insight", "Enquiries arrived via WhatsApp, web and Instagram at once and got lost between channels. Drop-off wasn't at checkout: it was in the wait.", "insight"],
+        ["Decision", "I rebuilt the site around getting in touch rather than the catalogue, then stayed on to shape the strategy so no conversation was left loose.", "insight"],
+        ["Outcome", "+15% in sales and customer retention. The company reached its stabilisation curve.", "win"]
+      ],
+      tags: [["Waiting", "feel"], ["Distrust", "line"], ["→ Habit", "clarity"]],
+      method: "Method: 6 interviews with recent customers and a review of three months of inbound conversations, channel by channel.",
+      quote: "\u201CI wrote on Friday and they replied on Tuesday. I'd already bought elsewhere.\u201D",
+      discard: "What I ruled out: a chatbot. The company didn't have the volume to justify it and it would have added one more wait — with a less useful answer."
+    }
+  },
+  {
+    key: "qstrauss", flip: true, findIdx: 6,
+    shots: [
+      { id: "m-qstrauss-1", src: "assets/diag/qs-flujo.svg", es: ["Diagrama de flujo del caso (sin NDA)", "El ciclo que se rompió: de la sesión repetida al material que se produce una vez."], en: ["Case flow diagram (NDA-safe)", "The cycle that broke: from repeated session to material produced once."] },
+      { id: "m-qstrauss-2", src: "assets/diag/qs-nav-despues.svg", es: ["Esquema de la navegación consolidada — sin datos reales", "La navegación consolidada en dos niveles."], en: ["Redrawn Custom Canvas wireframe — no real data", "Navigation consolidated into two levels."] },
+      { id: "m-qstrauss-3", src: "assets/diag/qs-dominios.svg", es: ["Esquema del sistema de dominios y slots", "Los bloques que se producen una vez y se adaptan por cliente."], en: ["Diagram of the domain and slot system", "Blocks produced once and adapted per client."] }
+    ],
+    es: {
+      chips: [["Consultoría · Enterprise", "mind"], ["Diseño de servicios", "line"], ["Actualidad", "line"]],
+      title: "QStrauss · La documentación como producto",
+      lede: "Entregábamos la plataforma configurada y el conocimiento se quedaba con nosotros. Meses después, el cliente seguía llamando para preguntar cómo funcionaba lo que ya tenía.",
+      rows: [
+        ["Insight", "Las dudas se repetían dentro del mismo cliente, con los mismos equipos. No era un problema de configuración: era de transferencia de conocimiento.", "insight"],
+        ["Decisión", "Tratar la documentación como un sistema reutilizable de dominios y slots, no como un anexo que se escribe al final de cada proyecto.", "insight"],
+        ["Resultado", "Menos horas en capacitaciones y aclaraciones dentro de implementaciones de 3 a más de 6 meses.", "win"]
+      ],
+      tags: [["Dependencia", "feel"], ["Reproceso", "line"], ["→ Autonomía", "clarity"]],
+      method: "Método: auditoría de la herramienta interna de documentación y revisión de las sesiones y preguntas que se repetían tras la entrega.",
+      quote: "\u201CNo sabemos cómo quedó configurado lo nuestro ni a quién preguntarle.\u201D",
+      discard: "Lo que descarté: empezar por rediseñar los componentes. El desorden se veía ahí, pero vivía en el sistema de espaciado y color."
+    },
+    en: {
+      chips: [["Consulting · Enterprise", "mind"], ["Service design", "line"], ["Current work", "line"]],
+      title: "QStrauss · Documentation as a product",
+      lede: "We delivered the platform configured and the knowledge stayed with us. Months later the client was still calling to ask how the thing they already owned worked.",
+      rows: [
+        ["Insight", "The same questions repeated within the same client, with the same teams. Not a configuration problem: a knowledge-transfer one.", "insight"],
+        ["Decision", "Treat documentation as a reusable system of domains and slots, not as an appendix written at the end of each project.", "insight"],
+        ["Outcome", "Fewer hours on training and clarifications inside implementations running 3 to 6+ months.", "win"]
+      ],
+      tags: [["Dependency", "feel"], ["Rework", "line"], ["→ Autonomy", "clarity"]],
+      method: "Method: an audit of the internal documentation tool and a review of the sessions and questions that kept repeating after delivery.",
+      quote: "\u201CWe don't know how ours ended up configured, or who to ask.\u201D",
+      discard: "What I ruled out: starting by redesigning the components. The disorder showed there, but it lived in the spacing and colour system."
+    }
+  },
+  {
+    key: "bid", flip: false, findIdx: 7,
+    shots: [
+      { id: "m-bid-1", src: "assets/diag/bid-comparacion.svg", es: ["Wireframe de la vista de comparación", "Oferentes, montos y productos en una sola pantalla."], en: ["Tender comparison view", "Bidders, amounts and products on one screen."] },
+      { id: "m-bid-2", src: "assets/diag/bid-detalle.svg", es: ["Detalle de un oferente", "El documento, un clic más abajo, para citar la fuente."], en: ["Detail of one bidder", "The document, one click deeper, for citing the source."] },
+      { id: "m-bid-3", src: "assets/diag/bid-flujo.svg", es: ["Flujo de evaluación: buscar → comparar → sustentar", "El recorrido completo de una decisión auditable."], en: ["Evaluation flow: search → compare → justify", "The full journey of an auditable decision."] }
+    ],
+    es: {
+      chips: [["Fintech público", "mind"], ["UX/UI Designer", "line"]],
+      title: "BID · Transparencia en compras públicas",
+      lede: "Los funcionarios tenían toda la información de una licitación — y aun así no podían compararla. El problema no era acceso, era legibilidad.",
+      rows: [
+        ["Insight", "Nadie leía los PDF completos: comparaban de memoria entre pestañas. La decisión ocurría fuera del sistema.", "insight"],
+        ["Decisión", "Dejamos de digitalizar documentos y diseñamos la comparación: oferentes, montos y productos en una sola vista.", "insight"],
+        ["Resultado", "2.º lugar del Techsprint, con mención por democratización de datos.", "win"]
+      ],
+      tags: [["Sobrecarga", "feel"], ["Miedo a equivocarse", "line"], ["→ Criterio", "clarity"]],
+      method: "Método: acompañamiento del proceso real de evaluación con funcionarios de compras, más benchmark de portales de contratación de la región.",
+      quote: "\u201CAbro las tres propuestas en pestañas y anoto en un papel. El sistema no me deja comparar.\u201D",
+      discard: "Lo que descarté: un ranking automático. Una puntuación oculta el criterio y traslada la responsabilidad a un algoritmo."
+    },
+    en: {
+      chips: [["Public fintech", "mind"], ["UX/UI Designer", "line"]],
+      title: "IDB · Transparency in public procurement",
+      lede: "Officers had every piece of information about a tender — and still couldn't compare it. The problem wasn't access, it was legibility.",
+      rows: [
+        ["Insight", "Nobody read the full PDFs: they compared from memory across tabs. The decision happened outside the system.", "insight"],
+        ["Decision", "We stopped digitising documents and designed the comparison: bidders, amounts and products in a single view.", "insight"],
+        ["Outcome", "2nd place in the Techsprint, with a mention for data democratisation.", "win"]
+      ],
+      tags: [["Overload", "feel"], ["Fear of getting it wrong", "line"], ["→ Judgement", "clarity"]],
+      method: "Method: shadowing the real evaluation process with procurement officers, plus a benchmark of procurement portals across the region.",
+      quote: "\u201CI open the three proposals in tabs and write on paper. The system won't let me compare.\u201D",
+      discard: "What I ruled out: an automatic ranking. A score hides the criteria and shifts responsibility onto an algorithm."
+    }
+  }
+];
+
+const STEP_HUE = { clarity: "var(--clarity)", mind: "var(--mind)", feel: "var(--feel)" };
+const TOTAL = 8;
+
+class Component extends DCLogic {
+  state = {
+    lang: (() => { try { return localStorage.getItem("em-lang") === "en" ? "en" : "es"; } catch (e) { return "es"; } })(),
+    found: (() => { try { return JSON.parse(localStorage.getItem("em-found") || "[]"); } catch (e) { return []; } })(),
+    mode: (() => { try { return localStorage.getItem("em-mode") === "grano" ? "grano" : "explorar"; } catch (e) { return "explorar"; } })(),
+    sel: 0, open: {}, shot: {}, still: false, panel: false, xray: false, raw: false, prog: 0,
+    foco: false, music: false, spotify: false, pulse: true, hue: null, songDraft: "",
+    songs: (() => { try { return JSON.parse(localStorage.getItem("em-songs") || "[]"); } catch (e) { return []; } })(),
+    toast: false, toastText: "",
+    intro: (() => { try { return !sessionStorage.getItem("em-intro"); } catch (e) { return true; } })()
+  };
+
+  componentDidMount() {
+    try { sessionStorage.setItem("em-intro", "1"); } catch (e) {}
+    if (this.state.intro) this._t = setTimeout(() => this.setState({ intro: false }), 2800);
+    try {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) this.setState({ still: true, intro: false });
+    } catch (e) {}
+    this._key = ev => {
+      const el = ev.target;
+      if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) return;
+      const k = ev.key;
+      if (k === "?") this.setState(p => ({ panel: !p.panel }));
+      else if (k === "Escape") this.setState({ panel: false, intro: false });
+      else if (k === "m" || k === "M") this.setState(p => ({ still: !p.still }));
+      else if (k === "x" || k === "X") this.setState(p => ({ xray: !p.xray }));
+      else if (k === "l" || k === "L") this.setLang(this.state.lang === "es" ? "en" : "es");
+      else if (k === "f" || k === "F") this.setState(p => ({ foco: !p.foco }));
+      else if (k === "s" || k === "S") this.toggleMusic();
+      else if (k === "p" || k === "P") this.setState(p => ({ spotify: !p.spotify, music: false }));
+      else if (this.state.intro) this.setState({ intro: false });
+    };
+    this._scroll = () => {
+      const d = document.documentElement;
+      this.setState({ prog: d.scrollTop / Math.max(1, d.scrollHeight - d.clientHeight) });
+    };
+    this._page = document.getElementById("page");
+    this._cv = document.getElementById("em-paint");
+    this.fitCanvas();
+    this._move = ev => {
+      const x = ev.clientX, y = ev.clientY;
+      if (this._page) {
+        this._page.style.setProperty("--mx", x + "px");
+        this._page.style.setProperty("--my", y + "px");
+      }
+      if (this._pts.length < 44) this._pts.push({ x: x, y: y, r: 55 + Math.random() * 75 });
+    };
+    this._fit = () => this.fitCanvas();
+    document.addEventListener("keydown", this._key);
+    window.addEventListener("pointermove", this._move, { passive: true });
+    window.addEventListener("resize", this._fit);
+    window.addEventListener("scroll", this._scroll, { passive: true });
+    this._raf = requestAnimationFrame(this.paintFrame);
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this._t); clearTimeout(this._hold); clearTimeout(this._toast);
+    document.removeEventListener("keydown", this._key);
+    window.removeEventListener("pointermove", this._move);
+    window.removeEventListener("resize", this._fit);
+    window.removeEventListener("scroll", this._scroll);
+    cancelAnimationFrame(this._raf);
+    this.stopMusic();
+  }
+
+  setLang(lang) {
+    try { localStorage.setItem("em-lang", lang); } catch (e) {}
+    this.setState({ lang });
+  }
+
+  reveal(i) {
+    const has = this.state.found.indexOf(i) >= 0;
+    if (has) {
+      this.setState(p => ({ found: p.found.filter(x => x !== i) }));
+      return;
+    }
+    const found = this.state.found.concat([i]);
+    try { localStorage.setItem("em-found", JSON.stringify(found)); } catch (e) {}
+    clearTimeout(this._toast);
+    this.setState({ found: found, toast: true, toastText: T[this.state.lang].findFound, toastMeta: "" });
+    this._toast = setTimeout(() => this.setState({ toast: false }), 2400);
+  }
+
+  resetFinds() {
+    try { localStorage.removeItem("em-found"); } catch (e) {}
+    this.setState({ found: [] });
+  }
+
+  find(i, t) {
+    const open = this.state.found.indexOf(i) >= 0;
+    const d = t.finds[i];
+    return {
+      open, tag: d[0], text: d[1], title: open ? d[0] : t.findHint,
+      glyph: "",
+      reveal: () => this.reveal(i),
+      style: "flex:none;width:14px;height:14px;margin-top:9px;padding:0;border-radius:999px;line-height:0;font-size:0;transition:all .25s ease;" +
+        (open
+          ? "border:1px solid var(--mind);background:var(--mind);"
+          : "border:1px solid var(--mind);background:color-mix(in srgb,#8B7BF0 22%,transparent);animation:pulseRing 2.6s ease-out infinite;") +
+        "display:" + (this.state.mode === "grano" ? "none" : "block")
+    };
+  }
+
+  setMode(v) {
+    this.setState({ mode: v, panel: false });
+    try { localStorage.setItem("em-mode", v); } catch (e) {}
+  }
+
+  mini(active) {
+    return active
+      ? "padding:5px 11px;border-radius:999px;border:0;background:var(--clarity-deep);color:#A5F3FC;font-size:12px;font-weight:600;letter-spacing:0.04em"
+      : "padding:5px 11px;border-radius:999px;border:0;background:transparent;color:var(--dimmer);font-size:12px;font-weight:500;letter-spacing:0.04em";
+  }
+
+  _pts = [];
+
+  fitCanvas() {
+    const el = this._cv;
+    if (!el) return;
+    const r = Math.min(2, window.devicePixelRatio || 1);
+    el.width = Math.floor(window.innerWidth * r);
+    el.height = Math.floor(window.innerHeight * r);
+    const cx = el.getContext("2d");
+    cx.setTransform(r, 0, 0, r, 0, 0);
+    this._cx = cx;
+  }
+
+  paintFrame = () => {
+    this._raf = requestAnimationFrame(this.paintFrame);
+    const el = document.getElementById("em-paint");
+    if (!el) return;
+    if (el !== this._cv || !this._cx) { this._cv = el; this.fitCanvas(); }
+    const cx = this._cx;
+    if (!cx) return;
+    const w = window.innerWidth, hh = window.innerHeight;
+    cx.globalCompositeOperation = "destination-out";
+    cx.fillStyle = "rgba(0,0,0,0.10)";
+    cx.fillRect(0, 0, w, hh);
+    if (this.state.still) { this._pts.length = 0; return; }
+    cx.globalCompositeOperation = "lighter";
+    const hue = this.state.hue || EMOTIONS[this.state.sel].hue;
+    let beat = 1;
+    if (this.state.pulse) {
+      const ph = (performance.now() % 1100) / 1100;
+      const thump = t0 => Math.exp(-Math.pow((ph - t0) / 0.055, 2));
+      beat = 0.34 + 1.5 * thump(0.1) + 0.72 * thump(0.28);
+    }
+    const a = Math.min(255, Math.round(20 + 30 * beat)).toString(16).padStart(2, "0");
+    while (this._pts.length) {
+      const p = this._pts.shift();
+      const r = p.r * (0.72 + 0.34 * beat);
+      const g = cx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
+      g.addColorStop(0, hue + a);
+      g.addColorStop(1, hue + "00");
+      cx.fillStyle = g;
+      cx.beginPath();
+      cx.arc(p.x, p.y, r, 0, 6.2832);
+      cx.fill();
+    }
+  };
+
+  setHue(v) { if (this.state.hue !== v) this.setState({ hue: v }); }
+
+  clearPaint() {
+    this._pts.length = 0;
+    if (this._cx) {
+      this._cx.globalCompositeOperation = "destination-out";
+      this._cx.fillStyle = "rgba(0,0,0,1)";
+      this._cx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+    }
+  }
+
+  toggleMusic() {
+    if (this.state.music) { this.stopMusic(); this.setState({ music: false }); return; }
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    const ctx = this._ctx || (this._ctx = new AC());
+    if (ctx.resume) ctx.resume();
+    const master = ctx.createGain();
+    master.gain.value = 0.0001;
+    master.connect(ctx.destination);
+    const lp = ctx.createBiquadFilter();
+    lp.type = "lowpass";
+    lp.frequency.value = 2000;
+    lp.connect(master);
+    const dly = ctx.createDelay();
+    dly.delayTime.value = 0.3;
+    const fb = ctx.createGain();
+    fb.gain.value = 0.2;
+    lp.connect(dly); dly.connect(fb); fb.connect(dly); dly.connect(master);
+    master.gain.exponentialRampToValueAtTime(0.07, ctx.currentTime + 3);
+    this._m = { master: master, lp: lp };
+    const CH = [[57,64,69,72],[56,63,68,71],[57,64,69,72],[50,57,62,65],[56,63,68,71],[57,64,69,72]];
+    const spb = 0.52;
+    const pluck = (midi, t, dur, gain) => {
+      const o = ctx.createOscillator();
+      o.type = "triangle";
+      o.frequency.value = 440 * Math.pow(2, (midi - 69) / 12);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(gain, t + 0.014);
+      g.gain.exponentialRampToValueAtTime(0.0008, t + dur);
+      o.connect(g); g.connect(lp);
+      o.start(t); o.stop(t + dur + 0.06);
+    };
+    this._bar = 0;
+    this._next = ctx.currentTime + 0.2;
+    this._tick = setInterval(() => {
+      if (!this._m) return;
+      while (this._next < ctx.currentTime + 1.4) {
+        const c = CH[this._bar % CH.length];
+        const t = this._next;
+        pluck(c[0] - 12, t, 1.5, 0.26);
+        pluck(c[1], t + spb, 0.9, 0.12);
+        pluck(c[2], t + spb + 0.02, 0.9, 0.1);
+        pluck(c[3], t + 2 * spb, 0.95, 0.11);
+        pluck(c[2], t + 2 * spb + 0.02, 0.95, 0.085);
+        if (this._bar % 4 === 3) pluck(c[3] + 12, t + 2 * spb + 0.28, 0.8, 0.055);
+        this._bar++;
+        this._next += 3 * spb;
+      }
+    }, 260);
+    this.setState({ music: true });
+  }
+
+  stopMusic() {
+    clearInterval(this._tick);
+    if (this._m && this._ctx) {
+      const g = this._m.master.gain;
+      g.cancelScheduledValues(this._ctx.currentTime);
+      g.setValueAtTime(g.value, this._ctx.currentTime);
+      g.exponentialRampToValueAtTime(0.0001, this._ctx.currentTime + 1.2);
+      const m = this._m;
+      setTimeout(() => { try { m.master.disconnect(); m.lp.disconnect(); } catch (e) {} }, 1600);
+    }
+    this._m = null;
+  }
+
+
+  addSong() {
+    const v = (this.state.songDraft || "").trim();
+    if (!v) return;
+    const songs = this.state.songs.concat([v.slice(0, 60)]).slice(-6);
+    try { localStorage.setItem("em-songs", JSON.stringify(songs)); } catch (e) {}
+    clearTimeout(this._toast);
+    this.setState({ songs: songs, songDraft: "", toast: true, toastText: T[this.state.lang].songThanks, toastMeta: "♪" });
+    this._toast = setTimeout(() => this.setState({ toast: false }), 2400);
+  }
+
+  renderVals() {
+    const s = this.state;
+    const L = s.lang;
+    const t = T[L];
+    const em = EMOTIONS[s.sel];
+    const sel = em[L];
+    const n = s.found.length;
+    const evBtn = "display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;border:1px dashed var(--line);background:transparent;color:var(--dim);font-size:13.5px;font-weight:500";
+    const switchOn = "padding:3px 10px;border-radius:999px;background:var(--clarity-deep);color:#A5F3FC;font-size:11.5px;font-weight:600";
+    const switchOff = "padding:3px 10px;border-radius:999px;background:var(--surface-2);color:var(--dimmer);font-size:11.5px;font-weight:600";
+
+    return {
+      t,
+      still: s.still || undefined,
+      intro: s.intro,
+      dismissIntro: () => this.setState({ intro: false }),
+      toast: s.toast, toastText: s.toastText, toastMeta: s.toastMeta || (n + "/" + TOTAL),
+      clearPaint: () => this.clearPaint(),
+      foco: s.foco,
+      toggleFoco: () => this.setState(p => ({ foco: !p.foco })),
+      focoSwitch: s.foco ? switchOn : switchOff,
+      focoState: s.foco ? t.on : t.off,
+      toggleMusic: () => this.toggleMusic(),
+      spotify: s.spotify,
+      toggleSpotify: () => { if (!s.spotify && s.music) this.toggleMusic(); this.setState({ spotify: !s.spotify }); },
+      spotifySwitch: s.spotify ? switchOn : switchOff,
+      spotifyState: s.spotify ? t.on : t.off,
+      pulse: s.pulse,
+      togglePulse: () => this.setState(p => ({ pulse: !p.pulse })),
+      pulseSwitch: s.pulse ? switchOn : switchOff,
+      pulseState: s.pulse ? t.on : t.off,
+      hueMind: () => this.setHue("#8B7BF0"),
+      hueFeel: () => this.setHue("#F0466B"),
+      hueClarity: () => this.setHue("#22D3EE"),
+      hueSel: () => this.setHue(null),
+      musicSwitch: s.music ? switchOn : switchOff,
+      musicState: s.music ? t.on : t.off,
+      lang: s.lang,
+      tutorialDelay: 6000,
+      explore: s.mode !== "grano",
+      openTutorial: () => window.dispatchEvent(new Event("em-open-tutorial")),
+      setGrano: () => this.setMode("grano"),
+      setExplorar: () => this.setMode("explorar"),
+      granoBtn: this.mini(s.mode === "grano"),
+      explorarBtn: this.mini(s.mode !== "grano"),
+      songOpen: n >= 4,
+      songDraft: s.songDraft,
+      hasSongs: s.songs.length > 0,
+      songs: s.songs.map(x => ({ label: x })),
+      onSongInput: ev => this.setState({ songDraft: ev.target.value }),
+      onSongKey: ev => { if (ev.key === "Enter") this.addSong(); },
+      addSong: () => this.addSong(),
+      foundLabel: n + "/" + TOTAL,
+      allFound: n >= TOTAL,
+      progressHint: t.progress[Math.min(n, TOTAL)],
+      barStyle: "height:100%;border-radius:999px;background:linear-gradient(90deg,#8B7BF0,#22D3EE);transition:width .4s ease;width:" + Math.round((n / TOTAL) * 100) + "%",
+      panel: s.panel,
+      togglePanel: () => this.setState(p => ({ panel: !p.panel })),
+      curiousBtn: "display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border-radius:999px;font-size:12.5px;font-weight:500;transition:all .2s ease;" +
+        (s.panel
+          ? "border:1px solid var(--mind);background:var(--mind-deep);color:var(--text)"
+          : "border:1px solid var(--line);background:var(--bg-2);color:var(--dim)"),
+      rowBtn: "display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg-2);color:var(--dim);font-size:13.5px;text-align:left",
+      xray: s.xray,
+      toggleXray: () => this.setState(p => ({ xray: !p.xray })),
+      xrayLabel: s.xray ? t.xrayOn : t.xrayOff,
+      xrayHint: s.xray ? t.xrayHintOn : t.xrayHintOff,
+      xrayBtn: "display:inline-flex;align-items:center;gap:9px;padding:10px 18px;border-radius:999px;font-size:13.5px;font-weight:500;transition:all .2s ease;" +
+        (s.xray
+          ? "border:1px solid var(--feel);background:color-mix(in srgb,#F0466B 14%,transparent);color:#FCA5B8"
+          : "border:1px solid var(--line);background:transparent;color:var(--dim)"),
+      xraySwitch: s.xray ? switchOn : switchOff,
+      xrayState: s.xray ? t.on : t.off,
+      stillSwitch: s.still ? switchOn : switchOff,
+      stillState: s.still ? t.on : t.off,
+      toggleStill: () => this.setState(p => ({ still: !p.still })),
+      resetFinds: () => this.resetFinds(),
+      esBtn: this.mini(L === "es"),
+      enBtn: this.mini(L === "en"),
+      setEs: () => this.setLang("es"),
+      setEn: () => this.setLang("en"),
+      raw: s.raw,
+      findBox: "position:relative;margin:0 0 30px;border:1px solid var(--mind-deep);border-left:2px solid var(--mind);border-radius:0 12px 12px 0;padding:18px 22px;background:color-mix(in srgb,#8B7BF0 8%,transparent);max-width:620px;animation:riseIn .35s ease both",
+      findLabelStyle: "font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#C7BFFA;margin-bottom:9px",
+      f0: this.find(0, t), f1: this.find(1, t), f2: this.find(2, t), f3: this.find(3, t), f4: this.find(4, t),
+      progStyle: "position:fixed;left:0;top:0;height:2px;z-index:60;pointer-events:none;background:linear-gradient(90deg,#8B7BF0,#22D3EE);width:" + (s.prog * 100).toFixed(2) + "%",
+      evBtn,
+      navBtn: "display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;border:1px solid var(--line);background:color-mix(in srgb,#080B16 70%,transparent);color:var(--dim);font-size:16px;line-height:1",
+
+      emotions: EMOTIONS.map((e, i) => ({
+        label: e[L].label,
+        pick: () => this.setState({ sel: i, raw: false }),
+        down: () => { clearTimeout(this._hold); this._hold = setTimeout(() => this.setState({ sel: i, raw: true }), 620); },
+        up: () => clearTimeout(this._hold),
+        style: "display:inline-flex;align-items:center;gap:10px;padding:12px 20px;border-radius:999px;transition:all .25s ease;" +
+          (i === s.sel
+            ? "border:1px solid " + e.hue + ";background:" + e.deep + ";color:var(--text)"
+            : "border:1px solid var(--line);background:transparent;color:var(--dim)"),
+        dot: "width:9px;height:9px;border-radius:999px;background:" + e.hue + ";opacity:" + (i === s.sel ? "1" : "0.45") + ";box-shadow:" + (i === s.sel ? "0 0 14px " + e.hue : "none")
+      })),
+      selCue: sel.cue, selSignal: sel.signal, selMove: sel.move, selRaw: sel.raw, selCase: em.caseRef,
+      selGlow: "position:absolute;top:-140px;right:-100px;width:360px;height:360px;border-radius:999px;pointer-events:none;background:radial-gradient(circle, " + em.hue + "2E 0%, transparent 68%);transition:background .4s ease",
+
+      cases: CASES.map(k => {
+        const d = k[L];
+        const si = s.shot[k.key] || 0;
+        const shot = k.shots[si];
+        return {
+          chips: d.chips.map(ch => ({ label: ch[0], style: CHIP[ch[1]] })),
+          title: d.title, lede: d.lede,
+          rows: d.rows.filter(r => !(s.xray && r[2] === "insight")).map(r => ({
+            label: r[0], text: r[1],
+            wrapStyle: "display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px;align-items:start",
+            labelStyle: "font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;padding-top:3px;color:" + (r[2] === "win" ? "var(--clarity)" : "var(--mind)"),
+            textStyle: "font-size:15.5px;line-height:1.55;" + (r[2] === "win" ? "color:#A5F3FC;font-weight:400" : "color:var(--dim);font-weight:300")
+          })),
+          tags: d.tags.map(tg => ({
+            label: tg[0],
+            style: "padding:6px 13px;border-radius:999px;font-size:13px;" +
+              (tg[1] === "feel" ? "border:1px solid var(--feel-deep);color:#FCA5B8"
+                : tg[1] === "clarity" ? "border:1px solid var(--clarity-deep);color:#A5F3FC"
+                : "border:1px solid var(--line);color:var(--dim)")
+          })),
+          method: d.method, quote: d.quote, discard: d.discard,
+          open: !!s.open[k.key],
+          toggle: () => this.setState(p => {
+            const o = Object.assign({}, p.open);
+            o[k.key] = !o[k.key];
+            return { open: o };
+          }),
+          evLabel: s.open[k.key] ? t.evClose : t.evOpen,
+          href: "Casos Emilio.dc.html#" + k.key,
+          find: this.find(k.findIdx, t),
+          shot: { id: shot.id, ph: shot[L][0], cap: shot[L][1], src: shot.src || "" },
+          prev: () => this.setShot(k, (si - 1 + k.shots.length) % k.shots.length),
+          next: () => this.setShot(k, (si + 1) % k.shots.length),
+          dots: k.shots.map((_, i) => ({
+            aria: t.slide + " " + (i + 1),
+            go: () => this.setShot(k, i),
+            style: "width:" + (i === si ? "20px" : "7px") + ";height:7px;border-radius:999px;border:0;padding:0;transition:all .25s ease;background:" + (i === si ? "var(--clarity)" : "var(--dimmer)")
+          })),
+          cardStyle: "display:grid;grid-template-columns:" + (k.flip ? "minmax(0,1fr) minmax(0,1.08fr)" : "minmax(0,1.08fr) minmax(0,1fr)") +
+            ";border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--surface)",
+          textCol: "padding:44px 42px" + (k.flip ? ";order:2" : ""),
+          mediaCol: "position:relative;min-height:560px;overflow:hidden" + (k.flip ? ";order:1" : "")
+        };
+      }),
+
+      steps: t.steps.map(sp => ({
+        n: sp[0], h3: sp[1], p: sp[2],
+        wrapStyle: "border-top:1px solid " + STEP_HUE[sp[3]] + ";padding-top:20px",
+        numStyle: "font-size:11px;font-weight:500;letter-spacing:0.12em;margin-bottom:12px;color:" + STEP_HUE[sp[3]]
+      })),
+      skills: t.skills.map(sk => ({ label: sk }))
+    };
+  }
+
+  setShot(k, i) {
+    this.setState(p => {
+      const sh = Object.assign({}, p.shot);
+      sh[k.key] = i;
+      return { shot: sh };
+    });
+  }
+}
+
+</script>
+</body>
+</html>

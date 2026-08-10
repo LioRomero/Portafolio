@@ -1,0 +1,131 @@
+---
+import '@fontsource/inter/latin-300.css';
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-500.css';
+import '@fontsource/inter/latin-600.css';
+import '../styles/global.css';
+import TopBar from '../components/TopBar.astro';
+import { DEFAULTS, KEYS } from '../lib/prefs';
+import { ROUTES, type Lang, type PageKey } from '../content/ui';
+import { withBase } from '../lib/paths';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Lang;
+  page: PageKey;
+}
+
+const { title, description, lang, page } = Astro.props;
+
+/* `Astro.url.pathname` ya incluye el `base`. Se fuerza la barra final para que
+   la canónica coincida con lo que sirve GitHub Pages y con el sitemap: si no,
+   la home queda como `/portafolio` y el sitemap dice `/portafolio/`. */
+const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const canonical = new URL(path, Astro.site);
+/* El sitio es bilingüe: cada página declara su equivalente en el otro idioma. */
+const alternates = [
+  { hreflang: 'es', href: new URL(withBase(ROUTES.es[page]), Astro.site).href },
+  { hreflang: 'en', href: new URL(withBase(ROUTES.en[page]), Astro.site).href },
+  { hreflang: 'x-default', href: new URL(withBase(ROUTES.es[page]), Astro.site).href },
+];
+const ogImage = new URL(withBase('/og.jpg'), Astro.site).href;
+const favicon = withBase('/favicon.svg');
+---
+
+<!doctype html>
+<html lang={lang} data-mode={DEFAULTS.mode}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href={favicon} type="image/svg+xml" />
+
+    <link rel="canonical" href={canonical} />
+    {
+      alternates.map((a) => (
+        <link rel="alternate" hreflang={a.hreflang} href={a.href} />
+      ))
+    }
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={lang === 'es' ? 'es_CO' : 'en_US'} />
+    <meta property="og:site_name" content="Emilio Romero" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {/*
+      Modo, idioma y movimiento se aplican antes del primer pintado. Sin esto,
+      quien guardó "explorar" vería un parpadeo del modo por defecto al cargar.
+    */}
+    <script is:inline define:vars={{ KEYS, DEFAULTS }}>
+      try {
+        var root = document.documentElement;
+        var mode = localStorage.getItem(KEYS.mode);
+        root.dataset.mode = mode === 'grano' || mode === 'explorar' ? mode : DEFAULTS.mode;
+        if (localStorage.getItem('em-motion') === 'off') root.dataset.motion = 'off';
+      } catch (e) {
+        /* almacenamiento bloqueado: se queda con los valores por defecto */
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">
+      {lang === 'es' ? 'Saltar al contenido' : 'Skip to content'}
+    </a>
+
+    <div id="read-progress" aria-hidden="true"></div>
+
+    <TopBar lang={lang} page={page} />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    {/* Barra de progreso de lectura: 2px arriba, ancho proporcional al scroll. */}
+    <script>
+      const bar = document.getElementById('read-progress');
+      if (bar) {
+        let ticking = false;
+        const update = () => {
+          const d = document.documentElement;
+          const max = Math.max(1, d.scrollHeight - d.clientHeight);
+          bar.style.width = ((d.scrollTop / max) * 100).toFixed(2) + '%';
+          ticking = false;
+        };
+        addEventListener(
+          'scroll',
+          () => {
+            if (!ticking) {
+              ticking = true;
+              requestAnimationFrame(update);
+            }
+          },
+          { passive: true }
+        );
+        update();
+      }
+    </script>
+
+    <style>
+      #read-progress {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 2px;
+        width: 0;
+        z-index: 95;
+        pointer-events: none;
+        background: linear-gradient(90deg, var(--mind), var(--clarity));
+      }
+    </style>
+  </body>
+</html>

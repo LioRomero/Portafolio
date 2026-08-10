@@ -1,0 +1,181 @@
+---
+import { UI, ROUTES, type Lang, type PageKey } from '../content/ui';
+import { withBase } from '../lib/paths';
+import ModeSwitch from '../islands/ModeSwitch.tsx';
+
+interface Props {
+  lang: Lang;
+  page: PageKey;
+}
+
+const { lang, page } = Astro.props;
+const t = UI[lang];
+const r = ROUTES[lang];
+const other = lang === 'es' ? 'en' : 'es';
+/** El conmutador de idioma lleva a la misma página en el otro idioma. */
+const otherHref = ROUTES[other][page];
+---
+
+<header class="bar">
+  <a class="logo" href={withBase(r.home)}>
+    <span class="dot" aria-hidden="true"></span>
+    Emilio Romero
+  </a>
+
+  <nav class="nav" aria-label={lang === 'es' ? 'Navegación principal' : 'Main navigation'}>
+    <a href={withBase(r.cases)} aria-current={page === 'cases' ? 'page' : undefined}>{t.navCases}</a>
+    <a href={withBase(r.about)} aria-current={page === 'about' ? 'page' : undefined}>{t.navAbout}</a>
+  </nav>
+
+  <span class="spacer"></span>
+
+  <ModeSwitch lang={lang} client:idle />
+
+  <a class="lang" href={withBase(otherHref)} title={t.langTitle} hreflang={other} lang={other}>
+    {t.langBtn}
+  </a>
+
+  <button
+    class="tutorial"
+    type="button"
+    aria-label={t.tutorialTitle}
+    title={t.tutorialTitle}
+    onclick="dispatchEvent(new Event('em-open-tutorial'))">?</button
+  >
+</header>
+
+<style>
+  .bar {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: var(--z-bar);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: 56px;
+    padding: 0 20px;
+    background: color-mix(in srgb, var(--bg-2) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: var(--border);
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    flex: none;
+    white-space: nowrap;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: var(--fw-medium);
+    letter-spacing: -0.01em;
+  }
+
+  .logo:hover {
+    color: var(--text);
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: var(--r-pill);
+    background: var(--clarity);
+    box-shadow: 0 0 12px var(--clarity);
+  }
+
+  .nav {
+    display: flex;
+    gap: 18px;
+    margin-left: 10px;
+  }
+
+  .nav a {
+    color: var(--dim);
+    font-size: 13.5px;
+  }
+
+  .nav a[aria-current='page'] {
+    color: var(--text);
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  .lang,
+  .tutorial {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    border-radius: var(--r-pill);
+    border: var(--border);
+    background: transparent;
+    color: var(--dim);
+    font-size: 12px;
+    font-weight: var(--fw-medium);
+    transition: border-color var(--dur-hover) var(--ease-hover),
+      color var(--dur-hover) var(--ease-hover);
+  }
+
+  .lang {
+    padding: 0 11px;
+  }
+
+  .lang:hover {
+    border-color: var(--line-strong);
+    color: var(--text);
+  }
+
+  .tutorial {
+    width: 30px;
+    padding: 0;
+  }
+
+  .tutorial:hover {
+    border-color: var(--mind);
+    color: var(--text);
+  }
+
+  /* En móvil la barra se colapsa a nombre + los controles esenciales.
+     Todo va en una sola línea de 56px: nada puede envolver. */
+  @media (max-width: 900px) {
+    .bar {
+      gap: 8px;
+      padding: 0 12px;
+    }
+
+    .nav {
+      display: none;
+    }
+
+    .logo {
+      font-size: 13px;
+      gap: 7px;
+    }
+
+    .lang,
+    .tutorial {
+      min-height: 30px;
+      height: 30px;
+    }
+
+    .lang {
+      padding: 0 9px;
+    }
+  }
+
+  /* Sólo en pantallas muy estrechas el nombre deja de caber junto a los
+     controles; hasta 340px se conserva porque es la marca del sitio. */
+  @media (max-width: 339px) {
+    .logo {
+      font-size: 0;
+      gap: 0;
+    }
+
+    .logo .dot {
+      width: 9px;
+      height: 9px;
+    }
+  }
+</style>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="border:1px solid #232A44;border-radius:18px;padding:32px 34px;background:#0C1020;font-family:Inter,system-ui,sans-serif">
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+    <span style="display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;background:color-mix(in srgb,#22D3EE 14%,transparent);border:1px solid #22D3EE;color:#A5F3FC;font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase">{{ t.badge }}</span>
+    <span style="font-size:12px;color:#767C99;font-weight:300">{{ t.kind }}</span>
+  </div>
+
+  <h3 style="font-weight:500;font-size:26px;line-height:1.18;letter-spacing:-0.028em;margin:0 0 8px;color:#E9EBF4;text-wrap:pretty">{{ t.title }}</h3>
+  <p style="font-size:15px;line-height:1.62;color:#A2A8C2;font-weight:300;margin:0 0 24px;max-width:600px;text-wrap:pretty">{{ t.sub }}</p>
+
+  <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#8B7BF0;margin-bottom:11px">{{ t.moodLabel }}</div>
+  <div style="display:flex;flex-wrap:wrap;gap:9px;margin-bottom:20px">
+    <sc-for list="{{ moods }}" as="m" hint-placeholder-count="5">
+      <button onClick="{{ m.click }}" style="{{ m.style }}">{{ m.label }}</button>
+    </sc-for>
+  </div>
+
+  <textarea value="{{ draft }}" onChange="{{ onDraft }}" placeholder="{{ t.placeholder }}" rows="3" style="width:100%;box-sizing:border-box;resize:vertical;padding:15px 17px;border-radius:12px;border:1px solid #232A44;background:#141A2E;color:#E9EBF4;font-family:inherit;font-size:15px;line-height:1.6;font-weight:300;margin-bottom:12px" style-focus="border-color:#22D3EE;outline:none"></textarea>
+
+  <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+    <input value="{{ who }}" onChange="{{ onWho }}" placeholder="{{ t.whoPlaceholder }}" style="flex:1;min-width:180px;box-sizing:border-box;padding:12px 16px;border-radius:11px;border:1px solid #232A44;background:#141A2E;color:#E9EBF4;font-family:inherit;font-size:14px;font-weight:300" style-focus="border-color:#22D3EE;outline:none">
+    <button onClick="{{ submit }}" style="{{ submitStyle }}">{{ t.submit }}</button>
+    <sc-if value="{{ canSend }}" hint-placeholder-val="{{ false }}">
+      <a href="{{ mailHref }}" style="font-size:13.5px;color:#22D3EE" style-hover="color:#A5F3FC">{{ t.mail }}</a>
+    </sc-if>
+  </div>
+
+  <p style="font-size:12.5px;line-height:1.55;color:#767C99;font-weight:300;margin:14px 0 0;max-width:560px">{{ t.privacy }}</p>
+
+  <sc-if value="{{ hasNotes }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:30px;padding-top:26px;border-top:1px solid #232A44">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <span style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#8B7BF0">{{ t.wallLabel }}</span>
+        <span style="flex:1;height:1px;background:#232A44"></span>
+        <button onClick="{{ clearAll }}" style="border:0;background:transparent;color:#767C99;font-size:12.5px;padding:0" style-hover="color:#F0466B">{{ t.clearAll }}</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px">
+        <sc-for list="{{ notes }}" as="n" hint-placeholder-count="2">
+          <div style="{{ n.cardStyle }}">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+              <span style="{{ n.dotStyle }}"></span>
+              <span style="{{ n.moodStyle }}">{{ n.mood }}</span>
+              <span style="flex:1"></span>
+              <button onClick="{{ n.remove }}" aria-label="{{ t.remove }}" title="{{ t.remove }}" style="border:0;background:transparent;color:#4E5578;font-size:14px;line-height:1;padding:0" style-hover="color:#F0466B">×</button>
+            </div>
+            <p style="font-size:14.5px;line-height:1.6;color:#E9EBF4;font-weight:300;margin:0 0 10px;text-wrap:pretty">{{ n.text }}</p>
+            <div style="font-size:12px;color:#767C99;font-weight:300">{{ n.meta }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:760,&quot;height&quot;:700},&quot;lang&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;es&quot;,&quot;en&quot;],&quot;default&quot;:&quot;es&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;email&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;emilio.romerog@outlook.com&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+const T = {
+  es: {
+    badge: "Canvas abierto", kind: "Escribe algo · queda en tu navegador",
+    title: "Deja aquí lo que te dejó esta página",
+    sub: "Una emoción, una duda, una idea de mejora o algo que no cuadró. Lo leo todo — es la única investigación que puedo hacer sobre mi propio portafolio.",
+    moodLabel: "¿Con qué te quedas?",
+    moods: ["Claridad", "Curiosidad", "Duda", "Inspiración", "Sugerencia"],
+    placeholder: "Escribe lo que quieras. Sin filtro es más útil.",
+    whoPlaceholder: "Tu nombre o cómo quieres firmar (opcional)",
+    submit: "Fijar la nota",
+    mail: "Enviármela por correo →",
+    privacy: "Las notas se guardan solo en tu navegador: no viajan a ningún servidor. Si quieres que la lea de verdad, usa el enlace de correo — abre tu cliente con la nota ya escrita.",
+    wallLabel: "Tus notas", clearAll: "Borrar todas", remove: "Borrar esta nota",
+    anon: "Anónimo", justNow: "ahora mismo", minsAgo: "hace {n} min", hoursAgo: "hace {n} h", daysAgo: "hace {n} d",
+    mailSubject: "Nota desde tu portafolio"
+  },
+  en: {
+    badge: "Open canvas", kind: "Write something · stays in your browser",
+    title: "Leave whatever this page left you with",
+    sub: "An emotion, a doubt, an idea for improvement, or something that didn't land. I read all of it — it's the only research I can run on my own portfolio.",
+    moodLabel: "What are you taking away?",
+    moods: ["Clarity", "Curiosity", "Doubt", "Inspiration", "Suggestion"],
+    placeholder: "Write whatever you want. Unfiltered is more useful.",
+    whoPlaceholder: "Your name, or how you'd like to sign (optional)",
+    submit: "Pin the note",
+    mail: "Email it to me →",
+    privacy: "Notes are stored only in your browser — they never reach a server. If you want me to actually read it, use the email link: it opens your mail client with the note already written.",
+    wallLabel: "Your notes", clearAll: "Clear all", remove: "Delete this note",
+    anon: "Anonymous", justNow: "just now", minsAgo: "{n} min ago", hoursAgo: "{n} h ago", daysAgo: "{n} d ago",
+    mailSubject: "A note from your portfolio"
+  }
+};
+
+const HUES = ["#22D3EE", "#8B7BF0", "#F0466B", "#8B7BF0", "#22D3EE"];
+const KEY = "em-canvas-notes";
+
+class Component extends DCLogic {
+  state = {
+    mood: 0, draft: "", who: "",
+    notes: (() => { try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (e) { return []; } })()
+  };
+
+  persist(notes) {
+    this.setState({ notes });
+    try { localStorage.setItem(KEY, JSON.stringify(notes)); } catch (e) {}
+  }
+
+  ago(ts, t) {
+    const m = Math.floor((Date.now() - ts) / 60000);
+    if (m < 1) return t.justNow;
+    if (m < 60) return t.minsAgo.replace("{n}", m);
+    if (m < 1440) return t.hoursAgo.replace("{n}", Math.floor(m / 60));
+    return t.daysAgo.replace("{n}", Math.floor(m / 1440));
+  }
+
+  submit(t) {
+    const text = this.state.draft.trim();
+    if (!text) return;
+    const note = { text, mood: this.state.mood, who: this.state.who.trim(), ts: Date.now() };
+    this.persist([note].concat(this.state.notes).slice(0, 40));
+    this.setState({ draft: "" });
+  }
+
+  renderVals() {
+    const t = T[this.props.lang === "en" ? "en" : "es"];
+    const s = this.state;
+    const ready = s.draft.trim().length > 0;
+    const mail = this.props.email || "emilio.romerog@outlook.com";
+    const body = s.draft.trim() + (s.who.trim() ? "\n\n— " + s.who.trim() : "");
+
+    return {
+      t, draft: s.draft, who: s.who,
+      hasNotes: s.notes.length > 0,
+      canSend: ready,
+      mailHref: "mailto:" + mail + "?subject=" + encodeURIComponent(t.mailSubject + " · " + t.moods[s.mood]) + "&body=" + encodeURIComponent(body),
+      onDraft: e => this.setState({ draft: e.target.value }),
+      onWho: e => this.setState({ who: e.target.value }),
+      submit: () => this.submit(t),
+      clearAll: () => this.persist([]),
+      submitStyle: "padding:12px 22px;border-radius:11px;font-size:14.5px;font-weight:500;transition:all .2s ease;" +
+        (ready ? "border:0;background:#22D3EE;color:#04222B;cursor:pointer" : "border:1px solid #232A44;background:#141A2E;color:#4E5578;cursor:default"),
+      moods: t.moods.map((label, i) => ({
+        label,
+        click: () => this.setState({ mood: i }),
+        style: "padding:9px 15px;border-radius:999px;font-size:13.5px;font-weight:400;transition:all .2s ease;cursor:pointer;" +
+          (i === s.mood
+            ? "border:1px solid " + HUES[i] + ";background:color-mix(in srgb," + HUES[i] + " 16%,transparent);color:#E9EBF4"
+            : "border:1px solid #232A44;background:#141A2E;color:#A2A8C2")
+      })),
+      notes: s.notes.map((n, idx) => ({
+        text: n.text,
+        mood: t.moods[n.mood] || t.moods[0],
+        meta: (n.who || t.anon) + " · " + this.ago(n.ts, t),
+        remove: () => this.persist(s.notes.filter((_, i) => i !== idx)),
+        cardStyle: "border:1px solid #232A44;border-top:2px solid " + (HUES[n.mood] || HUES[0]) + ";border-radius:12px;padding:18px 20px;background:#141A2E",
+        dotStyle: "width:7px;height:7px;border-radius:999px;background:" + (HUES[n.mood] || HUES[0]),
+        moodStyle: "font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:" + (HUES[n.mood] || HUES[0])
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="{{ shellStyle }}">
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+    <span style="{{ badgeStyle }}">{{ c.badge }}</span>
+    <span style="font-size:12px;color:#767C99;font-weight:300">{{ c.kind }}</span>
+    <span style="flex:1;min-width:20px"></span>
+    <sc-if value="{{ started }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ restart }}" style="display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;border:1px solid #232A44;background:#0C1020;color:#A2A8C2;font-size:12.5px" style-hover="border-color:#8B7BF0;color:#E9EBF4">{{ c.restart }}</button>
+    </sc-if>
+  </div>
+
+  <h3 style="font-weight:500;font-size:24px;line-height:1.2;letter-spacing:-0.025em;margin:0 0 8px;color:#E9EBF4;text-wrap:pretty">{{ c.title }}</h3>
+  <p style="font-size:15px;line-height:1.6;color:#A2A8C2;font-weight:300;margin:0 0 22px;max-width:560px;text-wrap:pretty">{{ c.rule }}</p>
+
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+    <div style="display:flex;gap:6px">
+      <sc-for list="{{ pips }}" as="p" hint-placeholder-count="6">
+        <span style="{{ p.style }}"></span>
+      </sc-for>
+    </div>
+    <span style="font-size:12.5px;color:#767C99;font-variant-numeric:tabular-nums">{{ progressLabel }}</span>
+    <span style="{{ feedbackStyle }}">{{ feedbackLabel }}</span>
+  </div>
+
+  <div style="{{ slotsStyle }}">
+    <sc-for list="{{ slots }}" as="s" hint-placeholder-count="6">
+      <div style="{{ s.style }}">
+        <span style="{{ s.numStyle }}">{{ s.num }}</span>
+        <span style="{{ s.labelStyle }}">{{ s.label }}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}">
+    <div style="margin-top:20px">
+      <div style="display:flex;flex-wrap:wrap;gap:9px">
+        <sc-for list="{{ chips }}" as="ch" hint-placeholder-count="6">
+          <button onClick="{{ ch.click }}" disabled="{{ ch.used }}" style="{{ ch.style }}">{{ ch.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ done }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:22px;border:1px solid #8B7BF0;border-radius:12px;padding:20px 22px;background:color-mix(in srgb,#8B7BF0 10%,transparent);animation:pzPop .45s ease both">
+      <div style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#C7BFFA;margin-bottom:9px">{{ c.solvedLabel }}</div>
+      <p style="font-size:15.5px;line-height:1.65;color:#E9EBF4;font-weight:300;margin:0;text-wrap:pretty">{{ c.solved }}</p>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:720,&quot;height&quot;:620},&quot;variant&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;proceso&quot;,&quot;casos&quot;,&quot;sobre&quot;],&quot;default&quot;:&quot;proceso&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contenido&quot;},&quot;lang&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;es&quot;,&quot;en&quot;],&quot;default&quot;:&quot;es&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contenido&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#8B7BF0&quot;,&quot;#22D3EE&quot;,&quot;#F0466B&quot;],&quot;default&quot;:&quot;#8B7BF0&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Estilo&quot;}}">
+const CONTENT = {
+  proceso: {
+    es: {
+      badge: "Puzzle 1 de 3", kind: "Interactivo · 30 segundos", restart: "Empezar de nuevo",
+      title: "Ordena mi proceso",
+      rule: "Toca los seis pasos en el orden en que trabajo, del negocio a la métrica. Si te equivocas, se reinicia y vuelves a intentarlo.",
+      steps: ["Entender el negocio", "Entrevistar usuarios", "Buscar patrones", "Enunciar el problema", "Prototipar", "Medir"],
+      solvedLabel: "Ese es el orden",
+      solved: "Los seis pasos importan, pero el que casi nadie hace es el cuarto: enunciar el problema antes de dibujar nada."
+    },
+    en: {
+      badge: "Puzzle 1 of 3", kind: "Interactive · 30 seconds", restart: "Start over",
+      title: "Put my process in order",
+      rule: "Tap the six steps in the order I work, from business to metric. Get one wrong and it resets so you can try again.",
+      steps: ["Understand the business", "Interview users", "Find patterns", "State the problem", "Prototype", "Measure"],
+      solvedLabel: "That's the order",
+      solved: "All six matter, but the one almost nobody does is the fourth: state the problem before drawing anything."
+    }
+  },
+  casos: {
+    es: {
+      badge: "Puzzle 2 de 3", kind: "Interactivo · 20 segundos", restart: "Empezar de nuevo",
+      title: "¿En qué orden llega un caso?",
+      rule: "Todo proyecto empieza con un encargo y termina en una métrica. Toca las cinco etapas en orden.",
+      steps: ["Llega el encargo", "Aparece el problema real", "Las preguntas incómodas", "La decisión", "El resultado medido"],
+      solvedLabel: "Exacto",
+      solved: "El encargo casi nunca es el problema. Por eso cada caso de este portafolio empieza separando esas dos cosas."
+    },
+    en: {
+      badge: "Puzzle 2 of 3", kind: "Interactive · 20 seconds", restart: "Start over",
+      title: "What order does a case arrive in?",
+      rule: "Every project starts as a brief and ends in a metric. Tap the five stages in order.",
+      steps: ["The brief arrives", "The real problem surfaces", "The uncomfortable questions", "The decision", "The measured result"],
+      solvedLabel: "Exactly",
+      solved: "The brief is almost never the problem. That's why every case here starts by separating those two things."
+    }
+  },
+  sobre: {
+    es: {
+      badge: "Puzzle 3 de 3", kind: "Interactivo · 20 segundos", restart: "Empezar de nuevo",
+      title: "Mi trayectoria, en orden",
+      rule: "Cuatro trabajos, cuatro escalas distintas del mismo oficio. Tócalos del más antiguo al más reciente.",
+      steps: ["ETB · practicante", "genia · freelance", "Ropofy · consultor jr", "QStrauss · technical architect"],
+      solvedLabel: "Ese es el camino",
+      solved: "De pantallas internas a arquitectura de plataforma. Lo que no cambió en ninguno: preguntar qué necesita la persona del otro lado antes de proponer nada."
+    },
+    en: {
+      badge: "Puzzle 3 of 3", kind: "Interactive · 20 seconds", restart: "Start over",
+      title: "My track record, in order",
+      rule: "Four jobs, four different scales of the same craft. Tap them from earliest to most recent.",
+      steps: ["ETB · intern", "genia · freelance", "Ropofy · jr consultant", "QStrauss · technical architect"],
+      solvedLabel: "That's the path",
+      solved: "From internal screens to platform architecture. What never changed: asking what the person on the other side needs before proposing anything."
+    }
+  }
+};
+
+const UI = {
+  es: { feedbackDefault: "Toca el siguiente paso", feedbackWrong: "Ese no va ahí — vuelve a empezar", of: "de" },
+  en: { feedbackDefault: "Tap the next step", feedbackWrong: "That one doesn't go there — start again", of: "of" }
+};
+
+function shuffle(n, seed) {
+  const a = Array.from({ length: n }, (_, i) => i);
+  let s = seed;
+  for (let i = n - 1; i > 0; i--) {
+    s = (s * 1103515245 + 12345) % 2147483648;
+    const j = s % (i + 1);
+    const tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+class Component extends DCLogic {
+  state = { pz: 0, wrong: false, order: null };
+
+  componentDidMount() {
+    if (!document.getElementById("pz-kf")) {
+      const st = document.createElement("style");
+      st.id = "pz-kf";
+      st.textContent = "@keyframes pzPop{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}@keyframes pzShake{10%,90%{transform:translateX(-2px)}30%,70%{transform:translateX(4px)}50%{transform:translateX(-5px)}}";
+      document.head.appendChild(st);
+    }
+  }
+
+  componentWillUnmount() { clearTimeout(this._t); }
+
+  content() {
+    const set = CONTENT[this.props.variant] || CONTENT.proceso;
+    return set[this.props.lang === "en" ? "en" : "es"];
+  }
+
+  click(i) {
+    if (i === this.state.pz) {
+      this.setState({ pz: this.state.pz + 1, wrong: false });
+    } else {
+      clearTimeout(this._t);
+      this.setState({ pz: 0, wrong: true });
+      this._t = setTimeout(() => this.setState({ wrong: false }), 1600);
+    }
+  }
+
+  renderVals() {
+    const c = this.content();
+    const ui = UI[this.props.lang === "en" ? "en" : "es"];
+    const n = c.steps.length;
+    const { pz, wrong } = this.state;
+    const done = pz >= n;
+    const accent = this.props.accent || "#8B7BF0";
+    if (!this.state.order) this.state.order = shuffle(n, n * 7919 + 13);
+
+    return {
+      c, done, playing: !done, started: pz > 0 || wrong,
+      progressLabel: pz + " " + ui.of + " " + n,
+      feedbackLabel: wrong ? ui.feedbackWrong : (done ? "" : ui.feedbackDefault),
+      feedbackStyle: "font-size:12.5px;font-weight:400;transition:color .2s ease;color:" + (wrong ? "#F0466B" : "#4E5578"),
+      restart: () => this.setState({ pz: 0, wrong: false }),
+      shellStyle: "border:1px solid #232A44;border-radius:18px;padding:30px 32px;background:#0C1020;font-family:Inter,system-ui,sans-serif" + (wrong ? ";animation:pzShake .5s ease" : ""),
+      badgeStyle: "display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;background:color-mix(in srgb," + accent + " 16%,transparent);border:1px solid " + accent + ";color:#C7BFFA;font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase",
+      slotsStyle: "display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px",
+      pips: Array.from({ length: n }, (_, i) => ({
+        style: "width:22px;height:4px;border-radius:999px;background:" + (i < pz ? accent : "#232A44") + ";transition:background .3s ease"
+      })),
+      slots: c.steps.map((label, i) => {
+        const filled = i < pz;
+        return {
+          num: String(i + 1).padStart(2, "0"),
+          label: filled ? label : "",
+          numStyle: "font-size:10.5px;font-weight:500;letter-spacing:0.1em;color:" + (filled ? "#C7BFFA" : "#4E5578"),
+          labelStyle: "font-size:13.5px;font-weight:400;line-height:1.25;text-wrap:pretty;color:" + (filled ? "#E9EBF4" : "transparent"),
+          style: "display:flex;flex-direction:column;gap:6px;min-height:74px;padding:12px 14px;border-radius:11px;transition:all .3s ease;" +
+            (filled
+              ? "border:1px solid " + accent + ";background:color-mix(in srgb," + accent + " 12%,transparent)"
+              : "border:1px dashed #232A44;background:#141A2E")
+        };
+      }),
+      chips: this.state.order.map(i => {
+        const used = i < pz;
+        return {
+          label: c.steps[i], used,
+          click: () => this.click(i),
+          style: "padding:10px 16px;border-radius:10px;font-size:14px;font-weight:400;transition:all .2s ease;text-align:left;" +
+            (used
+              ? "border:1px solid #232A44;background:#0C1020;color:#4E5578;cursor:default"
+              : "border:1px solid #3A4468;background:#1B2240;color:#E9EBF4;cursor:pointer")
+        };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

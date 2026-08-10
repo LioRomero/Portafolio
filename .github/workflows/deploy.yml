@@ -1,0 +1,37 @@
+name: Desplegar en GitHub Pages
+
+on:
+  # Cada push a la rama principal publica el sitio.
+  push:
+    branches: [main]
+  # Y se puede lanzar a mano desde la pestaña Actions.
+  workflow_dispatch:
+
+# Permisos que necesita la acción oficial de Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Si haces dos pushes seguidos, que gane el último y no se pisen.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: withastro/action@v3
+        # Compila con `npm ci && npm run build` y sube `dist/` como artefacto.
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
