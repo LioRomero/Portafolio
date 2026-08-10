@@ -74,16 +74,15 @@ export const UI = {
 } as const;
 
 /**
- * Hojas de vida en PDF.
+ * Hojas de vida en PDF, en `public/uploads/`.
  *
- * PENDIENTE: los archivos todavía no existen. Cuando estén, ponlos en
- * `public/uploads/` y escribe aquí sus rutas — los enlaces aparecen solos.
- * Mientras sean `null` no se pinta nada: antes eran texto en color de enlace
- * que no llevaba a ninguna parte, y eso es peor que no ofrecerlo.
+ * Si alguna se pone en `null` su enlace desaparece del contacto, en vez de
+ * quedar como texto en color de enlace que no lleva a ninguna parte.
+ * Para actualizarlas basta con reemplazar el archivo conservando el nombre.
  */
 export const CV_PDFS: { es: string | null; en: string | null } = {
-  es: null, // p. ej. '/uploads/CV-Emilio-Romero-ES.pdf'
-  en: null, // p. ej. '/uploads/CV-Emilio-Romero-EN.pdf'
+  es: '/uploads/cv-emilio-romero-es.pdf',
+  en: '/uploads/cv-emilio-romero-en.pdf',
 };
 
 /** Rutas equivalentes en cada idioma, para el conmutador de la barra. */

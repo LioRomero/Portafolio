@@ -280,6 +280,19 @@ export default function CuriousLayer({ lang, research }: Props) {
     };
   }, [foco]);
 
+  /* --- La playlist aparece al terminar la intro ----------------------------
+     No suena sola: ningún navegador reproduce audio sin un gesto previo. Lo
+     que sí se puede es dejarla servida, a un toque, en cuanto acaba la
+     animación. Solo en modo explorar: quien eligió "Al grano" no pidió música. */
+  useEffect(() => {
+    const alTerminarIntro = () => {
+      if (document.documentElement.dataset.mode === 'grano') return;
+      setSpotify(true);
+    };
+    window.addEventListener('em-intro-done', alTerminarIntro);
+    return () => window.removeEventListener('em-intro-done', alTerminarIntro);
+  }, []);
+
   /* --- Atajos de teclado --------------------------------------------------- */
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {

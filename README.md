@@ -131,11 +131,15 @@ Todavía sin resolver — hoy quedan los valores de los prototipos:
    Spotify como marcador de posición. Hay que cambiar `spotifySrc` (la URL de
    embed) y `playlistHref` en `src/content/home.ts` por la playlist real. Es el
    único pendiente que se ve en pantalla.
+
+   El reproductor **se abre solo al terminar la intro**, y únicamente en modo
+   explorar. No suena solo: ningún navegador reproduce audio sin un gesto previo
+   del visitante, así que lo que se puede garantizar es dejarlo a un toque.
 4. **Canvas de emociones** — ver la sección siguiente: hay tres caminos y hay
    que elegir uno.
-5. **PDF del CV** — la sección de contacto enlaza "CV en español / in English"
-   como texto. Faltan los archivos: ponlos en `public/uploads/` y conviértelos en
-   enlaces.
+5. ~~**PDF del CV**~~ — hecho. Los dos PDF están en `public/uploads/` y
+   enlazados desde contacto. Para actualizarlos, reemplaza el archivo
+   conservando el nombre; las rutas viven en `CV_PDFS` (`src/content/ui.ts`).
 
 ## El canvas: qué hace hoy y qué caminos hay
 

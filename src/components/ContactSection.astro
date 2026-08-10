@@ -3,6 +3,7 @@ import { HOME } from '../content/home';
 import { CONTACT_EMAIL } from '../content/canvas';
 import HiddenNote from '../islands/HiddenNote.tsx';
 import { CV_PDFS, type Lang } from '../content/ui';
+import { withBase } from '../lib/paths';
 
 interface Props {
   lang: Lang;
@@ -48,12 +49,12 @@ const sub = Astro.props.sub ?? t.ctaSub;
           (CV_PDFS.es || CV_PDFS.en) && (
             <div class="cvs">
               {CV_PDFS.es && (
-                <a href={CV_PDFS.es} download>
+                <a href={withBase(CV_PDFS.es)} download>
                   {t.cvEs}
                 </a>
               )}
               {CV_PDFS.en && (
-                <a href={CV_PDFS.en} download>
+                <a href={withBase(CV_PDFS.en)} download>
                   {t.cvEn}
                 </a>
               )}

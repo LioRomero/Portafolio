@@ -43,6 +43,10 @@ export default function Intro({ variant, lang }: Props) {
     const release = () => {
       root.removeAttribute('data-scroll-locked');
       setShowing(false);
+      /* La capa ambiental escucha esto para sacar el reproductor en cuanto
+         termina la animación. No puede sonar solo —los navegadores exigen un
+         gesto— pero sí puede quedar a un toque. */
+      window.dispatchEvent(new CustomEvent('em-intro-done', { detail: { variant } }));
     };
 
     /* En móvil la intro larga baja a ~3s. */
@@ -67,6 +71,7 @@ export default function Intro({ variant, lang }: Props) {
   const dismiss = () => {
     document.documentElement.removeAttribute('data-scroll-locked');
     setShowing(false);
+    window.dispatchEvent(new CustomEvent('em-intro-done', { detail: { variant } }));
   };
 
   return (
