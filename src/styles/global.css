@@ -29,7 +29,9 @@ html[data-scroll-locked] {
 
 body {
   margin: 0;
-  background: var(--bg);
+  /* Sin fondo propio, a propósito. El de `html` ya cubre el viewport, y un
+     fondo opaco aquí taparía el lienzo del rastro: los elementos con z-index
+     negativo se pintan antes que el fondo del body. */
   color: var(--text);
   font-family: var(--font);
   font-size: var(--fs-body);

@@ -592,8 +592,11 @@ const title =
   }
 
   /* Sin cursor no hay linterna, así que la letra chica se muestra entera:
-     ningún contenido queda accesible solo en escritorio. */
-  @media (pointer: coarse), (max-width: 900px) {
+     ningún contenido queda accesible solo en escritorio. La condición es la
+     capacidad del dispositivo, no el ancho: debe coincidir con `sinCursor()`
+     de la capa ambiental o una ventana estrecha mostraría la letra chica
+     revelada y con la linterna activa a la vez. */
+  @media (pointer: coarse), (hover: none) {
     .ghost {
       opacity: 1;
       border-left-color: var(--mind);

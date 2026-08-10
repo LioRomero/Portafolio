@@ -98,9 +98,10 @@ export const HOME = {
     nowPlaying: 'Suena ahora',
     spotifyNote:
       'Cámbiala si no te gusta. Si te gusta, ábrela en Spotify — es mi playlist de trabajo real.',
-    /** PENDIENTE: reemplazar por la playlist real de Emilio (ver README). */
+    /* Playlist de trabajo real. El `?si=` del enlace de compartir es un token
+       de seguimiento personal: no se propaga ni al embed ni al enlace. */
     spotifySrc:
-      'https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgRdKQ?utm_source=generator&theme=0',
+      'https://open.spotify.com/embed/playlist/2XIGEB5k7r3OHdYqLVf2lv?utm_source=generator&theme=0',
     senseHint:
       'Nada de esto es decorado: la linterna existe porque todo proyecto tiene letra chica que nadie mira; la playlist es el contexto emocional de trabajar; el fondo pintado dice que quien está del otro lado deja huella aunque no la vea.',
     tutorialLink: 'Ver el tour completo →',
@@ -122,7 +123,7 @@ export const HOME = {
     songAdd: 'Sumar',
     songThanks: 'Anotada. Gracias.',
     playlistLink: 'Abrir mi playlist en Spotify →',
-    playlistHref: 'https://open.spotify.com/',
+    playlistHref: 'https://open.spotify.com/playlist/2XIGEB5k7r3OHdYqLVf2lv',
     panelKeys: 'Teclas: X research · F linterna · P playlist · M movimiento · L idioma · ? este panel.',
     progress: [
       'Aún no has abierto ninguna. Los puntos laten.',
@@ -255,9 +256,8 @@ export const HOME = {
     spotifyRow: 'My Spotify playlist',
     nowPlaying: 'Now playing',
     spotifyNote: "Skip it if you don't like it. If you do, open it in Spotify — it's my real working playlist.",
-    /** PENDING: swap for Emilio's real playlist (see README). */
     spotifySrc:
-      'https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgRdKQ?utm_source=generator&theme=0',
+      'https://open.spotify.com/embed/playlist/2XIGEB5k7r3OHdYqLVf2lv?utm_source=generator&theme=0',
     senseHint:
       "None of this is decoration: the flashlight exists because every project has fine print nobody reads; the playlist is the emotional context of working; the painted background says the person on the other side leaves a mark even when they can't see it.",
     tutorialLink: 'See the full tour →',
@@ -279,7 +279,7 @@ export const HOME = {
     songAdd: 'Add',
     songThanks: 'Noted. Thank you.',
     playlistLink: 'Open my playlist on Spotify →',
-    playlistHref: 'https://open.spotify.com/',
+    playlistHref: 'https://open.spotify.com/playlist/2XIGEB5k7r3OHdYqLVf2lv',
     panelKeys: 'Keys: X research · F flashlight · P playlist · M motion · L language · ? this panel.',
     progress: [
       "You haven't opened any yet. The dots are pulsing.",

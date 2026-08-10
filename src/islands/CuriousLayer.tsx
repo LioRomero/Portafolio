@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { HOME } from '../content/home';
 import { UI, type Lang } from '../content/ui';
 import { getFinds, onFindsChange, resetFinds, TOTAL_FINDS } from '../lib/finds';
+import { getMode, onPrefsChange } from '../lib/prefs';
 
 type Hue = '#8B7BF0' | '#22D3EE' | '#F0466B';
 
@@ -16,9 +17,16 @@ const BEAM = 210;
 /** Distancia a la que un fragmento cuenta como encontrado. */
 const FOUND_AT = 130;
 
-const isCoarse = (): boolean => {
+/**
+ * ¿Hay un cursor de verdad? El rastro y la linterna dependen de él.
+ *
+ * Se mira la capacidad del dispositivo, no el ancho: una ventana de escritorio
+ * estrecha sigue teniendo ratón, y descartarla por tamaño apagaba el rastro en
+ * pantallas pequeñas o con el navegador a media pantalla.
+ */
+const sinCursor = (): boolean => {
   try {
-    return window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 900;
+    return window.matchMedia('(pointer: coarse), (hover: none)').matches;
   } catch {
     return false;
   }
@@ -67,6 +75,17 @@ export default function CuriousLayer({ lang, research }: Props) {
   const [researchOn, setResearchOn] = useState(false);
   const [ghosts, setGhosts] = useState(0);
   const [ghostTotal, setGhostTotal] = useState(0);
+  /* En "Al grano" toda esta capa está oculta por CSS. Sin esto el bucle de
+     pintado seguiría corriendo detrás de un `display:none`, gastando batería
+     para dibujar algo que nadie ve. */
+  const [explorando, setExplorando] = useState(true);
+
+  useEffect(() => {
+    setExplorando(getMode() !== 'grano');
+    return onPrefsChange(({ key, value }) => {
+      if (key === 'mode') setExplorando(value !== 'grano');
+    });
+  }, []);
 
   const canvas = useRef<HTMLCanvasElement | null>(null);
   const ctx = useRef<CanvasRenderingContext2D | null>(null);
@@ -137,7 +156,7 @@ export default function CuriousLayer({ lang, research }: Props) {
   /* --- Fondo pintado ------------------------------------------------------ */
   useEffect(() => {
     /* Sin cursor no hay rastro: en móvil y con movimiento reducido no se monta. */
-    if (isCoarse() || reducedMotion() || !paint) return;
+    if (sinCursor() || reducedMotion() || !paint || !explorando) return;
 
     const el = canvas.current;
     if (!el) return;
@@ -237,7 +256,7 @@ export default function CuriousLayer({ lang, research }: Props) {
       /* Al apagar el fondo no debe quedar el último rastro congelado. */
       clearPaint();
     };
-  }, [paint, pulse]);
+  }, [paint, pulse, explorando]);
 
   /* --- Linterna ------------------------------------------------------------
      Su función es literal: alumbrar la letra chica del portafolio. Los
@@ -312,7 +331,7 @@ export default function CuriousLayer({ lang, research }: Props) {
   });
 
   const n = found.length;
-  const coarse = isCoarse();
+  const coarse = sinCursor();
 
   return (
     <div data-playful>
