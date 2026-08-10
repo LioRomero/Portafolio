@@ -162,6 +162,7 @@ export default function CuriousLayer({ lang, research }: Props) {
   const [researchOn, setResearchOn] = useState(false);
   const [ghosts, setGhosts] = useState(0);
   const [ghostTotal, setGhostTotal] = useState(0);
+  const [aviso, setAviso] = useState(false);
   /* En "Al grano" toda esta capa está oculta por CSS. Sin esto el bucle de
      pintado seguiría corriendo detrás de un `display:none`, gastando batería
      para dibujar algo que nadie ve. */
@@ -210,6 +211,24 @@ export default function CuriousLayer({ lang, research }: Props) {
     setFound(getFinds());
     return onFindsChange(setFound);
   }, []);
+
+  /* Aviso al descubrir una nota. `previas` arranca en null para no anunciar
+     las que ya estaban guardadas de una visita anterior. */
+  const previas = useRef<number | null>(null);
+  const temporizadorAviso = useRef<number | undefined>(undefined);
+
+  useEffect(() => {
+    const n = found.length;
+    const antes = previas.current;
+    previas.current = n;
+    if (antes === null || n <= antes) return;
+
+    setAviso(true);
+    clearTimeout(temporizadorAviso.current);
+    temporizadorAviso.current = window.setTimeout(() => setAviso(false), 2600);
+  }, [found]);
+
+  useEffect(() => () => clearTimeout(temporizadorAviso.current), []);
 
   /* --- Qué ofrece esta página --------------------------------------------- */
   useEffect(() => {
@@ -501,6 +520,18 @@ export default function CuriousLayer({ lang, research }: Props) {
 
       {foco && <div class="cl-foco" aria-hidden="true" />}
 
+      {/* Aviso bajo la barra: confirma el hallazgo y se va solo. `role=status`
+          para que un lector de pantalla lo anuncie sin robar el foco. */}
+      {aviso && (
+        <div class="cl-aviso" role="status">
+          <span class="cl-aviso-dot" aria-hidden="true" />
+          {t.findFound}
+          <span class="cl-aviso-cuenta tabular">
+            {found.length}/{TOTAL_FINDS}
+          </span>
+        </div>
+      )}
+
       <button
         type="button"
         class={panel ? 'cl-toggle cl-toggle--on' : 'cl-toggle'}
@@ -774,6 +805,44 @@ export default function CuriousLayer({ lang, research }: Props) {
             rgba(4, 6, 14, .92) 100%
           );
         }
+
+        .cl-aviso {
+          position: fixed;
+          top: 68px;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 88;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 9px 16px;
+          border-radius: var(--r-pill);
+          border: 1px solid var(--mind);
+          background: color-mix(in srgb, var(--mind) 16%, var(--bg-2));
+          color: var(--text);
+          font-size: 13px;
+          font-weight: var(--fw-medium);
+          box-shadow: 0 14px 34px rgba(0, 0, 0, .5);
+          pointer-events: none;
+          animation: clAviso 2.6s ease both;
+        }
+        /* Entra rápido, se sostiene y se desvanece sin que haya que cerrarlo. */
+        @keyframes clAviso {
+          0% { opacity: 0; transform: translate(-50%, -10px); }
+          9% { opacity: 1; transform: translate(-50%, 0); }
+          76% { opacity: 1; transform: translate(-50%, 0); }
+          100% { opacity: 0; transform: translate(-50%, -6px); }
+        }
+        html[data-motion='off'] .cl-aviso { animation: none; }
+        @media (prefers-reduced-motion: reduce) { .cl-aviso { animation: none; } }
+
+        .cl-aviso-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: var(--r-pill);
+          background: var(--mind);
+        }
+        .cl-aviso-cuenta { color: var(--on-mind); }
 
         .cl-toggle {
           position: fixed;

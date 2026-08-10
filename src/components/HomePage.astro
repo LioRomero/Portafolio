@@ -8,6 +8,7 @@ import EmotionCanvas from '../islands/EmotionCanvas.tsx';
 import Intro from '../islands/Intro.tsx';
 import Tutorial from '../islands/Tutorial.tsx';
 import CuriousLayer from '../islands/CuriousLayer.tsx';
+import SongBlock from '../islands/SongBlock.tsx';
 import { Image } from 'astro:assets';
 import proceso from '../images/carrusel-1.jpg';
 import { HOME, HOME_CASES } from '../content/home';
@@ -232,6 +233,18 @@ const title =
           format="avif"
         />
       </figure>
+    </div>
+  </section>
+
+  {/* --- Canción sugerida: aparece a mitad de la exploración ------------ */}
+  <section class="section bordered" data-playful>
+    <div class="wrap wrap--canvas">
+      {/*
+        `client:idle` y no `client:visible`: hasta encontrar cuatro notas este
+        bloque no pinta nada, así que la isla queda sin tamaño y el observador
+        de visibilidad no dispararía nunca. Nunca llegaría a desbloquearse.
+      */}
+      <SongBlock lang={lang} client:idle />
     </div>
   </section>
 

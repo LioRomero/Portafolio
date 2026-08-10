@@ -37,13 +37,7 @@ export const HOME = {
     xrayHintOn: 'Esto es lo que queda sin research: pantallas bonitas y ninguna razón. Vuelve a encenderlo.',
     xrayNote:
       'Sin el insight, este caso es “hicimos una web nueva”. La decisión no se puede defender y el resultado parece suerte.',
-    emotionBehind: 'La emoción detrás',
     readFull: 'Leer el caso completo →',
-    evOpen: 'Ver la evidencia y lo que descarté',
-    evClose: 'Cerrar la evidencia',
-    prev: 'Imagen anterior',
-    next: 'Imagen siguiente',
-    slide: 'Imagen',
     methodTitle: 'Cómo trabajo',
     methodSub:
       'La consultoría me enseñó que la fricción vive en los procesos y en la comunicación, no en el botón. Así que empiezo ahí — y termino con una métrica que alguien más pueda defender.',
@@ -105,10 +99,6 @@ export const HOME = {
     senseHint:
       'Nada de esto es decorado: la linterna existe porque todo proyecto tiene letra chica que nadie mira; la playlist es el contexto emocional de trabajar; el fondo pintado dice que quien está del otro lado deja huella aunque no la vea.',
     tutorialLink: 'Ver el tour completo →',
-    playHint:
-      'Hay tres puzzles repartidos entre las páginas (uno aquí, uno en Casos, uno en Sobre mí) y un canvas abierto al final de cada una para que dejes lo que pensaste.',
-    paintHint:
-      'El fondo se pinta con el latido, a 55 pulsaciones por minuto, y el color va girando entre las tres emociones: violeta, cian y coral. Cada trazo vive unos segundos desde que lo dibujas y se apaga solo, así que el lienzo nunca se satura.',
     ghost1:
       'Lo que no pongo en el CV: tardé dos años en aprender a decir “no sé todavía” en una reunión. Sigue siendo la frase más útil que tengo.',
     ghost2:
@@ -122,6 +112,7 @@ export const HOME = {
     songPlaceholder: 'Canción y artista',
     songAdd: 'Sumar',
     songThanks: 'Anotada. Gracias.',
+    songMail: 'Enviarme tus canciones →',
     playlistLink: 'Abrir mi playlist en Spotify →',
     playlistHref: 'https://open.spotify.com/playlist/2XIGEB5k7r3OHdYqLVf2lv',
     panelKeys: 'Teclas: X research · F linterna · P playlist · M movimiento · L idioma · ? este panel.',
@@ -197,13 +188,7 @@ export const HOME = {
     xrayHintOn: "This is what's left without research: pretty screens and no reasons. Switch it back on.",
     xrayNote:
       "Without the insight, this case reads as “we built a new website”. The decision can't be defended and the outcome looks like luck.",
-    emotionBehind: 'The emotion behind it',
     readFull: 'Read the full case →',
-    evOpen: 'See the evidence and what I ruled out',
-    evClose: 'Hide the evidence',
-    prev: 'Previous image',
-    next: 'Next image',
-    slide: 'Image',
     methodTitle: 'How I work',
     methodSub:
       'Consulting taught me that friction lives in processes and communication, not in the button. So I start there — and finish with a metric someone else can defend.',
@@ -261,10 +246,6 @@ export const HOME = {
     senseHint:
       "None of this is decoration: the flashlight exists because every project has fine print nobody reads; the playlist is the emotional context of working; the painted background says the person on the other side leaves a mark even when they can't see it.",
     tutorialLink: 'See the full tour →',
-    playHint:
-      'There are three puzzles across the pages (one here, one in Cases, one in About) and an open canvas at the end of each, for whatever you thought.',
-    paintHint:
-      'The background paints with the heartbeat, at 55 beats per minute, and the colour turns through the three emotions: violet, cyan and coral. Every stroke lives a few seconds from the moment you draw it and fades on its own, so the canvas never saturates.',
     ghost1:
       'What’s not on my CV: it took me two years to learn to say “I don’t know yet” in a meeting. It’s still the most useful sentence I have.',
     ghost2:
@@ -278,6 +259,7 @@ export const HOME = {
     songPlaceholder: 'Song and artist',
     songAdd: 'Add',
     songThanks: 'Noted. Thank you.',
+    songMail: 'Send me your songs →',
     playlistLink: 'Open my playlist on Spotify →',
     playlistHref: 'https://open.spotify.com/playlist/2XIGEB5k7r3OHdYqLVf2lv',
     panelKeys: 'Keys: X research · F flashlight · P playlist · M motion · L language · ? this panel.',

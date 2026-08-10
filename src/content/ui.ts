@@ -8,9 +8,7 @@ export type Lang = 'es' | 'en';
 export const UI = {
   es: {
     navCases: 'Casos',
-    navMethod: 'Método',
     navAbout: 'Sobre mí',
-    navHome: 'Inicio',
     modeQuick: 'Al grano',
     modeExplore: 'Explorar',
     modeTitle:
@@ -21,7 +19,6 @@ export const UI = {
     langBtn: 'EN',
     curious: 'Modo curioso',
     curiousTitle: 'Modo curioso — notas escondidas y ajustes de la página',
-    letsTalk: 'Hablemos',
     close: 'Cerrar',
     on: 'Activado',
     off: 'Desactivado',
@@ -63,9 +60,7 @@ export const UI = {
   },
   en: {
     navCases: 'Cases',
-    navMethod: 'Method',
     navAbout: 'About',
-    navHome: 'Home',
     modeQuick: 'Quick read',
     modeExplore: 'Explore',
     modeTitle:
@@ -76,7 +71,6 @@ export const UI = {
     langBtn: 'ES',
     curious: 'Curious mode',
     curiousTitle: 'Curious mode — hidden notes and page settings',
-    letsTalk: "Let's talk",
     close: 'Close',
     on: 'On',
     off: 'Off',

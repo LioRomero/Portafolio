@@ -7,6 +7,8 @@ import Puzzle from '../islands/Puzzle.tsx';
 import EmotionCanvas from '../islands/EmotionCanvas.tsx';
 import CuriousLayer from '../islands/CuriousLayer.tsx';
 import CaseNav from '../islands/CaseNav.tsx';
+import CaseGallery, { type Lamina } from '../islands/CaseGallery.tsx';
+import CaseRail from '../islands/CaseRail.tsx';
 import { CASES, CASES_UI, CASE_ORDER } from '../content/cases';
 import { INTRO } from '../content/intro';
 import { ROUTES, type Lang } from '../content/ui';
@@ -24,6 +26,28 @@ const title = lang === 'es' ? 'Casos — Emilio Romero' : 'Cases — Emilio Rome
 const description = CASES.ropofy[lang].sub;
 
 const tabs = CASE_ORDER.map((k) => ({ key: k, label: CASES[k].tab, accent: CASES[k].accent }));
+
+/**
+ * Todas las imágenes de un caso en un solo carrusel: la principal, el par
+ * antes/después y el diagrama de flujo. El pie viaja con cada lámina.
+ */
+/* Se tipa por estructura y no con el tipo del caso: `as const` convierte cada
+   texto en un tipo literal propio, así que los tres casos son incompatibles
+   entre sí y ninguno serviría como parámetro común. */
+interface FuenteLaminas {
+  readonly hero: { readonly src: string; readonly ph: string };
+  readonly pairs: readonly { readonly src: string; readonly ph: string; readonly cap: string }[];
+  readonly flow?: { readonly src: string; readonly ph: string; readonly cap: string };
+}
+
+const laminasDe = (d: FuenteLaminas): Lamina[] => {
+  const laminas: Lamina[] = [{ src: withBase(d.hero.src), alt: d.hero.ph, cap: d.hero.ph }];
+  for (const p of d.pairs) laminas.push({ src: withBase(p.src), alt: p.ph, cap: p.cap });
+  if ('flow' in d && d.flow) {
+    laminas.push({ src: withBase(d.flow.src), alt: d.flow.ph, cap: d.flow.cap });
+  }
+  return laminas;
+};
 ---
 
 <BaseLayout title={title} description={description} lang={lang} page="cases">
@@ -35,6 +59,7 @@ const tabs = CASE_ORDER.map((k) => ({ key: k, label: CASES[k].tab, accent: CASES
     client:idle
   />
   <CaseNav tabs={tabs} navLabel={ui.onThisPage} client:idle />
+  <CaseRail etapas={[...ui.rail]} titulo={ui.onThisPage} client:idle />
 
   {/* La página abre directamente con el primer caso, así que no hay un título
       visible que sirva de h1. Sin él la jerarquía empieza en h2 y el documento
@@ -77,7 +102,7 @@ const tabs = CASE_ORDER.map((k) => ({ key: k, label: CASES[k].tab, accent: CASES
               </aside>
 
               {/* 01 · El encargo */}
-              <section class="block">
+              <section class="block" data-caso={key} data-etapa="0">
                 <div class="kicker label">{ui.kickers[0]}</div>
                 <h3>{d.brief.h2}</h3>
                 <p class="body">{d.brief.p1}</p>
@@ -95,7 +120,7 @@ const tabs = CASE_ORDER.map((k) => ({ key: k, label: CASES[k].tab, accent: CASES
               </section>
 
               {/* 02 · Investigación */}
-              <section class="block">
+              <section class="block" data-caso={key} data-etapa="1">
                 <div class="kicker label">{ui.kickers[1]}</div>
                 <h3>{d.research.h2}</h3>
                 <p class="body">{d.research.p}</p>
@@ -120,7 +145,7 @@ const tabs = CASE_ORDER.map((k) => ({ key: k, label: CASES[k].tab, accent: CASES
               </section>
 
               {/* 03 · Hallazgos */}
-              <section class="block">
+              <section class="block" data-caso={key} data-etapa="2">
                 <div class="kicker label">{ui.kickers[2]}</div>
                 <h3>{d.findings.h2}</h3>
                 <div class="findings">
@@ -141,7 +166,7 @@ const tabs = CASE_ORDER.map((k) => ({ key: k, label: CASES[k].tab, accent: CASES
               </section>
 
               {/* 04 · Decisiones */}
-              <section class="block">
+              <section class="block" data-caso={key} data-etapa="3">
                 <div class="kicker label">{ui.kickers[3]}</div>
                 <h3>{d.decisions.h2}</h3>
                 <ol class="decisions">
@@ -155,31 +180,20 @@ const tabs = CASE_ORDER.map((k) => ({ key: k, label: CASES[k].tab, accent: CASES
               </section>
 
               {/* 05 · La solución */}
-              <section class="block">
+              <section class="block" data-caso={key} data-etapa="4">
                 <div class="kicker label">{ui.kickers[4]}</div>
-                <figure class="hero-fig">
-                  <img src={withBase(d.hero.src)} alt={d.hero.ph} loading="lazy" decoding="async" />
-                </figure>
-
-                <div class="pairs">
-                  {d.pairs.map((p) => (
-                    <figure class="pair">
-                      <img src={withBase(p.src)} alt={p.ph} loading="lazy" decoding="async" />
-                      <figcaption class="meta">{p.cap}</figcaption>
-                    </figure>
-                  ))}
-                </div>
-
-                {'flow' in d && d.flow && (
-                  <figure class="flow">
-                    <img src={withBase(d.flow.src)} alt={d.flow.ph} loading="lazy" decoding="async" />
-                    <figcaption class="meta">{d.flow.cap}</figcaption>
-                  </figure>
-                )}
+                <CaseGallery
+                  laminas={laminasDe(d)}
+                  anterior={ui.prev}
+                  siguiente={ui.next}
+                  imagen={ui.slide}
+                  accent={c.accent}
+                  client:visible
+                />
               </section>
 
               {/* 06 · Resultado */}
-              <section class="block">
+              <section class="block" data-caso={key} data-etapa="5">
                 <div class="kicker label">{ui.kickers[5]}</div>
                 <div class={`result result--${d.result.tone}`}>
                   <span class={'small' in d.result && d.result.small ? 'big big--small' : 'big'}>
@@ -191,7 +205,7 @@ const tabs = CASE_ORDER.map((k) => ({ key: k, label: CASES[k].tab, accent: CASES
               </section>
 
               {/* 07 · Qué me dejó */}
-              <section class="block">
+              <section class="block" data-caso={key} data-etapa="6">
                 <div class="kicker label">{ui.kickers[6]}</div>
                 <div class="takeaways">
                   {d.takeaways.map(([h, body, tone]) => (
@@ -241,6 +255,13 @@ const tabs = CASE_ORDER.map((k) => ({ key: k, label: CASES[k].tab, accent: CASES
 
   .case + .case {
     border-top: var(--border);
+  }
+
+  /* Al saltar desde el índice o desde las pestañas, el destino quedaría bajo
+     la barra superior y la de casos, que son fijas. */
+  .case,
+  .block {
+    scroll-margin-top: 116px;
   }
 
   .case-title {
@@ -574,39 +595,8 @@ const tabs = CASE_ORDER.map((k) => ({ key: k, label: CASES[k].tab, accent: CASES
     line-height: var(--lh-body-sm);
   }
 
-  .hero-fig,
-  .flow,
-  .pair {
-    margin: 0;
-    border: var(--border);
-    border-radius: var(--r-card-lg);
-    overflow: hidden;
-    background: var(--bg-2);
-  }
-
-  .hero-fig img,
-  .flow img,
-  .pair img {
-    width: 100%;
-    height: auto;
-  }
-
-  .pairs {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: var(--gap-cards);
-    margin-top: var(--gap-cards);
-  }
-
-  .flow {
-    margin-top: var(--gap-cards);
-  }
-
-  .pair figcaption,
-  .flow figcaption {
-    padding: 12px 16px;
-    border-top: var(--border);
-  }
+  /* Las figuras apiladas (hero, par antes/después y flujo) las sustituyó el
+     carrusel `CaseGallery`, que trae sus propios estilos. */
 
   .result {
     display: flex;
