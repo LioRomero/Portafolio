@@ -14,6 +14,16 @@ const HUE_BY_SECTION: Record<string, Hue> = {
 
 /** Radio del haz, en px. Fuera de él la letra chica no se lee. */
 const BEAM = 210;
+
+/**
+ * Frames sin rastro nuevo antes de limpiar el lienzo del todo.
+ *
+ * El borrado por frame es multiplicativo (cada frame quita un 10%), así que en
+ * enteros de 8 bits se atasca: 4 × 0,9 = 3,6 y vuelve a redondear a 4. Sin este
+ * barrido quedaría una película violeta permanente por donde pasó el cursor.
+ * A 60 fps son ~0,8 s, bastante después de que el trazo deje de verse.
+ */
+const FRAMES_HASTA_LIMPIAR = 48;
 /** Distancia a la que un fragmento cuenta como encontrado. */
 const FOUND_AT = 130;
 
@@ -195,6 +205,7 @@ export default function CuriousLayer({ lang, research }: Props) {
 
     let raf = 0;
     let running = true;
+    let inactivos = 0;
 
     const frame = () => {
       raf = requestAnimationFrame(frame);
@@ -204,7 +215,17 @@ export default function CuriousLayer({ lang, research }: Props) {
       const w = window.innerWidth;
       const h = window.innerHeight;
 
-      /* Cada frame borra un 10%: el rastro se desvanece en ~0.4s. */
+      /* Sin rastro nuevo, se limpia una vez y se deja de componer: ni película
+         residual ni un bucle repintando un lienzo ya vacío. */
+      if (points.current.length === 0) {
+        inactivos++;
+        if (inactivos === FRAMES_HASTA_LIMPIAR) cx.clearRect(0, 0, w, h);
+        if (inactivos >= FRAMES_HASTA_LIMPIAR) return;
+      } else {
+        inactivos = 0;
+      }
+
+      /* Cada frame borra un 10%: el trazo deja de verse en ~0.4s. */
       cx.globalCompositeOperation = 'destination-out';
       cx.fillStyle = 'rgba(0,0,0,0.10)';
       cx.fillRect(0, 0, w, h);
