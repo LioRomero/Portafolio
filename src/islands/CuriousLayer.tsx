@@ -3,6 +3,15 @@ import { HOME } from '../content/home';
 import { UI, type Lang } from '../content/ui';
 import { getFinds, onFindsChange, resetFinds, TOTAL_FINDS } from '../lib/finds';
 import { getMode, onPrefsChange } from '../lib/prefs';
+import {
+  LIMITES,
+  PINCEL_DEFECTO,
+  PINCEL_GOTAS,
+  guardarPincel,
+  leerPincel,
+  type ModoColor,
+  type Pincel,
+} from '../lib/pincel';
 
 /** Radio del haz, en px. Fuera de él la letra chica no se lee. */
 const BEAM = 210;
@@ -12,14 +21,15 @@ const FOUND_AT = 130;
 /* --- Rastro del cursor ------------------------------------------------------
    Cada trazo es una partícula con su propia edad: vive los mismos segundos
    desde que se dibujó, se mueva el cursor o no. Antes el lienzo entero se
-   borraba a la vez, así que al parar el ratón desaparecía todo de golpe.      */
+   borraba a la vez, así que al parar el ratón desaparecía todo de golpe.
+   Los parámetros salen de `lib/pincel`, ajustables desde el panel.            */
 
-/** Cuánto vive cada trazo desde que nace. */
-const VIDA_MS = 4200;
 /** Un trazo cada tantos ms: sin esto un gesto rápido crea cientos de partículas. */
 const CADENCIA_MS = 26;
 /** Techo de seguridad por si el navegador entrega eventos muy seguidos. */
 const MAX_TRAZOS = 260;
+/** Píxeles por segundo al cuadrado con `caida` al máximo. */
+const GRAVEDAD = 260;
 
 /**
  * Los tres acentos del sistema, que es lo que el rastro va recorriendo:
@@ -39,6 +49,9 @@ const CICLO_COLOR_MS = 21000;
 interface Trazo {
   x: number;
   y: number;
+  /** Velocidad en px/s. La dispersión la reparte al nacer; la caída la empuja. */
+  vx: number;
+  vy: number;
   r: number;
   nace: number;
   color: number;
@@ -61,14 +74,23 @@ function crearSprites(): HTMLCanvasElement[] {
     s.width = s.height = LADO;
     const cx = s.getContext('2d')!;
     const grad = cx.createRadialGradient(LADO / 2, LADO / 2, 0, LADO / 2, LADO / 2, LADO / 2);
-    grad.addColorStop(0, `rgba(${r},${g},${b},0.42)`);
-    grad.addColorStop(0.45, `rgba(${r},${g},${b},0.12)`);
+    /* El sprite se hornea a plena opacidad: el brillo real lo pone
+       `globalAlpha` en cada frame, que es lo que ajusta el panel. */
+    grad.addColorStop(0, `rgba(${r},${g},${b},1)`);
+    grad.addColorStop(0.35, `rgba(${r},${g},${b},0.3)`);
     grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
     cx.fillStyle = grad;
     cx.fillRect(0, 0, LADO, LADO);
     return s;
   });
 }
+
+/** Índice de sprite fijo para cada acento, cuando no se usa el ciclo. */
+const SPRITE_POR_MODO: Record<Exclude<ModoColor, 'ciclo'>, number> = {
+  mind: 0,
+  clarity: Math.round(PASOS_COLOR / 3),
+  feel: Math.round((PASOS_COLOR * 2) / 3),
+};
 
 /**
  * ¿Hay un cursor de verdad? El rastro y la linterna dependen de él.
@@ -144,6 +166,26 @@ export default function CuriousLayer({ lang, research }: Props) {
   const ctx = useRef<CanvasRenderingContext2D | null>(null);
   const trazos = useRef<Trazo[]>([]);
   const seen = useRef<Set<string>>(new Set());
+
+  /* Los ajustes viven a la vez en estado (para pintar los controles) y en una
+     ref (para que el bucle lea el valor vivo sin reiniciarse en cada arrastre
+     del deslizador, que cortaría el rastro a cada píxel). */
+  const [pincel, setPincel] = useState<Pincel>(PINCEL_DEFECTO);
+  const ajustes = useRef<Pincel>(PINCEL_DEFECTO);
+  const [pincelAbierto, setPincelAbierto] = useState(false);
+
+  useEffect(() => {
+    const guardado = leerPincel();
+    ajustes.current = guardado;
+    setPincel(guardado);
+  }, []);
+
+  const cambiarPincel = (parcial: Partial<Pincel>) => {
+    const siguiente = { ...ajustes.current, ...parcial };
+    ajustes.current = siguiente;
+    setPincel(siguiente);
+    guardarPincel(siguiente);
+  };
 
   /** Borra el lienzo de un golpe, sin esperar a que los trazos cumplan su vida. */
   const clearPaint = () => {
@@ -232,18 +274,26 @@ export default function CuriousLayer({ lang, research }: Props) {
       const ahora = performance.now();
       if (ahora - ultimo < CADENCIA_MS) return;
       ultimo = ahora;
+      const p = ajustes.current;
       if (trazos.current.length >= MAX_TRAZOS) trazos.current.shift();
+
+      /* La dispersión reparte velocidades al nacer: sin ella el trazo se queda
+         clavado donde pasó el cursor; con ella se abre como salpicadura. */
+      const empuje = p.dispersion * 46;
       trazos.current.push({
         x: e.clientX,
         y: e.clientY,
-        r: 55 + Math.random() * 75,
+        vx: (Math.random() - 0.5) * empuje,
+        vy: (Math.random() - 0.5) * empuje,
+        r: p.tamano * (0.7 + Math.random() * 0.6),
         nace: ahora,
-        color: colorAhora(ahora),
+        color: p.modoColor === 'ciclo' ? colorAhora(ahora) : SPRITE_POR_MODO[p.modoColor],
       });
     };
 
     let raf = 0;
     let running = true;
+    let anterior = performance.now();
 
     const frame = () => {
       raf = requestAnimationFrame(frame);
@@ -253,13 +303,21 @@ export default function CuriousLayer({ lang, research }: Props) {
       const w = window.innerWidth;
       const h = window.innerHeight;
       const ahora = performance.now();
+      /* Acotado: al volver de una pestaña en segundo plano el salto sería
+         enorme y las gotas se teletransportarían fuera de pantalla. */
+      const dt = Math.min(0.05, (ahora - anterior) / 1000);
+      anterior = ahora;
+
+      const aj = ajustes.current;
+      const vidaMs = aj.duracion * 1000;
 
       /* Se repinta todo desde cero cada frame. Al no acumular capas no queda
          ninguna película residual, por muchas vueltas que dé el cursor. */
       cx.clearRect(0, 0, w, h);
 
-      /* Cada trazo muere a los VIDA_MS de nacer, se mueva el cursor o no. */
-      while (trazos.current.length && ahora - trazos.current[0]!.nace > VIDA_MS) {
+      /* Cada trazo muere a los `duracion` segundos de nacer, se mueva el
+         cursor o no. */
+      while (trazos.current.length && ahora - trazos.current[0]!.nace > vidaMs) {
         trazos.current.shift();
       }
       if (trazos.current.length === 0) return;
@@ -275,11 +333,24 @@ export default function CuriousLayer({ lang, research }: Props) {
 
       cx.globalCompositeOperation = 'lighter';
       for (const p of trazos.current) {
-        const edad = (ahora - p.nace) / VIDA_MS;
-        /* Desvanecido cuadrático: aguanta visible y se va apagando al final. */
+        const edad = (ahora - p.nace) / vidaMs;
+
+        /* Física de gota: cae, se frena por rozamiento y se va abriendo. */
+        p.vy += GRAVEDAD * aj.caida * dt;
+        const rozamiento = Math.pow(0.86, dt * 60);
+        p.vx *= rozamiento;
+        p.vy *= aj.caida > 0 ? 1 : rozamiento;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+
+        /* Desvanecido cuadrático: aguanta visible y se apaga al final. */
         const vida = (1 - edad) * (1 - edad);
-        const radio = p.r * (0.82 + 0.26 * latido);
-        cx.globalAlpha = Math.min(1, vida * (0.55 + 0.45 * latido));
+        const abierto = 1 + edad * aj.dispersion * 1.9;
+        const radio = p.r * abierto * (0.82 + 0.26 * latido);
+
+        /* Al abrirse reparte la misma luz en más superficie, así que se
+           atenúa: si no, una gota grande quemaría la pantalla. */
+        cx.globalAlpha = Math.min(1, (vida * aj.intensidad * (0.55 + 0.45 * latido)) / abierto);
         cx.drawImage(sprites[p.color]!, p.x - radio, p.y - radio, radio * 2, radio * 2);
       }
       cx.globalAlpha = 1;
@@ -476,6 +547,85 @@ export default function CuriousLayer({ lang, research }: Props) {
           <Row label={t.pulse} on={pulse} onLabel={u.on} offLabel={u.off} onClick={() => setPulse(!pulse)} />
           <Row label={t.reduceMotion} on={!motion} onLabel={u.on} offLabel={u.off} onClick={toggleMotion} />
 
+          {/* Ajustes del pincel, plegados: son de afinado fino y no deben
+              competir con los interruptores principales. */}
+          <button
+            type="button"
+            class="cl-plegar"
+            aria-expanded={pincelAbierto}
+            onClick={() => setPincelAbierto(!pincelAbierto)}
+          >
+            {u.pincel}
+            <span aria-hidden="true">{pincelAbierto ? '−' : '+'}</span>
+          </button>
+
+          {pincelAbierto && (
+            <div class="cl-pincel">
+              <Dial
+                label={u.pincelIntensidad}
+                valor={pincel.intensidad}
+                {...LIMITES.intensidad}
+                formato={(v) => `${Math.round(v * 100)}%`}
+                onInput={(v) => cambiarPincel({ intensidad: v })}
+              />
+              <Dial
+                label={u.pincelDispersion}
+                valor={pincel.dispersion}
+                {...LIMITES.dispersion}
+                formato={(v) => `${Math.round(v * 100)}%`}
+                onInput={(v) => cambiarPincel({ dispersion: v })}
+              />
+              <Dial
+                label={u.pincelCaida}
+                valor={pincel.caida}
+                {...LIMITES.caida}
+                formato={(v) => `${Math.round(v * 100)}%`}
+                onInput={(v) => cambiarPincel({ caida: v })}
+              />
+              <Dial
+                label={u.pincelDuracion}
+                valor={pincel.duracion}
+                {...LIMITES.duracion}
+                formato={(v) => `${v.toFixed(1)} s`}
+                onInput={(v) => cambiarPincel({ duracion: v })}
+              />
+              <Dial
+                label={u.pincelTamano}
+                valor={pincel.tamano}
+                {...LIMITES.tamano}
+                formato={(v) => `${Math.round(v)} px`}
+                onInput={(v) => cambiarPincel({ tamano: v })}
+              />
+
+              <label class="cl-campo">
+                <span class="cl-campo-label">{u.pincelColor}</span>
+                <select
+                  class="cl-select"
+                  value={pincel.modoColor}
+                  onChange={(e) =>
+                    cambiarPincel({ modoColor: (e.target as HTMLSelectElement).value as ModoColor })
+                  }
+                >
+                  <option value="ciclo">{u.pincelCiclo}</option>
+                  <option value="mind">{u.pincelMind}</option>
+                  <option value="clarity">{u.pincelClarity}</option>
+                  <option value="feel">{u.pincelFeel}</option>
+                </select>
+              </label>
+
+              <p class="cl-sense">{u.pincelNota}</p>
+
+              <div class="cl-foot">
+                <button type="button" class="cl-link" onClick={() => cambiarPincel(PINCEL_GOTAS)}>
+                  {u.pincelGotas}
+                </button>
+                <button type="button" class="cl-link" onClick={() => cambiarPincel(PINCEL_DEFECTO)}>
+                  {u.pincelDefecto}
+                </button>
+              </div>
+            </div>
+          )}
+
           <button type="button" class="cl-link cl-clear-paint" onClick={clearPaint}>
             {t.clearPaint}
           </button>
@@ -645,6 +795,84 @@ export default function CuriousLayer({ lang, research }: Props) {
         }
         .cl-keys { color: var(--disabled); }
 
+        .cl-plegar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          margin: 4px 0 8px;
+          padding: 11px 14px;
+          border-radius: var(--r-control);
+          border: var(--border);
+          background: var(--bg);
+          color: var(--dim);
+          font-size: 13.5px;
+          font-weight: var(--fw-medium);
+          text-align: left;
+          transition: border-color var(--dur-hover) var(--ease-hover);
+        }
+        .cl-plegar:hover { border-color: var(--line-strong); }
+        .cl-plegar span { color: var(--dimmer); font-size: 15px; line-height: 1; }
+
+        .cl-pincel {
+          margin: 0 0 10px;
+          padding: 14px;
+          border: var(--border);
+          border-radius: var(--r-control);
+          background: var(--bg);
+        }
+
+        .cl-campo { display: block; margin-bottom: 12px; }
+        .cl-campo-label {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          gap: 10px;
+          font-size: var(--fs-meta);
+          color: var(--dim);
+          margin-bottom: 6px;
+        }
+        .cl-campo-valor { color: var(--on-mind); }
+
+        .cl-rango {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 100%;
+          height: 3px;
+          border-radius: var(--r-pill);
+          background: var(--line-strong);
+          outline-offset: 6px;
+        }
+        .cl-rango::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 15px;
+          height: 15px;
+          border-radius: var(--r-pill);
+          background: var(--mind);
+          border: 0;
+          cursor: pointer;
+        }
+        .cl-rango::-moz-range-thumb {
+          width: 15px;
+          height: 15px;
+          border-radius: var(--r-pill);
+          background: var(--mind);
+          border: 0;
+          cursor: pointer;
+        }
+
+        .cl-select {
+          width: 100%;
+          padding: 9px 11px;
+          border-radius: var(--r-control);
+          border: var(--border);
+          background: var(--bg-2);
+          color: var(--text);
+          font-family: inherit;
+          font-size: 13px;
+        }
+
         .cl-clear-paint { margin-top: 6px; }
         .cl-foot { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 18px; }
         .cl-link {
@@ -754,6 +982,43 @@ export default function CuriousLayer({ lang, research }: Props) {
         }
       `}</style>
     </div>
+  );
+}
+
+/** Un deslizador con su valor a la vista: sin cifra no se sabe qué se toca. */
+function Dial({
+  label,
+  valor,
+  min,
+  max,
+  step,
+  formato,
+  onInput,
+}: {
+  label: string;
+  valor: number;
+  min: number;
+  max: number;
+  step: number;
+  formato: (v: number) => string;
+  onInput: (v: number) => void;
+}) {
+  return (
+    <label class="cl-campo">
+      <span class="cl-campo-label">
+        {label}
+        <span class="cl-campo-valor tabular">{formato(valor)}</span>
+      </span>
+      <input
+        class="cl-rango"
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={valor}
+        onInput={(e) => onInput(Number((e.target as HTMLInputElement).value))}
+      />
+    </label>
   );
 }
 
