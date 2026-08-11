@@ -35,8 +35,6 @@ export const HOME = {
     xrayHintOff:
       'Un botón honesto: apaga los insights y déjame solo el “antes y después”. Es como se ve la mayoría de los portafolios.',
     xrayHintOn: 'Esto es lo que queda sin research: pantallas bonitas y ninguna razón. Vuelve a encenderlo.',
-    xrayNote:
-      'Sin el insight, este caso es “hicimos una web nueva”. La decisión no se puede defender y el resultado parece suerte.',
     readFull: 'Leer el caso completo →',
     methodTitle: 'Cómo trabajo',
     methodSub:
@@ -50,10 +48,13 @@ export const HOME = {
       'Soy diseñador interactivo de la Universidad Jorge Tadeo Lozano. Pude ser economista o dedicarme a las ventas; elegí un camino donde la curiosidad se paga sola.',
     aboutP2:
       'Trabajo mejor cuando puedo preguntar mucho antes de proponer algo. Me interesan los proyectos donde nadie tiene todavía claro cuál es el problema.',
+    /* Encabeza la métrica de ETB, que es la verificable. La de Ropofy pasa a
+       un hecho de diseño comprobable en el propio caso, en vez de a un
+       porcentaje que no se puede respaldar con una fuente. */
     proof: [
-      { n: '+15%', l: 'en ventas y permanencia de clientes (Ropofy)' },
       { n: '30%', l: 'más eficiencia de navegación (ETB, 500+ usuarios/mes)' },
       { n: '2.º lugar', l: 'TechSprint del BID 2024' },
+      { n: '3 canales', l: 'unificados en una sola bandeja de entrada (Ropofy)' },
       { n: '3 a 6+ meses', l: 'duración de las implementaciones que documento hoy' },
     ],
     processPh: 'Foto de proceso sobre fondo oscuro — taller, entrevista, pizarra',
@@ -186,8 +187,6 @@ export const HOME = {
     xrayHintOff:
       "An honest button: switch the insights off and leave only the before-and-after. That's how most portfolios look.",
     xrayHintOn: "This is what's left without research: pretty screens and no reasons. Switch it back on.",
-    xrayNote:
-      "Without the insight, this case reads as “we built a new website”. The decision can't be defended and the outcome looks like luck.",
     readFull: 'Read the full case →',
     methodTitle: 'How I work',
     methodSub:
@@ -202,9 +201,9 @@ export const HOME = {
     aboutP2:
       'I work best when I get to ask a lot before proposing anything. I’m drawn to projects where nobody is yet clear on what the problem is.',
     proof: [
-      { n: '+15%', l: 'in sales and customer retention (Ropofy)' },
       { n: '30%', l: 'better navigation efficiency (ETB, 500+ users/month)' },
       { n: '2nd place', l: 'IDB TechSprint 2024' },
+      { n: '3 channels', l: 'merged into a single inbox (Ropofy)' },
       { n: '3 to 6+ months', l: 'length of the implementations I document today' },
     ],
     processPh: 'Process photo on a dark background — workshop, interview, whiteboard',
@@ -389,7 +388,7 @@ export const EMOTIONS = [
     key: 'alivio',
     hue: '#22D3EE',
     deep: '#123A4A',
-    caseRef: 'Ropofy · +15%',
+    caseRef: 'Ropofy',
     es: {
       label: 'Alivio',
       cue: '“Ya no necesito preguntarle a nadie para hacerlo.”',
@@ -425,9 +424,11 @@ export const HOME_CASES = [
       rows: [
         ['Insight', 'Las consultas entraban por WhatsApp, web e Instagram a la vez y se perdían entre canales. El abandono no pasaba en el checkout: pasaba en la espera.', 'insight'],
         ['Decisión', 'Rediseñé la web alrededor del contacto, no del catálogo, y pasé a acompañar la estrategia para que ninguna conversación quedara suelta.', 'insight'],
-        ['Resultado', '+15% en ventas y permanencia de clientes. La empresa alcanzó su curva de estabilización.', 'win'],
+        ['Resultado', 'El rediseño acompañó el crecimiento de tráfico y de generación de leads durante la etapa de estabilización de la compañía.', 'win'],
       ],
       tags: [['Espera', 'feel'], ['Desconfianza', 'line'], ['→ Hábito', 'clarity']],
+      xray:
+        'Sin el insight, este caso es “hicimos una web nueva”. La decisión no se puede defender y el resultado parece suerte.',
       method: 'Método: 6 entrevistas a clientes recientes y revisión de tres meses de conversaciones entrantes, canal por canal.',
       quote: '“Escribí el viernes y me contestaron el martes. Ya había comprado en otro lado.”',
       discard: 'Lo que descarté: un chatbot. La empresa no tenía el volumen para justificarlo y habría añadido una espera más — con una respuesta menos útil.',
@@ -439,9 +440,11 @@ export const HOME_CASES = [
       rows: [
         ['Insight', "Enquiries arrived via WhatsApp, web and Instagram at once and got lost between channels. Drop-off wasn't at checkout: it was in the wait.", 'insight'],
         ['Decision', 'I rebuilt the site around getting in touch rather than the catalogue, then stayed on to shape the strategy so no conversation was left loose.', 'insight'],
-        ['Outcome', '+15% in sales and customer retention. The company reached its stabilisation curve.', 'win'],
+        ['Outcome', 'The redesign accompanied the growth in traffic and lead generation during the company’s stabilisation stage.', 'win'],
       ],
       tags: [['Waiting', 'feel'], ['Distrust', 'line'], ['→ Habit', 'clarity']],
+      xray:
+        "Without the insight, this case reads as “we built a new website”. The decision can't be defended and the outcome looks like luck.",
       method: 'Method: 6 interviews with recent customers and a review of three months of inbound conversations, channel by channel.',
       quote: "“I wrote on Friday and they replied on Tuesday. I'd already bought elsewhere.”",
       discard: "What I ruled out: a chatbot. The company didn't have the volume to justify it and it would have added one more wait — with a less useful answer.",
@@ -466,6 +469,8 @@ export const HOME_CASES = [
         ['Resultado', 'Menos horas en capacitaciones y aclaraciones dentro de implementaciones de 3 a más de 6 meses.', 'win'],
       ],
       tags: [['Dependencia', 'feel'], ['Reproceso', 'line'], ['→ Autonomía', 'clarity']],
+      xray:
+        'Sin el insight, este caso es “escribimos más documentación”. Nada explica por qué el cliente seguía preguntando lo mismo, ni por qué esta vez iba a dejar de hacerlo.',
       method: 'Método: auditoría de la herramienta interna de documentación y revisión de las sesiones y preguntas que se repetían tras la entrega.',
       quote: '“No sabemos cómo quedó configurado lo nuestro ni a quién preguntarle.”',
       discard: 'Lo que descarté: empezar por rediseñar los componentes. El desorden se veía ahí, pero vivía en el sistema de espaciado y color.',
@@ -480,6 +485,8 @@ export const HOME_CASES = [
         ['Outcome', 'Fewer hours on training and clarifications inside implementations running 3 to 6+ months.', 'win'],
       ],
       tags: [['Dependency', 'feel'], ['Rework', 'line'], ['→ Autonomy', 'clarity']],
+      xray:
+        'Without the insight, this case reads as “we wrote more documentation”. Nothing explains why the client kept asking the same questions, or why this time they would stop.',
       method: 'Method: an audit of the internal documentation tool and a review of the sessions and questions that kept repeating after delivery.',
       quote: "“We don't know how ours ended up configured, or who to ask.”",
       discard: 'What I ruled out: starting by redesigning the components. The disorder showed there, but it lived in the spacing and colour system.',
@@ -504,6 +511,8 @@ export const HOME_CASES = [
         ['Resultado', '2.º lugar del Techsprint, con mención por democratización de datos.', 'win'],
       ],
       tags: [['Sobrecarga', 'feel'], ['Miedo a equivocarse', 'line'], ['→ Criterio', 'clarity']],
+      xray:
+        'Sin el insight, este caso es “hicimos otro portal de licitaciones”. Los documentos ya estaban publicados: sin la pregunta detrás, la pantalla no cambia nada.',
       method: 'Método: acompañamiento del proceso real de evaluación con funcionarios de compras, más benchmark de portales de contratación de la región.',
       quote: '“Abro las tres propuestas en pestañas y anoto en un papel. El sistema no me deja comparar.”',
       discard: 'Lo que descarté: un ranking automático. Una puntuación oculta el criterio y traslada la responsabilidad a un algoritmo.',
@@ -518,6 +527,8 @@ export const HOME_CASES = [
         ['Outcome', '2nd place in the Techsprint, with a mention for data democratisation.', 'win'],
       ],
       tags: [['Overload', 'feel'], ['Fear of getting it wrong', 'line'], ['→ Judgement', 'clarity']],
+      xray:
+        'Without the insight, this case reads as “we built another procurement portal”. The documents were already published: without the question behind it, the screen changes nothing.',
       method: 'Method: shadowing the real evaluation process with procurement officers, plus a benchmark of procurement portals across the region.',
       quote: "“I open the three proposals in tabs and write on paper. The system won't let me compare.”",
       discard: 'What I ruled out: an automatic ranking. A score hides the criteria and shifts responsibility onto an algorithm.',

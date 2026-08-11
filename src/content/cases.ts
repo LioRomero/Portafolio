@@ -49,13 +49,13 @@ export const CASES = {
     tab: 'Ropofy',
     accent: '#22D3EE',
     es: {
-      chips: [['SaaS · CRM', 'clarity'], ['Diseño + Consultoría estratégica', 'line'], ['Jun 2025 – Abr 2026', 'line']],
+      chips: [['SaaS · CRM', 'clarity'], ['Jr UX Consultant / UX Designer', 'line'], ['Jun 2025 – Abr 2026', 'line']],
       title: 'Me contrataron para rediseñar una web. El problema estaba en el silencio.',
       sub: 'Ropofy vendía bien y perdía clientes sin saber dónde. El sitio no era el cuello de botella: lo era el tiempo que tardaban en responder.',
       cols: [
         ['Mi rol', 'Investigación, rediseño y, después, acompañamiento estratégico del proceso comercial.'],
         ['La decisión', 'Diseñar el sitio alrededor del contacto —no del catálogo— y ordenar los canales de entrada.'],
-        ['El resultado', '+15% en ventas y permanencia de clientes. La empresa alcanzó su curva de estabilización.', true],
+        ['El resultado', 'El rediseño acompañó el crecimiento de tráfico y de generación de leads durante la etapa de estabilización de la compañía.', true],
       ],
       note: 'El caso abre con el resultado, no con el proceso. Quien decide contratarme casi nunca llega al final de la página — pero si el resultado lo engancha, sí lee el método.',
       brief: {
@@ -96,10 +96,11 @@ export const CASES = {
       ],
       flow: { src: '/assets/diag/ropofy-flujo.svg', ph: 'Diagrama del flujo de consultas: WhatsApp / web / Instagram → bandeja única → respuesta', cap: 'El flujo que ordenó los tres canales de entrada.' },
       result: {
-        big: '+15%',
+        big: 'Tráfico y leads',
         tone: 'clarity',
-        p: 'en ventas y en permanencia de clientes. Con eso la empresa alcanzó su curva de estabilización — el punto en que deja de depender de cada venta suelta.',
-        secondary: 'La consecuencia que no estaba en el encargo: el rediseño terminó siendo la parte pequeña. Lo que movió el número fue dejar de perder conversaciones.',
+        small: true,
+        p: 'crecieron durante la etapa de estabilización de la compañía, y el rediseño acompañó ese crecimiento. No puedo aislar cuánto aportó cada parte, así que prefiero decirlo así antes que atribuirme un porcentaje.',
+        secondary: 'La consecuencia que no estaba en el encargo: el rediseño terminó siendo la parte pequeña. Lo que movió la aguja fue dejar de perder conversaciones.',
       },
       takeaways: [
         ['Lo que aprendí', 'Que un encargo mal formulado no es un obstáculo: es el primer hallazgo. Y que negociar el alcance a mitad del proyecto es parte del trabajo, no un fracaso de la propuesta.', 'clarity'],
@@ -107,13 +108,13 @@ export const CASES = {
       ],
     },
     en: {
-      chips: [['SaaS · CRM', 'clarity'], ['Design + Strategy consulting', 'line'], ['Jun 2025 – Apr 2026', 'line']],
+      chips: [['SaaS · CRM', 'clarity'], ['Jr UX Consultant / UX Designer', 'line'], ['Jun 2025 – Apr 2026', 'line']],
       title: 'They hired me to redesign a website. The problem was the silence.',
       sub: "Ropofy was selling well and losing customers without knowing where. The site wasn't the bottleneck — how long they took to reply was.",
       cols: [
         ['My role', 'Research, redesign, and afterwards strategic support of the sales process.'],
         ['The decision', 'Build the site around getting in touch — not around the catalogue — and put the inbound channels in order.'],
-        ['The outcome', '+15% in sales and customer retention. The company reached its stabilisation curve.', true],
+        ['The outcome', 'The redesign accompanied the growth in traffic and lead generation during the company’s stabilisation stage.', true],
       ],
       note: 'The case opens with the outcome, not the process. Whoever decides to hire me rarely reaches the bottom of the page — but if the outcome hooks them, they do read the method.',
       brief: {
@@ -154,10 +155,11 @@ export const CASES = {
       ],
       flow: { src: '/assets/diag/ropofy-flujo.svg', ph: 'Enquiry flow diagram: WhatsApp / web / Instagram → single inbox → reply', cap: 'The flow that put the three inbound channels in order.' },
       result: {
-        big: '+15%',
+        big: 'Traffic and leads',
         tone: 'clarity',
-        p: 'in sales and in customer retention. With that the company reached its stabilisation curve — the point where it stops depending on each individual sale.',
-        secondary: "The consequence that wasn't in the brief: the redesign turned out to be the small part. What moved the number was stopping the loss of conversations.",
+        small: true,
+        p: 'grew during the company’s stabilisation stage, and the redesign accompanied that growth. I can’t isolate how much each part contributed, so I’d rather say it this way than claim a percentage.',
+        secondary: "The consequence that wasn't in the brief: the redesign turned out to be the small part. What moved the needle was stopping the loss of conversations.",
       },
       takeaways: [
         ['What I learned', "That a badly framed brief isn't an obstacle: it's the first finding. And that renegotiating scope mid-project is part of the job, not a failure of the proposal.", 'clarity'],
@@ -170,7 +172,7 @@ export const CASES = {
     tab: 'QStrauss',
     accent: '#8B7BF0',
     es: {
-      chips: [['Consultoría · Enterprise', 'mind'], ['Diseño de servicios + Documentación', 'line'], ['2026 – Actualidad', 'line']],
+      chips: [['Consultoría · Enterprise', 'mind'], ['Technical Architect', 'line'], ['Abr 2026 – Actualidad', 'line']],
       title: 'Entregábamos la plataforma configurada. El conocimiento se quedaba con nosotros.',
       sub: 'Las implementaciones salían bien. Meses después, el cliente seguía llamando para preguntar cómo funcionaba lo que ya tenía.',
       cols: [
@@ -229,7 +231,7 @@ export const CASES = {
       ],
     },
     en: {
-      chips: [['Consulting · Enterprise', 'mind'], ['Service design + Documentation', 'line'], ['2026 – Present', 'line']],
+      chips: [['Consulting · Enterprise', 'mind'], ['Technical Architect', 'line'], ['Apr 2026 – Present', 'line']],
       title: 'We delivered the platform configured. The knowledge stayed with us.',
       sub: 'The implementations went well. Months later the client was still calling to ask how the thing they already owned worked.',
       cols: [
@@ -293,7 +295,7 @@ export const CASES = {
     tab: 'BID',
     accent: '#8B7BF0',
     es: {
-      chips: [['Fintech público', 'mind'], ['UX/UI Designer', 'line'], ['Techsprint BID', 'line']],
+      chips: [['Fintech público', 'mind'], ['UX/UI Designer', 'line'], ['TechSprint BID · Ago 2024', 'line']],
       title: 'Tenían toda la información. Ninguna forma de compararla.',
       sub: 'En compras públicas la transparencia se mide en documentos publicados. Pero un PDF disponible no es un dato utilizable: la decisión estaba ocurriendo fuera del sistema.',
       cols: [
@@ -351,7 +353,7 @@ export const CASES = {
       ],
     },
     en: {
-      chips: [['Public fintech', 'mind'], ['UX/UI Designer', 'line'], ['IDB Techsprint', 'line']],
+      chips: [['Public fintech', 'mind'], ['UX/UI Designer', 'line'], ['IDB TechSprint · Aug 2024', 'line']],
       title: 'They had all the information. No way to compare it.',
       sub: "In public procurement, transparency is measured in documents published. But an available PDF isn't usable data: the decision was happening outside the system.",
       cols: [
