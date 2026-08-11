@@ -57,6 +57,10 @@ export const UI = {
     skipToContent: 'Saltar al contenido',
     role: 'Consultoría UX · Investigación · Diseño de servicios',
     location: 'Bogotá · Remoto global',
+    /* Encima del titular: quien llega desde LinkedIn tiene que saber qué eres
+       antes de leer la frase. Va en el estilo discreto del kicker para no
+       competir con ella. */
+    heroKicker: 'Consultor UX · Investigación y diseño de servicios — Bogotá · Remoto global',
   },
   en: {
     navCases: 'Cases',
@@ -101,6 +105,7 @@ export const UI = {
     skipToContent: 'Skip to content',
     role: 'UX consulting · Research · Service design',
     location: 'Bogotá · Remote worldwide',
+    heroKicker: 'UX consultant · Research and service design — Bogotá · Remote worldwide',
   },
 } as const;
 
