@@ -311,14 +311,14 @@ export const EMOTIONS = [
     caseRef: 'Ropofy',
     es: {
       label: 'Espera',
-      cue: '“Escribí y me contestaron tres días después.”',
+      cue: '“Escribí el viernes y me contestaron el martes.”',
       signal: 'El silencio se interpreta como desinterés. La persona ya decidió antes de que respondas.',
       move: 'Mido el tiempo real de respuesta por canal y rediseño el flujo alrededor del contacto, no del catálogo.',
       raw: '“Yo ya estaba lista para comprar. Lo que me hizo dudar fue el silencio, no el precio.” — cliente, entrevista 4',
     },
     en: {
       label: 'Waiting',
-      cue: '“I wrote and they got back to me three days later.”',
+      cue: '“I wrote on Friday and they got back to me on Tuesday.”',
       signal: 'Silence reads as indifference. The person has already decided before you reply.',
       move: 'I measure real response time per channel and rebuild the flow around getting in touch, not around the catalogue.',
       raw: '“I was ready to buy. What made me hesitate was the silence, not the price.” — customer, interview 4',

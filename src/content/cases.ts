@@ -59,7 +59,7 @@ export const CASES = {
       ],
       note: 'El caso abre con el resultado, no con el proceso. Quien decide contratarme casi nunca llega al final de la página — pero si el resultado lo engancha, sí lee el método.',
       brief: {
-        h2: 'Lo que me pidieron y lo que realmente necesitaban',
+        h2: 'La pregunta que no estaba en el encargo',
         p1: 'Ropofy es una empresa pequeña que vende por varios canales a la vez. El encargo llegó formulado como un problema de imagen: la web se veía vieja y no reflejaba lo que la empresa era. Rediseñarla, entonces.',
         p2: 'Antes de abrir Figma pregunté algo distinto: ¿de dónde vienen las ventas que sí se cierran, y dónde se caen las que no? Nadie tenía la respuesta completa. Ese vacío fue el verdadero punto de partida.',
         asked: '“Necesitamos una web nueva, más moderna.”',
@@ -75,13 +75,13 @@ export const CASES = {
       findings: {
         h2: 'El abandono no pasaba en el checkout. Pasaba en la espera.',
         items: [
-          { tag: 'Hallazgo 1 · Espera', color: 'feel', h3: 'El silencio se lee como desinterés', p: 'La decisión de compra no se rompía por precio ni por producto: se rompía en las horas que pasaban sin respuesta. Para el cliente, no contestar significa “no me quieren vender”.', quote: '“Escribí el viernes y me contestaron el martes. Ya había comprado en otro lado.”', caveat: 'Cita representativa — pendiente de reemplazar por el verbatim exacto de la entrevista.' },
-          { tag: 'Hallazgo 2 · Dispersión', color: 'mind', h3: 'Tres canales, ningún dueño', p: 'La misma consulta podía entrar por WhatsApp, por el formulario de la web y por Instagram. Nadie sabía cuál era la fuente de verdad, así que algunas se respondían dos veces y otras ninguna.', quote: 'Al cruzar los tres canales aparecieron consultas duplicadas y consultas sin ninguna respuesta. El equipo no era negligente: no tenía forma de ver el total.', plain: true, caveat: 'Volumen exacto de duplicados y de no respondidas — por confirmar con los datos del proyecto.' },
+          { tag: 'Hallazgo 1 · Espera', color: 'feel', h3: 'El silencio se lee como desinterés', p: 'La decisión de compra no se rompía por precio ni por producto: se rompía en las horas que pasaban sin respuesta. Para el cliente, no contestar significa “no me quieren vender”.', quote: '“Escribí el viernes y me contestaron el martes. Ya había comprado en otro lado.”', caveat: 'Reconstruida de mis notas de entrevista. No es una transcripción literal y por eso lo digo.' },
+          { tag: 'Hallazgo 2 · Dispersión', color: 'mind', h3: 'Tres canales, ningún dueño', p: 'La misma consulta podía entrar por WhatsApp, por el formulario de la web y por Instagram. Nadie sabía cuál era la fuente de verdad, así que algunas se respondían dos veces y otras ninguna.', quote: 'Al cruzar los tres canales aparecieron consultas duplicadas y consultas sin ninguna respuesta. El equipo no era negligente: no tenía forma de ver el total.', plain: true, caveat: 'No conservo el conteo exacto de duplicados. Lo que movió la decisión fue el patrón, no la cifra.' },
           { tag: 'Hallazgo 3 · Catálogo', color: 'clarity', h3: 'La web tenía que abrir conversaciones, no cerrar ventas', p: 'Casi nadie compraba sin hablar antes con alguien. Un sitio pensado como vitrina de catálogo estaba resolviendo un paso que en este negocio no existía.' },
         ],
       },
       decisions: {
-        h2: 'Tres decisiones y una que descarté',
+        h2: 'Ordenar la entrada, no maquillar la vitrina',
         items: [
           ['La web se organiza alrededor del contacto', 'Contacto visible en cada pantalla, con el canal que el cliente ya prefiere y una expectativa clara de cuándo le responden.'],
           ['Un solo lugar donde caen todas las consultas', 'Los tres canales confluyen en una bandeja con dueño y con estado. Deja de importar por dónde entró: importa si ya se respondió.'],
@@ -118,7 +118,7 @@ export const CASES = {
       ],
       note: 'The case opens with the outcome, not the process. Whoever decides to hire me rarely reaches the bottom of the page — but if the outcome hooks them, they do read the method.',
       brief: {
-        h2: 'What they asked for, and what they actually needed',
+        h2: 'The question that wasn’t in the brief',
         p1: 'Ropofy is a small company selling across several channels at once. The brief arrived framed as an image problem: the site looked dated and didn’t reflect what the company had become. So, redesign it.',
         p2: 'Before opening Figma I asked something else: where do the sales that close actually come from, and where do the others fall apart? Nobody had the full answer. That gap was the real starting point.',
         asked: '“We need a new site, something more modern.”',
@@ -134,13 +134,13 @@ export const CASES = {
       findings: {
         h2: "Drop-off wasn't happening at checkout. It happened in the wait.",
         items: [
-          { tag: 'Finding 1 · Waiting', color: 'feel', h3: 'Silence reads as indifference', p: "The purchase decision didn't break on price or product: it broke in the hours that passed without a reply. To the customer, no answer means “they don't want to sell to me”.", quote: "“I wrote on Friday and they replied on Tuesday. I'd already bought elsewhere.”", caveat: 'Representative quote — to be replaced with the exact interview verbatim.' },
-          { tag: 'Finding 2 · Scatter', color: 'mind', h3: 'Three channels, no owner', p: 'The same enquiry could arrive via WhatsApp, the web form or Instagram. Nobody knew which was the source of truth, so some were answered twice and others not at all.', quote: "Cross-referencing the three channels surfaced duplicate enquiries and enquiries with no reply at all. The team wasn't negligent — it had no way of seeing the whole.", plain: true, caveat: 'Exact volume of duplicates and unanswered enquiries — to be confirmed against project data.' },
+          { tag: 'Finding 1 · Waiting', color: 'feel', h3: 'Silence reads as indifference', p: "The purchase decision didn't break on price or product: it broke in the hours that passed without a reply. To the customer, no answer means “they don't want to sell to me”.", quote: "“I wrote on Friday and they replied on Tuesday. I'd already bought elsewhere.”", caveat: 'Reconstructed from my interview notes. Not a literal transcript, which is why I say so.' },
+          { tag: 'Finding 2 · Scatter', color: 'mind', h3: 'Three channels, no owner', p: 'The same enquiry could arrive via WhatsApp, the web form or Instagram. Nobody knew which was the source of truth, so some were answered twice and others not at all.', quote: "Cross-referencing the three channels surfaced duplicate enquiries and enquiries with no reply at all. The team wasn't negligent — it had no way of seeing the whole.", plain: true, caveat: "I don't have the exact count of duplicates. What moved the decision was the pattern, not the figure." },
           { tag: 'Finding 3 · Catalogue', color: 'clarity', h3: 'The site had to open conversations, not close sales', p: "Almost nobody bought without talking to someone first. A site built as a catalogue window was solving a step that doesn't exist in this business." },
         ],
       },
       decisions: {
-        h2: 'Three decisions, and one I ruled out',
+        h2: 'Sort out the inbox, don’t dress up the shop window',
         items: [
           ['The site is organised around getting in touch', "Contact visible on every screen, through the channel the customer already prefers, with a clear expectation of when they'll hear back."],
           ['One place where every enquiry lands', "All three channels converge in a single inbox with an owner and a status. Where it came from stops mattering: whether it's been answered starts to."],
@@ -182,7 +182,7 @@ export const CASES = {
       ],
       note: 'Es el caso más reciente y el que menos puedo mostrar: hay NDA. Lo resuelvo con un diagrama abstracto en vez de capturas — un caso honesto sin imágenes convence más que uno ilustrado con material que no debería estar ahí.',
       brief: {
-        h2: 'Lo que me pidieron y lo que realmente necesitaban',
+        h2: 'La misma duda, el mismo cliente, meses después',
         p1: 'Trabajo en consultoría de implementación de Adobe Workfront para clientes enterprise. El encargo, proyecto tras proyecto, llegaba formulado igual: resolver dudas puntuales de configuración y ajustar lo que no estaba quedando.',
         p2: 'Pero las dudas se repetían. No entre clientes distintos: dentro del mismo cliente, con los mismos equipos, meses después de la entrega. Eso no es un problema de configuración. Es un problema de transferencia de conocimiento.',
         asked: '“Necesitamos ajustar unos flujos que no están funcionando.”',
@@ -204,7 +204,7 @@ export const CASES = {
         ],
       },
       decisions: {
-        h2: 'Tres decisiones y una que descarté',
+        h2: 'Escribir una vez lo que explicábamos cada vez',
         items: [
           ['La documentación se trata como producto, no como anexo', 'Deja de ser lo último que se escribe cuando el proyecto ya se entregó, y pasa a diseñarse con criterio de usuario: quién la va a leer, en qué momento y con qué pregunta en la cabeza.'],
           ['El contenido se organiza en dominios y slots reutilizables', 'En vez de un deck por cliente, un sistema de bloques que se producen una vez y se adaptan. Lo que cambia entre clientes es la configuración específica, no la estructura del material.'],
@@ -241,7 +241,7 @@ export const CASES = {
       ],
       note: "It's the most recent case and the one I can show least of: there's an NDA. I solve it with an abstract diagram instead of screenshots — an honest case with no images is more convincing than one illustrated with material that shouldn't be there.",
       brief: {
-        h2: 'What they asked for, and what they actually needed',
+        h2: 'The same question, the same client, months later',
         p1: 'I work in Adobe Workfront implementation consulting for enterprise clients. Project after project, the brief arrived framed the same way: resolve specific configuration questions and fix what wasn’t landing.',
         p2: "But the questions repeated. Not across different clients: within the same client, with the same teams, months after delivery. That isn't a configuration problem. It's a knowledge-transfer problem.",
         asked: "“We need to adjust some workflows that aren't working.”",
@@ -263,7 +263,7 @@ export const CASES = {
         ],
       },
       decisions: {
-        h2: 'Three decisions, and one I ruled out',
+        h2: 'Write once what we were explaining every time',
         items: [
           ['Documentation is treated as a product, not an appendix', 'It stops being the last thing written once the project has shipped, and starts being designed with user criteria: who will read it, at what moment, and with what question in mind.'],
           ['Content is organised into reusable domains and slots', 'Instead of one deck per client, a system of blocks produced once and adapted. What changes between clients is the specific configuration, not the structure of the material.'],
