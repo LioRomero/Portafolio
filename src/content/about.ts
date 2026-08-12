@@ -22,9 +22,9 @@ export const JOBS: Job[] = [
     org: 'QStrauss Consulting · Code and Theory Network (Stagwell)',
     title: 'Technical Architect',
     titleEn: 'Technical Architect',
-    lede: 'Consultoría técnica sobre implementaciones de Adobe Workfront para clientes enterprise de retail, banca y consumo masivo.',
+    lede: 'Lidero la consultoría técnica sobre implementaciones de Adobe Workfront para clientes enterprise de retail, banca y consumo masivo.',
     ledeEn:
-      'Technical consulting on Adobe Workfront implementations for enterprise clients across retail, banking and consumer goods.',
+      'I lead the technical consulting on Adobe Workfront implementations for enterprise clients across retail, banking and consumer goods.',
     bullets: [
       'Diagnostico fallas de configuración y de adopción, y diseño la solución que las resuelve — no solo el informe que las describe.',
       'Rediseño flujos de trabajo de cliente para bajar fricción y acortar ciclos de entrega.',
@@ -51,16 +51,16 @@ export const JOBS: Job[] = [
     orgEn: 'Ropofy · B2B SaaS (CRM and automation)',
     title: 'Jr UX Consultant / UX Designer',
     titleEn: 'Jr UX Consultant / UX Designer',
-    lede: 'Adopción de la plataforma en toda la cartera de clientes, y el rediseño del sitio del producto.',
-    ledeEn: 'Platform adoption across the whole client portfolio, plus the product website redesign.',
+    lede: 'Dos frentes a la vez: la cartera de clientes y el sitio del producto.',
+    ledeEn: 'Two fronts at once: the client portfolio and the product website.',
     bullets: [
-      'Acompañé implementaciones, resolví incidencias y fui el puente entre cliente y equipo de desarrollo.',
+      'Lideré la adopción de la plataforma en la cartera de clientes: acompañé implementaciones, resolví incidencias y fui el puente entre cliente y equipo de desarrollo.',
       'Rediseñé el sitio del producto partiendo de necesidades reales de usuario final; acompañó el crecimiento de tráfico y leads en la etapa de estabilización de la compañía.',
       'Diseñé y dicté capacitaciones continuas en automatización de procesos y bots de IA.',
       'Aporté a las estrategias de reactivación de clientes y generación de leads con el equipo comercial.',
     ],
     bulletsEn: [
-      'I supported implementations, resolved issues and acted as the bridge between clients and the development team.',
+      'I led platform adoption across the client portfolio: supporting implementations, resolving issues and acting as the bridge between clients and the development team.',
       "I redesigned the product website from real end-user needs; it accompanied traffic and lead growth during the company's stabilization stage.",
       'I designed and delivered ongoing training on process automation and AI bots.',
       'I contributed to client reactivation and lead generation strategy alongside the commercial team.',
@@ -117,7 +117,7 @@ export const ABOUT = {
     chips: ['Bogotá, Colombia', 'Remoto / Híbrido', 'Inglés C1', 'Adobe Workfront'],
     k1: 'Quién soy',
     who: [
-      'Soy diseñador interactivo de la Universidad Jorge Tadeo Lozano. Lo que me mueve es crear experiencias nuevas: entender de verdad qué necesita la persona del otro lado y traducirlo en herramientas que funcionen, se puedan replicar y dejen un impacto medible.',
+      'Soy diseñador interactivo de la Universidad Jorge Tadeo Lozano. Lo que me mueve es crear experiencias nuevas: entender de verdad qué necesita la persona del otro lado y traducirlo en herramientas que funcionen, se puedan replicar, se puedan automatizar y dejen un impacto medible.',
       'Trabajo con diseño centrado en el usuario tanto en producto digital como en las operaciones internas de una empresa. Investigo, prototipo, valido, y me quedo hasta que la gente lo adopta — la parte que casi nunca aparece en un caso de estudio.',
       'Sé programar lo suficiente para no pedir imposibles: HTML, CSS, algo de C#. Diseño y prototipo en Figma, y me interesa el terreno donde la tecnología todavía no tiene convenciones: AR, VR, videojuegos.',
     ],
@@ -207,7 +207,7 @@ export const ABOUT = {
     chips: ['Bogotá, Colombia', 'Remote / Hybrid', 'English C1', 'Adobe Workfront'],
     k1: 'Who I am',
     who: [
-      "I'm an interactive designer from Universidad Jorge Tadeo Lozano. What drives me is building new experiences: genuinely understanding what the person on the other side needs, and turning that into tools that work, that can be replicated, and that leave measurable impact.",
+      "I'm an interactive designer from Universidad Jorge Tadeo Lozano. What drives me is building new experiences: genuinely understanding what the person on the other side needs, and turning that into tools that work, that can be replicated, that can be automated, and that leave measurable impact.",
       "I apply user-centred design to digital products and to a company's internal operations alike. I research, prototype, validate — and stay until people actually adopt it, the part that rarely makes it into a case study.",
       "I code enough not to ask for the impossible: HTML, CSS, some C#. I design and prototype in Figma, and I'm drawn to the ground where technology has no conventions yet: AR, VR, games.",
     ],
