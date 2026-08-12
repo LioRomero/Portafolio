@@ -53,7 +53,7 @@ export const HOME = {
        porcentaje que no se puede respaldar con una fuente. */
     proof: [
       { n: '30%', l: 'más eficiencia de navegación (ETB, 500+ usuarios/mes)' },
-      { n: 'Categoría ganada', l: 'Democratización de Datos — TechSprint del BID 2024' },
+      { n: '311 de 622', l: 'contratos públicos con inconsistencias detectadas (BID, Rep. Dominicana)' },
       { n: '3 canales', l: 'unificados en una sola bandeja de entrada (Ropofy)' },
       { n: '3 a 6+ meses', l: 'duración de las implementaciones que documento hoy' },
     ],
@@ -202,7 +202,7 @@ export const HOME = {
       'I work best when I get to ask a lot before proposing anything. I’m drawn to projects where nobody is yet clear on what the problem is.',
     proof: [
       { n: '30%', l: 'better navigation efficiency (ETB, 500+ users/month)' },
-      { n: 'Category won', l: 'Data Democratisation — IDB TechSprint 2024' },
+      { n: '311 of 622', l: 'public contracts flagged as inconsistent (IDB, Dominican Republic)' },
       { n: '3 channels', l: 'merged into a single inbox (Ropofy)' },
       { n: '3 to 6+ months', l: 'length of the implementations I document today' },
     ],
@@ -497,9 +497,9 @@ export const HOME_CASES = [
     flip: false,
     findIdx: 7,
     shots: [
-      { src: '/assets/diag/bid-comparacion.svg', es: ['Wireframe de la vista de comparación', 'Oferentes, montos y productos en una sola pantalla.'], en: ['Tender comparison view', 'Bidders, amounts and products on one screen.'] },
-      { src: '/assets/diag/bid-detalle.svg', es: ['Detalle de un oferente', 'El documento, un clic más abajo, para citar la fuente.'], en: ['Detail of one bidder', 'The document, one click deeper, for citing the source.'] },
-      { src: '/assets/diag/bid-flujo.svg', es: ['Flujo de evaluación: buscar → comparar → sustentar', 'El recorrido completo de una decisión auditable.'], en: ['Evaluation flow: search → compare → justify', 'The full journey of an auditable decision.'] },
+      { src: '/assets/diag/bid-comparacion.svg', es: ['Tabla de aplicantes', 'Precio estimado contra precio ofertado: la herramienta marca la línea que no cuadra.'], en: ['Applicants table', 'Estimated price against offered price: the tool flags the line that does not add up.'] },
+      { src: '/assets/diag/bid-detalle.svg', es: ['Tablero del catálogo de contratos', '311 de 622 contratos con información faltante o inconsistencias.'], en: ['Contract catalogue dashboard', '311 of 622 contracts with missing information or inconsistencies.'] },
+      { src: '/assets/diag/bid-flujo.svg', es: ['Del documento publicado a la decisión', 'Digitalizar, comparar, señalar. La firma sigue siendo humana.'], en: ['From published document to decision', 'Digitise, compare, flag. The signature stays human.'] },
     ],
     es: {
       chips: [['Transparencia pública', 'mind'], ['UX/UI Designer', 'line']],

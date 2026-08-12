@@ -322,8 +322,9 @@ export const CASES = {
         h2: 'La inconsistencia no está en un solo lugar',
         items: [
           { tag: 'Hallazgo 1 · Dispersión', color: 'feel', h3: 'Lo que no cuadra puede estar en cualquier campo', p: 'Un precio que no corresponde, un dato faltante o mal diligenciado, un producto que no es el que se pidió. Son tres revisiones distintas sobre el mismo documento, y ninguna se puede saltar.' },
-          { tag: 'Hallazgo 2 · Miedo a equivocarse', color: 'mind', h3: 'Cuando la decisión es auditable, la duda paraliza', p: 'Revisar mal en compras públicas tiene consecuencias personales. Sin un respaldo que sustente el criterio, la gente se protege revisando de más — y aun así no queda tranquila.' },
-          { tag: 'Hallazgo 3 · Público', color: 'clarity', h3: 'El ciudadano tampoco puede leer eso', p: 'Si el funcionario experto no logra verificar con comodidad, la vigilancia ciudadana es teórica. La legibilidad no es una comodidad: es la condición de la transparencia.' },
+          { tag: 'Hallazgo 2 · Escala', color: 'clarity', h3: 'No es un caso raro: es la mitad del catálogo', p: 'Sobre el catálogo de contratos del Gobierno de la República Dominicana, la herramienta encontró 311 de 622 contratos con información faltante y otros 311 con inconsistencias en sus documentos. Revisar eso a mano no es lento: es inviable.' },
+          { tag: 'Hallazgo 3 · Miedo a equivocarse', color: 'mind', h3: 'Cuando la decisión es auditable, la duda paraliza', p: 'Revisar mal en compras públicas tiene consecuencias personales. Sin un respaldo que sustente el criterio, la gente se protege revisando de más — y aun así no queda tranquila.' },
+          { tag: 'Hallazgo 4 · Público', color: 'clarity', h3: 'El ciudadano tampoco puede leer eso', p: 'Si el funcionario experto no logra verificar con comodidad, la vigilancia ciudadana es teórica. La legibilidad no es una comodidad: es la condición de la transparencia.' },
         ],
       },
       decisions: {
@@ -335,10 +336,10 @@ export const CASES = {
           ['Lo que no hicimos: decidir por el funcionario', 'La herramienta señala dónde mirar. Adjudicar sigue siendo una decisión humana, y por eso auditable: quien firma tiene que poder explicar por qué eligió.', true],
         ],
       },
-      hero: { src: '/assets/diag/bid-comparacion.svg', ph: 'Wireframe de la vista de comparación de licitaciones' },
+      hero: { src: '/assets/diag/bid-comparacion.svg', ph: 'Tabla de aplicantes: precio estimado contra precio ofertado, con las líneas inconsistentes marcadas' },
       pairs: [
-        { src: '/assets/diag/bid-detalle.svg', ph: 'Detalle de un oferente', cap: 'El detalle, cuando hace falta citar la fuente.' },
-        { src: '/assets/diag/bid-flujo.svg', ph: 'Flujo de evaluación: buscar → comparar → sustentar', cap: 'El recorrido de evaluación, de la búsqueda al sustento.' },
+        { src: '/assets/diag/bid-detalle.svg', ph: 'Tablero del catálogo de contratos con los medidores de información faltante e inconsistencias', cap: 'El estado del catálogo, antes de abrir un solo documento.' },
+        { src: '/assets/diag/bid-flujo.svg', ph: 'Flujo: documentos → digitalización → comparación → inconsistencia → decisión', cap: 'El recorrido completo. El paso que antes era manual ahora lo hace la herramienta.' },
       ],
       result: {
         big: 'Categoría ganada',
@@ -380,8 +381,9 @@ export const CASES = {
         h2: "The inconsistency isn't in one single place",
         items: [
           { tag: 'Finding 1 · Scattered', color: 'feel', h3: "What doesn't add up can be in any field", p: "A price that doesn't match, a field left blank or filled in wrong, a product that isn't the one requested. That's three different reviews of the same document, and none of them can be skipped." },
-          { tag: 'Finding 2 · Fear of getting it wrong', color: 'mind', h3: 'When a decision is auditable, doubt paralyses', p: "Reviewing badly in public procurement has personal consequences. Without something to back the criteria, people protect themselves by over-reviewing — and still don't feel settled." },
-          { tag: 'Finding 3 · The public', color: 'clarity', h3: "Citizens can't read it either", p: "If the expert officer can't verify comfortably, citizen oversight is theoretical. Legibility isn't a convenience: it's the condition of transparency." },
+          { tag: 'Finding 2 · Scale', color: 'clarity', h3: "It isn't a rare case: it's half the catalogue", p: 'Across the Dominican Republic government contract catalogue, the tool found 311 of 622 contracts with missing information and another 311 with inconsistencies in their documents. Reviewing that by hand is not slow — it is impossible.' },
+          { tag: 'Finding 3 · Fear of getting it wrong', color: 'mind', h3: 'When a decision is auditable, doubt paralyses', p: "Reviewing badly in public procurement has personal consequences. Without something to back the criteria, people protect themselves by over-reviewing — and still don't feel settled." },
+          { tag: 'Finding 4 · The public', color: 'clarity', h3: "Citizens can't read it either", p: "If the expert officer can't verify comfortably, citizen oversight is theoretical. Legibility isn't a convenience: it's the condition of transparency." },
         ],
       },
       decisions: {
@@ -393,10 +395,10 @@ export const CASES = {
           ["What we didn't do: decide for the officer", 'The tool points at where to look. Awarding remains a human decision, and therefore auditable: whoever signs has to be able to explain why they chose.', true],
         ],
       },
-      hero: { src: '/assets/diag/bid-comparacion.svg', ph: 'Wireframe of the tender comparison view' },
+      hero: { src: '/assets/diag/bid-comparacion.svg', ph: 'Applicants table: estimated price against offered price, with the inconsistent lines flagged' },
       pairs: [
-        { src: '/assets/diag/bid-detalle.svg', ph: 'Detail of one bidder', cap: 'The detail, for when you need to cite the source.' },
-        { src: '/assets/diag/bid-flujo.svg', ph: 'Evaluation flow: search → compare → justify', cap: 'The evaluation journey, from search to justification.' },
+        { src: '/assets/diag/bid-detalle.svg', ph: 'Contract catalogue dashboard with gauges for missing information and inconsistencies', cap: 'The state of the catalogue, before opening a single document.' },
+        { src: '/assets/diag/bid-flujo.svg', ph: 'Flow: documents → digitisation → comparison → inconsistency → decision', cap: 'The full journey. The step that used to be manual is now the tool’s job.' },
       ],
       result: {
         big: 'Category won',
