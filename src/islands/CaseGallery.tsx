@@ -122,7 +122,7 @@ export default function CaseGallery({ laminas, anterior, siguiente, imagen, acce
         }
 
         .cg-mandos { display: flex; align-items: center; gap: 10px; }
-        .cg-cuenta { font-size: var(--fs-meta); color: var(--disabled); }
+        .cg-cuenta { font-size: var(--fs-meta); color: var(--dimmer); }
 
         .cg-puntos { display: flex; gap: 6px; }
         .cg-punto {

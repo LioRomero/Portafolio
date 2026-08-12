@@ -919,7 +919,7 @@ export default function CuriousLayer({ lang, research }: Props) {
           color: var(--dimmer);
           margin-top: 14px;
         }
-        .cl-keys { color: var(--disabled); }
+        .cl-keys { color: var(--dimmer); }
 
         .cl-plegar {
           display: flex;

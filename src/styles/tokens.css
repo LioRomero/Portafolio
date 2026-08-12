@@ -13,9 +13,15 @@
   /* --- Texto ------------------------------------------------------------- */
   --text: #e9ebf4;            /* primario */
   --dim: #a2a8c2;             /* cuerpo secundario */
-  --dimmer: #767c99;          /* metadatos, notas al pie — nunca por debajo de 12px */
+  /* El texto más callado que puede leerse. Era #767c99, que da 4,20 sobre
+     --surface y se quedaba corto de AA en las tarjetas; #8288a8 da 4,96 ahí
+     y 5,64 sobre --bg. Es el suelo del contraste: nada legible va por debajo. */
+  --dimmer: #8288a8;          /* metadatos, notas al pie — nunca por debajo de 12px */
   --line: #232a44;            /* bordes, divisores */
   --line-strong: #3a4468;     /* borde hover / activo */
+  /* Solo para controles realmente deshabilitados, que WCAG exime del contraste
+     mínimo. Si el texto se lee, va en --dimmer: a 2,38 sobre tarjeta este no
+     se lee. */
   --disabled: #4e5578;        /* texto deshabilitado */
 
   /* --- Acentos semánticos ------------------------------------------------ */

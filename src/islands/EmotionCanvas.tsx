@@ -256,7 +256,7 @@ export default function EmotionCanvas({ lang }: { lang: Lang }) {
           border-radius: 11px;
           border: var(--border);
           background: var(--surface);
-          color: var(--disabled);
+          color: var(--dimmer);
           font-size: var(--fs-btn);
           font-weight: var(--fw-medium);
           cursor: default;

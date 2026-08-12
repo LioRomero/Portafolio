@@ -176,7 +176,7 @@ export default function SongBlock({ lang }: { lang: Lang }) {
         }
         .sb-add:disabled {
           border-color: var(--line);
-          color: var(--disabled);
+          color: var(--dimmer);
           cursor: default;
         }
         .sb-add:not(:disabled):hover { background: var(--clarity-16); }

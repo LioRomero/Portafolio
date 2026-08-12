@@ -195,7 +195,7 @@ export default function Puzzle({ variant, lang }: Props) {
         .pz-count { font-size: 12.5px; color: var(--dimmer); }
         .pz-feedback {
           font-size: 12.5px;
-          color: var(--disabled);
+          color: var(--dimmer);
           transition: color var(--dur-hover) var(--ease-hover);
         }
         .pz-feedback--wrong { color: var(--feel); }
@@ -228,7 +228,7 @@ export default function Puzzle({ variant, lang }: Props) {
           font-size: 10.5px;
           font-weight: var(--fw-medium);
           letter-spacing: 0.1em;
-          color: var(--disabled);
+          color: var(--dimmer);
         }
         .pz-slot--filled .pz-slot-n { color: var(--on-mind); }
         .pz-slot-label {
@@ -258,7 +258,7 @@ export default function Puzzle({ variant, lang }: Props) {
         .pz-chip--used {
           border-color: var(--line);
           background: var(--bg-2);
-          color: var(--disabled);
+          color: var(--dimmer);
           cursor: default;
         }
 

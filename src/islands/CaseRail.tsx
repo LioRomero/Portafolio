@@ -89,7 +89,7 @@ export default function CaseRail({ etapas, titulo }: Props) {
           padding: 5px 0;
           border: 0;
           background: transparent;
-          color: var(--disabled);
+          color: var(--dimmer);
           font-size: 12px;
           text-align: left;
           line-height: 1.3;
