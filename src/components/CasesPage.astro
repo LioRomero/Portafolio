@@ -12,7 +12,7 @@ import CaseRail from '../islands/CaseRail.tsx';
 import { CASES, CASES_UI, CASE_ORDER } from '../content/cases';
 import { INTRO } from '../content/intro';
 import { ROUTES, type Lang } from '../content/ui';
-import { withBase } from '../lib/paths';
+import { withBase, diagrama } from '../lib/paths';
 
 interface Props {
   lang: Lang;
@@ -41,10 +41,10 @@ interface FuenteLaminas {
 }
 
 const laminasDe = (d: FuenteLaminas): Lamina[] => {
-  const laminas: Lamina[] = [{ src: withBase(d.hero.src), alt: d.hero.ph, cap: d.hero.ph }];
-  for (const p of d.pairs) laminas.push({ src: withBase(p.src), alt: p.ph, cap: p.cap });
+  const laminas: Lamina[] = [{ src: diagrama(d.hero.src, lang), alt: d.hero.ph, cap: d.hero.ph }];
+  for (const p of d.pairs) laminas.push({ src: diagrama(p.src, lang), alt: p.ph, cap: p.cap });
   if ('flow' in d && d.flow) {
-    laminas.push({ src: withBase(d.flow.src), alt: d.flow.ph, cap: d.flow.cap });
+    laminas.push({ src: diagrama(d.flow.src, lang), alt: d.flow.ph, cap: d.flow.cap });
   }
   return laminas;
 };

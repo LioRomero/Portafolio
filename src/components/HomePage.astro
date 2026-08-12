@@ -13,7 +13,7 @@ import { Image } from 'astro:assets';
 import proceso from '../images/carrusel-1.jpg';
 import { HOME, HOME_CASES } from '../content/home';
 import { UI, ROUTES, type Lang } from '../content/ui';
-import { withBase } from '../lib/paths';
+import { withBase, diagrama } from '../lib/paths';
 
 interface Props {
   lang: Lang;
@@ -149,7 +149,7 @@ const title =
                 </div>
 
                 <figure class={`case-fig ${c.flip ? 'case-fig--flip' : ''}`}>
-                  <img src={withBase(shot.src)} alt={shot[lang][0]} loading="lazy" decoding="async" />
+                  <img src={diagrama(shot.src, lang)} alt={shot[lang][0]} loading="lazy" decoding="async" />
                   <figcaption class="meta">{shot[lang][1]}</figcaption>
                 </figure>
               </article>
