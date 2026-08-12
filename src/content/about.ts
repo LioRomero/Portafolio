@@ -136,9 +136,9 @@ export const ABOUT = {
     k3: 'Reconocimientos',
     awards: [
       {
-        tag: 'Segundo lugar · 2024',
-        title: 'TechSprint — BID y Alliance for Innovative Regulation',
-        body: 'Solución en Power BI para transparencia en procesos gubernamentales. Quedamos segundos: el equipo ganador tenía mejor demo, nosotros teníamos mejor pregunta.',
+        tag: 'Ganador de categoría · Ago 2024',
+        title: 'TechSprint para una Mayor Transparencia Gubernamental — BID, AIR e INL',
+        body: 'Con el equipo Trust: una aplicación web en Power BI con inteligencia artificial para digitalizar y verificar documentos de licitación. Ganamos la Distinción en Democratización de Datos en el Demo Day de Washington D.C., y quedamos segundos en la general.',
       },
       {
         tag: 'Top 20 regional · 2025',
@@ -206,9 +206,9 @@ export const ABOUT = {
     k3: 'Awards',
     awards: [
       {
-        tag: 'Second place · 2024',
-        title: 'TechSprint — IDB and the Alliance for Innovative Regulation',
-        body: 'A Power BI solution for transparency in government processes. We came second: the winning team had the better demo, we had the better question.',
+        tag: 'Category winner · Aug 2024',
+        title: 'TechSprint for Greater Government Transparency — IDB, AIR and INL',
+        body: 'With team Trust: a Power BI web application using AI to digitise and verify tender documents. We won the Distinction in Data Democratisation at the Washington D.C. Demo Day, and finished second overall.',
       },
       {
         tag: 'Regional top 20 · 2025',
