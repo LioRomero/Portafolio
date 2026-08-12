@@ -8,6 +8,8 @@ import EmotionCanvas from '../islands/EmotionCanvas.tsx';
 import CuriousLayer from '../islands/CuriousLayer.tsx';
 import { Image } from 'astro:assets';
 import perfil from '../images/perfil-emilio.jpg';
+import cyberEntrada from '../images/cybernexo-entrada.png';
+import cyberNiveles from '../images/cybernexo-niveles.png';
 import { ABOUT, JOBS } from '../content/about';
 import type { Lang } from '../content/ui';
 
@@ -124,6 +126,44 @@ const title = es ? 'Sobre mí — Emilio Romero' : 'About — Emilio Romero';
           ))
         }
       </div>
+    </div>
+  </section>
+
+  {/* --- Game design: Cybernexo ------------------------------------------
+      Las capturas salen del .fig a 702×355 y 712×351, que es todo lo que
+      existe. Se muestran a 460 px como techo: por debajo del original, para
+      que se vean nítidas en vez de estiradas, y con los tres teléfonos de
+      cada captura todavía legibles. */}
+  <section class="section bordered">
+    <div class="wrap wrap--cases">
+      <h2 class="section-h">{t.k7}</h2>
+      <div class="game">
+        <div class="game-intro">
+          <h3 class="game-title">{t.game.title}</h3>
+          <p class="body">{t.game.lede}</p>
+          <dl class="game-facts">
+            {
+              t.game.facts.map(([k, v]) => (
+                <div class="game-fact">
+                  <dt class="col-label">{k}</dt>
+                  <dd class="body">{v}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+        <div class="game-shots">
+          <figure>
+            <Image src={cyberEntrada} alt={t.game.shots[0][1]} widths={[460, 702]} sizes="(max-width: 700px) 92vw, 460px" loading="lazy" format="avif" />
+            <figcaption class="meta">{t.game.shots[0][0]}</figcaption>
+          </figure>
+          <figure>
+            <Image src={cyberNiveles} alt={t.game.shots[1][1]} widths={[460, 702]} sizes="(max-width: 700px) 92vw, 460px" loading="lazy" format="avif" />
+            <figcaption class="meta">{t.game.shots[1][0]}</figcaption>
+          </figure>
+        </div>
+      </div>
+      <p class="game-honest meta">{t.game.honest}</p>
     </div>
   </section>
 
@@ -375,6 +415,71 @@ const title = es ? 'Sobre mí — Emilio Romero' : 'About — Emilio Romero';
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: var(--gap-cards);
+  }
+
+  /* Cybernexo. El texto manda y las capturas acompañan, porque solo existen
+     a 702 px de ancho: estirarlas a media pantalla las delataría. */
+  .game {
+    display: grid;
+    gap: var(--gap-cards);
+  }
+
+  .game-intro {
+    max-width: 68ch;
+  }
+
+  .game-title {
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-medium);
+    color: var(--mind);
+    margin-bottom: 10px;
+  }
+
+  .game-facts {
+    margin-top: 22px;
+    display: grid;
+    gap: 16px;
+  }
+
+  .game-fact dt {
+    margin-bottom: 4px;
+  }
+
+  .game-shots {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 18px;
+  }
+
+  .game-shots figure {
+    width: 100%;
+    margin: 0;
+    border: var(--border);
+    border-radius: var(--r-card);
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .game-shots img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .game-shots figcaption {
+    padding: 10px 14px 12px;
+  }
+
+  .game-honest {
+    margin-top: 28px;
+    padding-left: 14px;
+    border-left: 2px solid var(--line);
+  }
+
+  @media (max-width: 900px) {
+    .game {
+      grid-template-columns: 1fr;
+    }
   }
 
   .award {

@@ -146,6 +146,26 @@ export const ABOUT = {
         body: 'Semifinales de Colombia, Panamá, Perú y Ecuador con el equipo Apolo: un proyecto para acercar al consumidor masculino al cuidado personal a través de la tecnología.',
       },
     ],
+    /* La carrera tuvo énfasis en UX/UI y game design, y hasta ahora solo se
+       veía la primera mitad. Va como pieza y no como caso: es trabajo de
+       interfaz y dirección de arte, sin la investigación ni la métrica que
+       sostienen a Ropofy, QStrauss y el BID. */
+    k7: 'La otra mitad: game design',
+    game: {
+      title: 'Cybernexo',
+      lede: 'Un juego móvil que diseñé de punta a punta: la identidad, la entrada, los diálogos y los niveles. Es la pieza donde se ve el énfasis en game design de mi carrera, que en los casos de consultoría no aparece por ningún lado.',
+      facts: [
+        ['Qué es', 'Un juego de puzzles sobre la placa de circuito de un edificio. Los sistemas de abastecimiento, regulación y control quedaron averiados, y el jugador entra a repararlos.'],
+        ['Qué diseñé', 'Identidad y dirección de arte, menú, acceso por huella, los diálogos del personaje y las pantallas de juego.'],
+        ['Para qué', 'Está hecho alrededor del festival RealMix 2023: al entrar, el juego te acredita como “Ayudante del RealMix 2023”.'],
+      ],
+      shots: [
+        ['Acceso por huella, menú principal y el diálogo que plantea la avería.', 'Entrada del juego: pantalla de acceso por huella, menú principal y el primer diálogo del personaje'],
+        ['Tres niveles. El tablero es la placa de circuito del edificio.', 'Tres pantallas de juego con el tablero de puzzles sobre una placa de circuito'],
+      ],
+      honest:
+        'Lo pongo como pieza y no como caso a propósito: no tengo research ni una métrica de resultado que enseñar, y prefiero decirlo antes que rellenar el formato con humo.',
+    },
     k4: 'Habilidades',
     skills: [
       {
@@ -216,6 +236,22 @@ export const ABOUT = {
         body: 'Semifinals for Colombia, Panama, Peru and Ecuador with team Apolo: a project connecting male consumers to personal care through technology.',
       },
     ],
+    k7: 'The other half: game design',
+    game: {
+      title: 'Cybernexo',
+      lede: "A mobile game I designed end to end: the identity, the entry screens, the dialogue and the levels. It's the piece where my degree's game-design emphasis shows up — nowhere to be found in the consulting cases.",
+      facts: [
+        ['What it is', "A puzzle game set on a building's circuit board. Its supply, regulation and control systems have failed, and the player goes in to repair them."],
+        ['What I designed', 'Identity and art direction, the menu, fingerprint access, the character dialogue and the gameplay screens.'],
+        ['What it was for', 'It was built around the RealMix 2023 festival: on entry, the game credits you as an “Ayudante del RealMix 2023”.'],
+      ],
+      shots: [
+        ['Fingerprint access, main menu and the dialogue that sets up the fault.', 'Game entry: fingerprint access screen, main menu and the character’s first dialogue'],
+        ["Three levels. The board is the building's circuit board.", 'Three gameplay screens with the puzzle board laid over a circuit board'],
+      ],
+      honest:
+        "It's here as a piece, not a case, on purpose: I have no research and no outcome metric to show, and I'd rather say so than pad the format.",
+    },
     k4: 'Skills',
     skills: [
       {

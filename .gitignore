@@ -8,3 +8,8 @@ dist/
 
 # Carpeta scratch de la herramienta de desarrollo
 .claude/
+
+# Recortes de trabajo sobre los marcos exportados de Figma. El marco completo
+# sí se versiona como respaldo de lo que dice cada caso; los recortes se
+# regeneran con sharp cuando hagan falta.
+assets/figma/_*
