@@ -112,12 +112,13 @@ export const ABOUT = {
     back: 'Inicio',
     cases: 'Casos',
     kicker: 'Sobre mí',
-    role: 'Consultor UX · Diseño de servicios y experiencia',
-    hook: 'Vengo del UX/UI y el game design, y me moví a la consultoría porque quería entender cómo ocurre la transformación por dentro de una organización, no solo cómo se ve la interfaz al final.',
+    role: 'Service Designer · UX Research & Diseño de Negocio',
+    hook: 'Investigo para entender el negocio y a su gente, y diseño el sistema que resuelve lo que encuentro. No creo que una cosa se pueda hacer bien sin la otra.',
     chips: ['Bogotá, Colombia', 'Remoto / Híbrido', 'Inglés C1', 'Adobe Workfront'],
     k1: 'Quién soy',
     who: [
       'Soy diseñador interactivo de la Universidad Jorge Tadeo Lozano. Lo que me mueve es crear experiencias nuevas: entender de verdad qué necesita la persona del otro lado y traducirlo en herramientas que funcionen, se puedan replicar, se puedan automatizar y dejen un impacto medible.',
+      'Vengo del UX/UI y el game design, y me moví a la consultoría porque quería entender cómo ocurre la transformación por dentro de una organización, no solo cómo se ve la interfaz al final.',
       'Trabajo con diseño centrado en el usuario tanto en producto digital como en las operaciones internas de una empresa. Investigo, prototipo, valido, y me quedo hasta que la gente lo adopta — la parte que casi nunca aparece en un caso de estudio.',
       'Sé programar lo suficiente para no pedir imposibles: HTML, CSS, algo de C#. Diseño y prototipo en Figma, y me interesa el terreno donde la tecnología todavía no tiene convenciones: AR, VR, videojuegos.',
     ],
@@ -169,12 +170,12 @@ export const ABOUT = {
     k4: 'Habilidades',
     skills: [
       {
-        label: 'Plataforma y procesos',
-        items: ['Adobe Workfront', 'Consultoría de implementación', 'Diseño de servicios', 'Rediseño y optimización de procesos', 'Documentación técnica y enablement', 'Análisis de riesgos', 'Gestión de stakeholders'],
+        label: 'Diseño y producto',
+        items: ['UX Research', 'Entrevistas y síntesis', 'Journey maps', 'Service blueprints', 'Arquitectura de información', 'Pruebas de usabilidad', 'Prototipado', 'Design systems', 'Diseño UX/UI', 'Accesibilidad (WCAG)', 'Storytelling y gamificación'],
       },
       {
-        label: 'Diseño y producto',
-        items: ['UX Research', 'Diseño UX/UI', 'Prototipado', 'Design systems', 'Arquitectura de información', 'Pruebas de usabilidad', 'Accesibilidad (WCAG)', 'Storytelling y gamificación'],
+        label: 'Plataforma y procesos',
+        items: ['Diseño de servicios', 'Diseño de modelos operativos', 'Mapeo y rediseño de procesos', 'Análisis de negocio', 'Consultoría de implementación', 'Documentación técnica y enablement', 'Análisis de riesgos', 'Gestión de stakeholders', 'Adobe Workfront'],
       },
       {
         label: 'Herramientas',
@@ -202,12 +203,13 @@ export const ABOUT = {
     back: 'Home',
     cases: 'Cases',
     kicker: 'About me',
-    role: 'UX Consultant · Service & Experience Design',
-    hook: 'My background is UX/UI and game design, and I moved into consulting because I wanted to understand how transformation happens inside an organization, not just how the interface looks at the end.',
+    role: 'Service Designer · UX Research & Business Design',
+    hook: 'I research to understand the business and the people in it, and I design the system that solves what I find. I don’t think either half can be done well without the other.',
     chips: ['Bogotá, Colombia', 'Remote / Hybrid', 'English C1', 'Adobe Workfront'],
     k1: 'Who I am',
     who: [
       "I'm an interactive designer from Universidad Jorge Tadeo Lozano. What drives me is building new experiences: genuinely understanding what the person on the other side needs, and turning that into tools that work, that can be replicated, that can be automated, and that leave measurable impact.",
+      "My background is UX/UI and game design, and I moved into consulting because I wanted to understand how transformation happens inside an organization, not just how the interface looks at the end.",
       "I apply user-centred design to digital products and to a company's internal operations alike. I research, prototype, validate — and stay until people actually adopt it, the part that rarely makes it into a case study.",
       "I code enough not to ask for the impossible: HTML, CSS, some C#. I design and prototype in Figma, and I'm drawn to the ground where technology has no conventions yet: AR, VR, games.",
     ],
@@ -255,12 +257,12 @@ export const ABOUT = {
     k4: 'Skills',
     skills: [
       {
-        label: 'Platform & process',
-        items: ['Adobe Workfront', 'Implementation consulting', 'Service design', 'Process redesign and optimization', 'Technical documentation and enablement', 'Risk analysis', 'Stakeholder management'],
+        label: 'Design & product',
+        items: ['UX research', 'Interviews and synthesis', 'Journey maps', 'Service blueprints', 'Information architecture', 'Usability testing', 'Prototyping', 'Design systems', 'UX/UI design', 'Accessibility (WCAG)', 'Storytelling and gamification'],
       },
       {
-        label: 'Design & product',
-        items: ['UX research', 'UX/UI design', 'Prototyping', 'Design systems', 'Information architecture', 'Usability testing', 'Accessibility (WCAG)', 'Storytelling and gamification'],
+        label: 'Platform & process',
+        items: ['Service design', 'Operating model design', 'Process mapping and redesign', 'Business analysis', 'Implementation consulting', 'Technical documentation and enablement', 'Risk analysis', 'Stakeholder management', 'Adobe Workfront'],
       },
       {
         label: 'Tools',
