@@ -132,7 +132,8 @@ export const HOME = {
       ['01', 'Entender el negocio', 'Objetivos, procesos, quién decide y qué se mide. Antes de hablar de pantallas.', 'clarity'],
       ['02', 'Escuchar de verdad', 'Entrevistas y observación. Registro lo que se dice, lo que se evita y lo que se hace de otra forma.', 'mind'],
       ['03', 'Traducir a decisiones', 'Un problema bien enunciado y una lista corta. Lo demás se documenta y se deja ir.', 'feel'],
-      ['04', 'Validar y medir', 'Pruebas con usuarios reales y una métrica acordada antes de empezar.', 'clarity'],
+      ['04', 'Diseñar el sistema', 'El flujo de trabajo, el blueprint del servicio y las piezas que lo hacen real: interfaces, plantillas, documentación. La pantalla es el final, no el punto de partida.', 'mind'],
+      ['05', 'Validar y medir', 'Pruebas con usuarios reales y una métrica acordada antes de empezar.', 'clarity'],
     ],
     skills: [
       'Entrevistas',
@@ -277,7 +278,8 @@ export const HOME = {
       ['01', 'Understand the business', 'Goals, processes, who decides and what gets measured. Before any talk of screens.', 'clarity'],
       ['02', 'Listen properly', "Interviews and observation. I record what's said, what's avoided, and what's done another way.", 'mind'],
       ['03', 'Translate into decisions', 'One well-framed problem and a short list. The rest gets documented and let go.', 'feel'],
-      ['04', 'Validate and measure', 'Testing with real users and a metric agreed before we start.', 'clarity'],
+      ['04', 'Design the system', 'The workflow, the service blueprint, and the pieces that make it real: interfaces, templates, documentation. The screen is the end, not the starting point.', 'mind'],
+      ['05', 'Validate and measure', 'Testing with real users and a metric agreed before we start.', 'clarity'],
     ],
     skills: [
       'Interviews',

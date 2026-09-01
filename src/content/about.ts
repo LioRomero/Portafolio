@@ -49,8 +49,8 @@ export const JOBS: Job[] = [
     datesEn: 'Jun 2025 — Apr 2026',
     org: 'Ropofy · SaaS B2B (CRM y automatización)',
     orgEn: 'Ropofy · B2B SaaS (CRM and automation)',
-    title: 'Jr UX Consultant / UX Designer',
-    titleEn: 'Jr UX Consultant / UX Designer',
+    title: 'Consultor UX / Diseñador UX',
+    titleEn: 'UX Consultant / UX Designer',
     lede: 'Dos frentes a la vez: la cartera de clientes y el sitio del producto.',
     ledeEn: 'Two fronts at once: the client portfolio and the product website.',
     bullets: [
@@ -89,7 +89,7 @@ export const JOBS: Job[] = [
     datesEn: 'Feb 2024 — Aug 2024',
     org: 'ETB · Telecomunicaciones',
     orgEn: 'ETB · Telecommunications',
-    title: 'Practicante UX/UI',
+    title: 'Practicante de Diseño UX/UI',
     titleEn: 'UX/UI Design Intern',
     lede: 'Plataformas internas usadas por más de 500 personas al mes: el primer lugar donde vi que el problema casi nunca está en la pantalla.',
     ledeEn:
@@ -171,11 +171,11 @@ export const ABOUT = {
     skills: [
       {
         label: 'Diseño y producto',
-        items: ['UX Research', 'Entrevistas y síntesis', 'Journey maps', 'Service blueprints', 'Arquitectura de información', 'Pruebas de usabilidad', 'Prototipado', 'Design systems', 'Diseño UX/UI', 'Accesibilidad (WCAG)', 'Storytelling y gamificación'],
+        items: ['UX Research', 'Entrevistas y síntesis', 'Journey maps', 'Service blueprints', 'Arquitectura de información', 'Pruebas de usabilidad', 'Prototipado', 'Design systems', 'Diseño UX/UI', 'Accesibilidad (WCAG)', 'Documentación como producto', 'Storytelling y gamificación'],
       },
       {
         label: 'Plataforma y procesos',
-        items: ['Diseño de servicios', 'Diseño de modelos operativos', 'Mapeo y rediseño de procesos', 'Análisis de negocio', 'Consultoría de implementación', 'Documentación técnica y enablement', 'Análisis de riesgos', 'Gestión de stakeholders', 'Adobe Workfront'],
+        items: ['Diseño de servicios', 'Diseño de modelos operativos', 'Mapeo y rediseño de procesos', 'Análisis de negocio', 'Levantamiento de requerimientos', 'Consultoría de implementación', 'Documentación técnica y enablement', 'Análisis de riesgos', 'Gestión de stakeholders', 'Adobe Workfront'],
       },
       {
         label: 'Herramientas',
@@ -258,11 +258,11 @@ export const ABOUT = {
     skills: [
       {
         label: 'Design & product',
-        items: ['UX research', 'Interviews and synthesis', 'Journey maps', 'Service blueprints', 'Information architecture', 'Usability testing', 'Prototyping', 'Design systems', 'UX/UI design', 'Accessibility (WCAG)', 'Storytelling and gamification'],
+        items: ['UX research', 'Interviews and synthesis', 'Journey maps', 'Service blueprints', 'Information architecture', 'Usability testing', 'Prototyping', 'Design systems', 'UX/UI design', 'Accessibility (WCAG)', 'Documentation as a product', 'Storytelling and gamification'],
       },
       {
         label: 'Platform & process',
-        items: ['Service design', 'Operating model design', 'Process mapping and redesign', 'Business analysis', 'Implementation consulting', 'Technical documentation and enablement', 'Risk analysis', 'Stakeholder management', 'Adobe Workfront'],
+        items: ['Service design', 'Operating model design', 'Process mapping and redesign', 'Business analysis', 'Requirements gathering', 'Implementation consulting', 'Technical documentation and enablement', 'Risk analysis', 'Stakeholder management', 'Adobe Workfront'],
       },
       {
         label: 'Tools',

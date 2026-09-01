@@ -12,6 +12,7 @@ export const CASES_UI = {
     theBrief: 'El encargo',
     realProblem: 'El problema real',
     questionsAsked: 'Las preguntas que hice',
+    methodLabel: 'El método',
     nextCase: 'Siguiente caso',
     backHome: 'Volver al inicio',
     prev: 'Imagen anterior',
@@ -31,6 +32,7 @@ export const CASES_UI = {
     theBrief: 'The brief',
     realProblem: 'The real problem',
     questionsAsked: 'The questions I asked',
+    methodLabel: 'The method',
     nextCase: 'Next case',
     backHome: 'Back to home',
     prev: 'Previous image',
@@ -49,7 +51,7 @@ export const CASES = {
     tab: 'Ropofy',
     accent: '#22D3EE',
     es: {
-      chips: [['SaaS · CRM', 'clarity'], ['Jr UX Consultant / UX Designer', 'line'], ['Jun 2025 – Abr 2026', 'line']],
+      chips: [['SaaS · CRM', 'clarity'], ['Consultor UX / Diseñador UX', 'line'], ['Jun 2025 – Abr 2026', 'line']],
       title: 'Me contrataron para rediseñar una web. El problema estaba en el silencio.',
       sub: 'Ropofy vendía bien y perdía clientes sin saber dónde. El sitio no era el cuello de botella: lo era el tiempo que tardaban en responder.',
       cols: [
@@ -108,7 +110,7 @@ export const CASES = {
       ],
     },
     en: {
-      chips: [['SaaS · CRM', 'clarity'], ['Jr UX Consultant / UX Designer', 'line'], ['Jun 2025 – Apr 2026', 'line']],
+      chips: [['SaaS · CRM', 'clarity'], ['UX Consultant / UX Designer', 'line'], ['Jun 2025 – Apr 2026', 'line']],
       title: 'They hired me to redesign a website. The problem was the silence.',
       sub: "Ropofy was selling well and losing customers without knowing where. The site wasn't the bottleneck — how long they took to reply was.",
       cols: [

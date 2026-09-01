@@ -125,6 +125,7 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
                 <h3>{d.research.h2}</h3>
                 <p class="body">{d.research.p}</p>
 
+                <div class="col-label method-label">{ui.methodLabel}</div>
                 <ul class="stats">
                   {d.research.stats.map(([n, l]) => (
                     <li>
@@ -232,6 +233,15 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
   <section class="section bordered" data-playful>
     <div class="wrap wrap--canvas">
       <Puzzle variant="casos" lang={lang} client:visible />
+    </div>
+  </section>
+
+  {/* El blueprint va aquí, después de los tres casos, porque es la herramienta
+      con la que se diseñó el sistema que cuentan QStrauss y el BID. Leerlo
+      explicado no es lo mismo que armarlo. */}
+  <section class="section bordered" data-playful>
+    <div class="wrap wrap--canvas">
+      <Puzzle variant="blueprint" lang={lang} client:visible />
     </div>
   </section>
 
@@ -442,18 +452,29 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
     list-style: none;
   }
 
+  /* El metodo es la mitad del argumento en un caso de service design, asi que
+     los datos se leen como evidencia y no como prosa: tarjeta propia y cifra
+     grande, del mismo peso que la franja de metricas de la portada. */
   .stats li {
-    border-left: 1px solid var(--line);
-    padding-left: 16px;
+    border: var(--border);
+    border-top: 2px solid var(--accent);
+    border-radius: var(--r-card);
+    background: var(--surface);
+    padding: 20px 22px 22px;
+  }
+
+  .method-label {
+    margin: 30px 0 0;
   }
 
   .stat-n {
     display: block;
-    font-size: 24px;
+    font-size: 40px;
     font-weight: var(--fw-medium);
     letter-spacing: -0.03em;
+    line-height: 1.05;
     color: var(--accent);
-    margin-bottom: 6px;
+    margin-bottom: 10px;
   }
 
   .stat-l {
