@@ -18,6 +18,10 @@ export const BLUEPRINT = {
     reiniciar: 'Volver al frente',
     lineaLabel: 'Línea de visibilidad',
     lineaNota: 'Todo lo que está debajo es invisible para el cliente — y es donde estaba el problema real.',
+    montaRegla: 'Antes de mirarlo hay que armarlo. Toca las capas en el orden en que se dibuja un blueprint: primero lo que el cliente vive, después lo que lo sostiene.',
+    montaProgreso: 'colocadas',
+    montaHecho: 'Armado. Ahora ábrelo: cada capa es un cajón.',
+    montaError: 'Esa va más abajo. Se reinicia.',
     capas: [
       { n: '01', t: 'Evidencia física', d: 'La respuesta que llega al celular. Es lo único tangible de todo el servicio.', tono: 'clarity' },
       { n: '02', t: 'Acciones del usuario', d: 'Escribe el viernes. Espera. El martes ya compró en otro lado.', tono: 'feel' },
@@ -37,6 +41,10 @@ export const BLUEPRINT = {
     reiniciar: 'Face on',
     lineaLabel: 'Line of visibility',
     lineaNota: 'Everything below it is invisible to the customer — and that is where the real problem was.',
+    montaRegla: 'Before looking at it you have to build it. Tap the layers in the order a blueprint is drawn: first what the customer lives through, then what holds it up.',
+    montaProgreso: 'placed',
+    montaHecho: 'Built. Now open it: every layer is a drawer.',
+    montaError: 'That one goes further down. Starting over.',
     capas: [
       { n: '01', t: 'Physical evidence', d: 'The reply that lands on their phone. The only tangible part of the whole service.', tono: 'clarity' },
       { n: '02', t: 'User actions', d: 'Writes on Friday. Waits. By Tuesday they have bought elsewhere.', tono: 'feel' },

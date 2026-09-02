@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { PUZZLE, PUZZLE_UI, shuffle, seedFor, type PuzzleVariant } from '../content/puzzle';
 import { sonar, leerSonido } from '../lib/sonido';
+import { leerAvance, guardarAvance } from '../lib/prefs';
 import type { Lang } from '../content/ui';
 
 interface Props {
@@ -28,6 +29,9 @@ export default function Puzzle({ variant, lang }: Props) {
   const fantasma = useRef<HTMLDivElement | null>(null);
   const shell = useRef<HTMLElement | null>(null);
   const movido = useRef(false);
+  /* Un arrastre que acierta ya resolvio la jugada, pero el navegador dispara
+     su `click` justo despues sobre la misma ficha. Esta bandera se lo come. */
+  const ignorarClick = useRef(false);
 
   /* Permutación determinista: mismo desorden en cada render y en cada visita. */
   const order = shuffle(n, seedFor(n));
@@ -35,6 +39,11 @@ export default function Puzzle({ variant, lang }: Props) {
 
   useEffect(() => {
     leerSonido();
+    /* El avance se recupera despues del montaje y no en el useState inicial:
+       en el render del servidor no hay sessionStorage, y sembrarlo ahi
+       desajustaria la hidratacion. */
+    const guardado = leerAvance(variant);
+    if (guardado > 0 && guardado <= n) setPz(guardado);
     return () => clearTimeout(timer.current);
   }, []);
 
@@ -42,12 +51,14 @@ export default function Puzzle({ variant, lang }: Props) {
     if (i === pz) {
       const fin = pz + 1;
       setPz(fin);
+      guardarAvance(variant, fin);
       setWrong(false);
       sonar(fin >= n ? 'completo' : 'acierto');
       return;
     }
     clearTimeout(timer.current);
     setPz(0);
+    guardarAvance(variant, 0);
     setWrong(true);
     sonar('error');
     timer.current = window.setTimeout(() => setWrong(false), 1600);
@@ -56,6 +67,7 @@ export default function Puzzle({ variant, lang }: Props) {
   const restart = () => {
     clearTimeout(timer.current);
     setPz(0);
+    guardarAvance(variant, 0);
     setWrong(false);
   };
 
@@ -116,13 +128,17 @@ export default function Puzzle({ variant, lang }: Props) {
     const destino = huecoBajo(ev.clientX, ev.clientY);
     setArrastrando(null);
     setSobreHueco(null);
-    /* Sin desplazamiento real fue un toque, no un arrastre: se trata como clic
-       para que ambos gestos lleguen al mismo sitio. */
-    if (!movido.current) return click(i);
+    /* Sin desplazamiento real fue un toque, no un arrastre: no se hace nada
+       aqui porque el navegador va a disparar su propio `click` justo despues,
+       y adelantarse contaria el paso dos veces. */
+    if (!movido.current) return;
     /* Soltar fuera de un hueco no penaliza: cancelar no es equivocarse. */
-    if (destino === null) return;
-    if (destino === pz) return click(i);
-    click(-1);
+    if (destino === null) {
+      ignorarClick.current = true;
+      return;
+    }
+    ignorarClick.current = true;
+    click(destino === pz ? i : -1);
   };
 
   return (
@@ -195,6 +211,13 @@ export default function Puzzle({ variant, lang }: Props) {
                   (arrastrando === i ? ' pz-chip--viajando' : '')
                 }
                 disabled={used}
+                onClick={() => {
+                  if (ignorarClick.current) {
+                    ignorarClick.current = false;
+                    return;
+                  }
+                  click(i);
+                }}
                 onPointerDown={(e: PointerEvent) => empezarArrastre(i, e)}
                 onPointerMove={seguirArrastre}
                 onPointerUp={soltarArrastre}

@@ -177,3 +177,29 @@ export function onPrefsChange(handler: (change: PrefsChange) => void): () => voi
   document.addEventListener(PREFS_EVENT, listener);
   return () => document.removeEventListener(PREFS_EVENT, listener);
 }
+
+/**
+ * Progreso de los juegos, guardado por sesión del navegador.
+ *
+ * `sessionStorage` es justo la memoria que hace falta: sobrevive a un refresco
+ * —perder el avance por recargar sin querer es una crueldad— y se borra al
+ * cerrar el navegador, así que quien vuelve otro día se encuentra los juegos
+ * y las animaciones como la primera vez.
+ */
+export function leerAvance(clave: string): number {
+  try {
+    const v = Number(sessionStorage.getItem('em-avance:' + clave));
+    return Number.isFinite(v) && v > 0 ? v : 0;
+  } catch {
+    return 0;
+  }
+}
+
+export function guardarAvance(clave: string, valor: number): void {
+  try {
+    if (valor > 0) sessionStorage.setItem('em-avance:' + clave, String(valor));
+    else sessionStorage.removeItem('em-avance:' + clave);
+  } catch {
+    /* almacenamiento bloqueado: el avance dura lo que la pestaña */
+  }
+}

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { BLUEPRINT } from '../content/blueprint';
 import { sonar, leerSonido } from '../lib/sonido';
+import { leerAvance, guardarAvance } from '../lib/prefs';
 import type { Lang } from '../content/ui';
 
 interface Props {
@@ -26,10 +27,21 @@ export default function Blueprint3D({ lang }: Props) {
   const [ry, setRy] = useState(-15);
   const [sep, setSep] = useState(60);
   const [activa, setActiva] = useState<number | null>(null);
+  /* La capa abierta sale del archivador: sube, se acerca y despliega su ficha
+     dentro. Se cierra volviendo a tocarla, como un cajon. */
+  const [abierta, setAbierta] = useState<number | null>(null);
+  /* Fase de montaje: hasta que las cinco capas no estan puestas, el
+     archivador no existe. Asi el puzzle de esta pagina deja de ser otra lista
+     de fichas en orden y pasa a construirse en el espacio. */
+  const [puestas, setPuestas] = useState(0);
+  const [fallo, setFallo] = useState(false);
+  const montado = puestas >= t.capas.length;
   const arrastre = useRef<{ x: number; y: number; rx: number; ry: number } | null>(null);
 
   useEffect(() => {
     leerSonido();
+    const guardado = leerAvance('blueprint');
+    if (guardado > 0 && guardado <= t.capas.length) setPuestas(guardado);
   }, []);
 
   const limitar = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
@@ -76,6 +88,30 @@ export default function Blueprint3D({ lang }: Props) {
     setRy(-15);
     setSep(60);
     setActiva(null);
+    setAbierta(null);
+  };
+
+  const colocar = (i: number) => {
+    if (i === puestas) {
+      const fin = puestas + 1;
+      setPuestas(fin);
+      guardarAvance('blueprint', fin);
+      setFallo(false);
+      sonar(fin >= t.capas.length ? 'completo' : 'acierto');
+      return;
+    }
+    setPuestas(0);
+    guardarAvance('blueprint', 0);
+    setFallo(true);
+    sonar('error');
+    window.setTimeout(() => setFallo(false), 1500);
+  };
+
+  const abrirCajon = (i: number) => {
+    const cerrando = abierta === i;
+    setAbierta(cerrando ? null : i);
+    setActiva(i);
+    sonar(cerrando ? 'elegir' : 'acierto');
   };
 
   const giro = 'rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
@@ -85,7 +121,7 @@ export default function Blueprint3D({ lang }: Props) {
       <div class="bp-cabeza">
         <span class="label label--mind">{t.kicker}</span>
         <h3 class="bp-title">{t.title}</h3>
-        <p class="bp-lede">{t.lede}</p>
+        <p class="bp-lede">{montado ? t.lede : t.montaRegla}</p>
       </div>
 
       <div class="bp-cols">
@@ -113,7 +149,7 @@ export default function Blueprint3D({ lang }: Props) {
               const y = (i - 2) * -(sep * 0.58);
               return (
                 <>
-                  {i === 3 && (
+                  {i === 3 && puestas > 3 && (
                     <div
                       class="bp-linea"
                       style={{ transform: 'translate3d(0,' + (y + sep * 0.29) + 'px,' + (z + sep / 2) + 'px)' }}
@@ -121,19 +157,32 @@ export default function Blueprint3D({ lang }: Props) {
                       <span class="bp-linea-txt">{t.lineaLabel}</span>
                     </div>
                   )}
-                  <div
-                    class={'bp-capa bp-capa--' + c.tono + (activa === i ? ' bp-capa--activa' : '')}
-                    style={{ transform: 'translate3d(0,' + y + 'px,' + z + 'px)' }}
-                    onPointerEnter={() => {
-                      setActiva(i);
-                      sonar('elegir');
+                  {i < puestas && (
+                  <button
+                    type="button"
+                    class={
+                      'bp-capa bp-capa--' + c.tono +
+                      (activa === i ? ' bp-capa--activa' : '') +
+                      (abierta === i ? ' bp-capa--abierta' : '')
+                    }
+                    style={{
+                      transform:
+                        'translate3d(0,' + (abierta === i ? y - 74 : y) + 'px,' +
+                        (abierta === i ? z + 130 : z) + 'px)',
                     }}
+                    aria-expanded={abierta === i}
+                    onPointerEnter={() => setActiva(i)}
                     onFocus={() => setActiva(i)}
-                    tabIndex={0}
+                    onClick={() => abrirCajon(i)}
                   >
-                    <span class="bp-n tabular">{c.n}</span>
-                    <span class="bp-t">{c.t}</span>
-                  </div>
+                    <span class="bp-fila">
+                      <span class="bp-n tabular">{c.n}</span>
+                      <span class="bp-t">{c.t}</span>
+                      <span class="bp-tirador" aria-hidden="true" />
+                    </span>
+                    {abierta === i && <span class="bp-ficha">{c.d}</span>}
+                  </button>
+                  )}
                 </>
               );
             })}
@@ -141,6 +190,27 @@ export default function Blueprint3D({ lang }: Props) {
         </div>
 
         <div class="bp-lado">
+          {!montado && (
+            <div class={fallo ? 'bp-monta bp-monta--mal' : 'bp-monta'}>
+              <span class="bp-monta-cuenta tabular">
+                {puestas} / {t.capas.length} {t.montaProgreso}
+              </span>
+              <span class="bp-monta-aviso" aria-live="polite">
+                {fallo ? t.montaError : ''}
+              </span>
+              <div class="bp-fichas">
+                {t.capas.map((c, i) =>
+                  i < puestas ? null : (
+                    <button type="button" class="bp-ficha-btn" onClick={() => colocar(i)}>
+                      {c.t}
+                    </button>
+                  )
+                )}
+              </div>
+            </div>
+          )}
+
+          {montado && (
           <div class="bp-detalle" aria-live="polite">
             {activa === null ? (
               <p class="bp-hint">{t.hint}</p>
@@ -154,6 +224,9 @@ export default function Blueprint3D({ lang }: Props) {
             )}
           </div>
 
+          )}
+
+          {montado && (
           <label class="bp-control">
             <span class="col-label">{t.separar}</span>
             <input
@@ -165,15 +238,19 @@ export default function Blueprint3D({ lang }: Props) {
             />
           </label>
 
+          )}
+
+          {montado && (
           <button type="button" class="bp-reset" onClick={reiniciar}>
             {t.reiniciar}
           </button>
+          )}
 
           <p class="bp-nota meta">{t.lineaNota}</p>
         </div>
       </div>
 
-      <p class="bp-cierre">{t.cierre}</p>
+      <p class="bp-cierre">{montado ? t.cierre : t.montaHecho}</p>
 
       <style>{`
         .bp-shell {
@@ -210,6 +287,9 @@ export default function Blueprint3D({ lang }: Props) {
           width: 300px;
           height: 190px;
           transform-style: preserve-3d;
+          /* El giro sigue al dedo y por eso va corto: una manipulacion directa
+             con 300 ms de transicion se siente rota, no elegante. Lo lento es
+             el cajon, que si hay que poder leer. */
           transition: transform .12s linear;
         }
         html[data-motion='off'] .bp-pila { transition: none; }
@@ -220,17 +300,61 @@ export default function Blueprint3D({ lang }: Props) {
           transform-style: preserve-3d;
           border-radius: 12px;
         }
+        /* Cada capa es un cajon del archivador: se saca tirando y vuelve a su
+           sitio al empujarla. La transicion es lenta a proposito -- 480 ms --
+           porque el movimiento es lo que explica que la capa sale de una pila,
+           y a 150 ms no da tiempo a leerlo. */
         .bp-capa {
           display: flex;
+          flex-direction: column;
           user-select: none;
-          align-items: flex-start;
-          gap: 14px;
-          padding: 13px 20px 0;
+          align-items: stretch;
+          gap: 10px;
+          padding: 13px 18px 0;
+          text-align: left;
+          font: inherit;
+          cursor: pointer;
           border: 1px solid var(--line-strong);
           background: color-mix(in srgb, var(--surface) 86%, transparent);
           box-shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.9);
-          transition: border-color var(--dur-hover) var(--ease-hover), background var(--dur-hover) var(--ease-hover);
+          transition:
+            transform 480ms cubic-bezier(0.22, 1, 0.36, 1),
+            border-color 260ms var(--ease-hover),
+            background 260ms var(--ease-hover),
+            box-shadow 320ms var(--ease-hover);
         }
+        html[data-motion='off'] .bp-capa { transition: none; }
+
+        .bp-fila { display: flex; align-items: center; gap: 14px; }
+        /* El tirador del cajon: sin el, la capa no se lee como algo que se abre. */
+        .bp-tirador {
+          margin-left: auto;
+          width: 26px;
+          height: 3px;
+          border-radius: 2px;
+          background: var(--line-strong);
+          transition: background 260ms var(--ease-hover), width 260ms var(--ease-hover);
+        }
+        .bp-capa--activa .bp-tirador { background: currentColor; width: 34px; }
+
+        .bp-capa--abierta {
+          background: var(--surface-2);
+          border-color: currentColor;
+          box-shadow: 0 26px 60px -22px rgba(0, 0, 0, 0.95), 0 0 40px -10px currentColor;
+        }
+        .bp-ficha {
+          display: block;
+          padding-right: 4px;
+          font-size: 13.5px;
+          line-height: 1.5;
+          color: var(--dim);
+          animation: bpFicha 420ms 120ms both ease-out;
+        }
+        @keyframes bpFicha {
+          from { opacity: 0; transform: translateY(-6px); }
+          to { opacity: 1; transform: none; }
+        }
+        html[data-motion='off'] .bp-ficha { animation: none; }
         .bp-capa--clarity { border-color: color-mix(in srgb, var(--clarity) 55%, var(--line-strong)); }
         .bp-capa--mind { border-color: color-mix(in srgb, var(--mind) 55%, var(--line-strong)); }
         .bp-capa--feel { border-color: color-mix(in srgb, var(--feel) 55%, var(--line-strong)); }
@@ -266,6 +390,39 @@ export default function Blueprint3D({ lang }: Props) {
         }
 
         .bp-lado { display: grid; gap: 18px; }
+
+        /* Fichas del montaje. Viven al lado de la escena y no debajo, para que
+           se vea caer la capa en su sitio sin apartar la vista. */
+        .bp-monta { display: grid; gap: 10px; }
+        .bp-monta-cuenta { font-size: 13px; color: var(--dimmer); letter-spacing: var(--ls-label); }
+        .bp-monta-aviso { font-size: 13px; color: var(--feel); min-height: 18px; }
+        .bp-fichas { display: flex; flex-wrap: wrap; gap: 8px; }
+        .bp-ficha-btn {
+          padding: 9px 14px;
+          border-radius: var(--r-control);
+          border: 1px solid var(--line-strong);
+          background: var(--surface-2);
+          color: var(--text);
+          font-size: 13.5px;
+          text-align: left;
+          transition: border-color var(--dur-hover) var(--ease-hover);
+        }
+        .bp-ficha-btn:hover { border-color: var(--mind); }
+        .bp-monta--mal .bp-fichas { animation: bpNo .45s ease; }
+        @keyframes bpNo {
+          25% { transform: translateX(-4px); }
+          75% { transform: translateX(4px); }
+        }
+        html[data-motion='off'] .bp-monta--mal .bp-fichas { animation: none; }
+
+        /* La capa recien colocada entra desde arriba: es el gesto que explica
+           que se esta apilando algo, y por eso dura lo que dura. */
+        .bp-capa { animation: bpEntra 520ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+        @keyframes bpEntra {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        html[data-motion='off'] .bp-capa { animation: none; }
         .bp-detalle { min-height: 96px; border-left: 2px solid var(--line-strong); padding-left: 16px; }
         .bp-detalle-t { font-size: 15px; color: var(--text); margin-bottom: 6px; }
         .bp-detalle-n { color: var(--dimmer); font-size: 12px; }

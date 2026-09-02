@@ -237,17 +237,10 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
     </div>
   </section>
 
-  {/* El blueprint va aquí, después de los tres casos, porque es la herramienta
-      con la que se diseñó el sistema que cuentan QStrauss y el BID. Leerlo
-      explicado no es lo mismo que armarlo. */}
-  <section class="section bordered" data-playful>
-    <div class="wrap wrap--canvas">
-      <Puzzle variant="blueprint" lang={lang} client:visible />
-    </div>
-  </section>
-
-  {/* Y después de armarlo, verlo. El puzzle enseña el orden; esto deja mirar
-      la herramienta por dentro con un caso real encima. */}
+  {/* El blueprint se armaba antes con un puzzle plano igual que los otros dos,
+      y tres veces el mismo gesto se sentía a plantilla. Ahora se arma dentro
+      de la propia escena 3D: colocar las capas ES el puzzle, y al terminar la
+      pieza queda para explorarla. */}
   <section class="section bordered" data-playful>
     <div class="wrap wrap--canvas">
       <Blueprint3D lang={lang} client:visible />

@@ -1,13 +1,14 @@
-/** Los cuatro puzzles. Los tres primeros vienen de `Puzzle.dc.html`; el del
- *  blueprint se sumó al reposicionar el portafolio hacia service design. */
+/** Los tres puzzles de fichas. El del blueprint ya no está aquí: se arma
+ *  dentro de la escena 3D, en `Blueprint3D.tsx`, para que no fueran tres
+ *  veces el mismo gesto. */
 
-export type PuzzleVariant = 'proceso' | 'casos' | 'blueprint' | 'sobre';
+export type PuzzleVariant = 'proceso' | 'casos' | 'sobre';
 
 export const PUZZLE = {
   proceso: {
     accent: '#8B7BF0',
     es: {
-      badge: 'Puzzle 1 de 4',
+      badge: 'Puzzle 1 de 3',
       kind: 'Interactivo · 30 segundos',
       restart: 'Empezar de nuevo',
       title: 'Ordena mi proceso',
@@ -26,7 +27,7 @@ export const PUZZLE = {
         'El cuarto paso es el que casi nadie hace: enunciar el problema antes de dibujar nada. Y el quinto es el que separa a quien investiga de quien además diseña el sistema que resuelve lo encontrado.',
     },
     en: {
-      badge: 'Puzzle 1 of 4',
+      badge: 'Puzzle 1 of 3',
       kind: 'Interactive · 30 seconds',
       restart: 'Start over',
       title: 'Put my process in order',
@@ -48,7 +49,7 @@ export const PUZZLE = {
   casos: {
     accent: '#22D3EE',
     es: {
-      badge: 'Puzzle 2 de 4',
+      badge: 'Puzzle 2 de 3',
       kind: 'Interactivo · 20 segundos',
       restart: 'Empezar de nuevo',
       title: '¿En qué orden llega un caso?',
@@ -65,7 +66,7 @@ export const PUZZLE = {
         'El encargo casi nunca es el problema. Por eso cada caso de este portafolio empieza separando esas dos cosas.',
     },
     en: {
-      badge: 'Puzzle 2 of 4',
+      badge: 'Puzzle 2 of 3',
       kind: 'Interactive · 20 seconds',
       restart: 'Start over',
       title: 'What order does a case arrive in?',
@@ -82,53 +83,10 @@ export const PUZZLE = {
         "The brief is almost never the problem. That's why every case here starts by separating those two things.",
     },
   },
-  /**
-   * El blueprint es EL artefacto del diseño de servicios, y hasta ahora el
-   * portafolio hablaba de el sin dejar tocarlo. Se ordena de arriba hacia
-   * abajo, que es como se dibuja: lo que el usuario ve primero, lo que lo
-   * sostiene despues.
-   */
-  blueprint: {
-    accent: '#22D3EE',
-    es: {
-      badge: 'Puzzle 3 de 4',
-      kind: 'Interactivo · 25 segundos',
-      restart: 'Empezar de nuevo',
-      title: 'Arma un blueprint de servicio',
-      rule: 'Un blueprint se lee de arriba hacia abajo: primero lo que el usuario vive, después lo que lo sostiene. Toca las cinco capas en ese orden.',
-      steps: [
-        'Evidencia física',
-        'Acciones del usuario',
-        'Lo que el usuario ve',
-        'Lo que pasa detrás',
-        'Procesos de soporte',
-      ],
-      solvedLabel: 'Ese es el mapa',
-      solved:
-        'La línea que separa la tercera capa de la cuarta se llama línea de visibilidad. Casi todos los problemas que me contratan a resolver viven debajo de ella, aunque se sientan arriba.',
-    },
-    en: {
-      badge: 'Puzzle 3 of 4',
-      kind: 'Interactive · 25 seconds',
-      restart: 'Start over',
-      title: 'Build a service blueprint',
-      rule: 'A blueprint reads top to bottom: first what the user lives through, then what holds it up. Tap the five layers in that order.',
-      steps: [
-        'Physical evidence',
-        'User actions',
-        'What the user sees',
-        'What happens backstage',
-        'Support processes',
-      ],
-      solvedLabel: "That's the map",
-      solved:
-        'The line between the third and fourth layers is called the line of visibility. Almost every problem I get hired to fix lives below it, even though it is felt above.',
-    },
-  },
   sobre: {
     accent: '#F0466B',
     es: {
-      badge: 'Puzzle 4 de 4',
+      badge: 'Puzzle 3 de 3',
       kind: 'Interactivo · 20 segundos',
       restart: 'Empezar de nuevo',
       title: 'Mi trayectoria, en orden',
@@ -144,7 +102,7 @@ export const PUZZLE = {
         'De pantallas internas a arquitectura de plataforma. Lo que no cambió en ninguno: preguntar qué necesita la persona del otro lado antes de proponer nada.',
     },
     en: {
-      badge: 'Puzzle 4 of 4',
+      badge: 'Puzzle 3 of 3',
       kind: 'Interactive · 20 seconds',
       restart: 'Start over',
       title: 'My track record, in order',
