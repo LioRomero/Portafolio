@@ -25,4 +25,8 @@ export const withBase = (path: string): string => PREFIX + path;
  * archivo inglés se nota como imagen rota en vez de colarse en español.
  */
 export const diagrama = (path: string, lang: string): string =>
-  withBase(lang === 'en' ? path.replace('/assets/diag/', '/assets/diag/en/') : path);
+  withBase(
+    lang === 'en' && path.startsWith('/assets/diag/')
+      ? path.replace('/assets/diag/', '/assets/diag/en/')
+      : path
+  );

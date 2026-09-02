@@ -37,6 +37,7 @@ export default function Blueprint3D({ lang }: Props) {
   const [fallo, setFallo] = useState(false);
   const montado = puestas >= t.capas.length;
   const arrastre = useRef<{ x: number; y: number; rx: number; ry: number } | null>(null);
+  const girando = useRef(false);
 
   useEffect(() => {
     leerSonido();
@@ -46,20 +47,35 @@ export default function Blueprint3D({ lang }: Props) {
 
   const limitar = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
 
+  /* No se captura el puntero al apoyarlo, sino solo cuando el gesto se
+     convierte en giro de verdad (mas de 4 px). Capturar de entrada retiraba
+     el evento al boton de la capa y el navegador ya no disparaba su `click`:
+     por eso los cajones no abrian. */
   const abajo = (e: PointerEvent) => {
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
     arrastre.current = { x: e.clientX, y: e.clientY, rx, ry };
   };
 
   const mover = (e: PointerEvent) => {
     const a = arrastre.current;
     if (!a) return;
-    setRy(limitar(a.ry + (e.clientX - a.x) * 0.4, -70, 70));
-    setRx(limitar(a.rx - (e.clientY - a.y) * 0.3, -20, 60));
+    const dx = e.clientX - a.x;
+    const dy = e.clientY - a.y;
+    if (!girando.current) {
+      if (Math.hypot(dx, dy) < 4) return;
+      girando.current = true;
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    }
+    setRy(limitar(a.ry + dx * 0.4, -70, 70));
+    setRx(limitar(a.rx - dy * 0.3, -20, 60));
   };
 
   const arriba = () => {
     arrastre.current = null;
+    /* El `click` llega justo despues del `pointerup`; se levanta la bandera en
+       el siguiente turno para que el cajon no se abra al terminar un giro. */
+    window.setTimeout(() => {
+      girando.current = false;
+    }, 0);
   };
 
   /* El teclado hace lo mismo que el ratón. Sin esto, girar sería un gesto
@@ -173,7 +189,10 @@ export default function Blueprint3D({ lang }: Props) {
                     aria-expanded={abierta === i}
                     onPointerEnter={() => setActiva(i)}
                     onFocus={() => setActiva(i)}
-                    onClick={() => abrirCajon(i)}
+                    onClick={() => {
+                      if (girando.current) return;
+                      abrirCajon(i);
+                    }}
                   >
                     <span class="bp-fila">
                       <span class="bp-n tabular">{c.n}</span>
