@@ -125,11 +125,15 @@ export const PUZZLE_UI = {
     feedbackDefault: 'Toca el siguiente paso',
     feedbackWrong: 'Ese no va ahí — vuelve a empezar',
     of: 'de',
+    sonidoOn: 'Silenciar',
+    sonidoOff: 'Activar sonido',
   },
   en: {
     feedbackDefault: 'Tap the next step',
     feedbackWrong: "That one doesn't go there — start again",
     of: 'of',
+    sonidoOn: 'Mute',
+    sonidoOff: 'Sound on',
   },
 } as const;
 

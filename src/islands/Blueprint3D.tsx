@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { BLUEPRINT } from '../content/blueprint';
-import { sonar, leerSonido } from '../lib/sonido';
+import { sonar, leerSonido, activarSonido } from '../lib/sonido';
 import { leerAvance, guardarAvance } from '../lib/prefs';
 import type { Lang } from '../content/ui';
 
@@ -35,12 +35,13 @@ export default function Blueprint3D({ lang }: Props) {
      de fichas en orden y pasa a construirse en el espacio. */
   const [puestas, setPuestas] = useState(0);
   const [fallo, setFallo] = useState(false);
+  const [suena, setSuena] = useState(false);
   const montado = puestas >= t.capas.length;
   const arrastre = useRef<{ x: number; y: number; rx: number; ry: number } | null>(null);
   const girando = useRef(false);
 
   useEffect(() => {
-    leerSonido();
+    setSuena(leerSonido());
     const guardado = leerAvance('blueprint');
     if (guardado > 0 && guardado <= t.capas.length) setPuestas(guardado);
   }, []);
@@ -62,6 +63,11 @@ export default function Blueprint3D({ lang }: Props) {
     const dy = e.clientY - a.y;
     if (!girando.current) {
       if (Math.hypot(dx, dy) < 4) return;
+      /* Si el gesto es mas vertical que horizontal, es scroll y no giro. */
+      if (Math.abs(dy) > Math.abs(dx)) {
+        arrastre.current = null;
+        return;
+      }
       girando.current = true;
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
     }
@@ -135,7 +141,22 @@ export default function Blueprint3D({ lang }: Props) {
   return (
     <section class="bp-shell" aria-label={t.title}>
       <div class="bp-cabeza">
-        <span class="label label--mind">{t.kicker}</span>
+        <div class="bp-cabeza-fila">
+          <span class="label label--mind">{t.kicker}</span>
+          <button
+            type="button"
+            class={suena ? 'bp-sonido bp-sonido--on' : 'bp-sonido'}
+            aria-pressed={suena}
+            onClick={() => {
+              const v = !suena;
+              setSuena(v);
+              activarSonido(v);
+              if (v) sonar('elegir');
+            }}
+          >
+            {suena ? t.sonidoOn : t.sonidoOff}
+          </button>
+        </div>
         <h3 class="bp-title">{t.title}</h3>
         <p class="bp-lede">{montado ? t.lede : t.montaRegla}</p>
       </div>
@@ -278,6 +299,18 @@ export default function Blueprint3D({ lang }: Props) {
           padding: 30px 32px 26px;
           background: var(--bg-2);
         }
+        .bp-cabeza-fila { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .bp-sonido {
+          margin-left: auto;
+          padding: 5px 11px;
+          border-radius: 999px;
+          border: 1px solid var(--line-strong);
+          background: transparent;
+          color: var(--dimmer);
+          font-size: 12.5px;
+        }
+        .bp-sonido:hover { border-color: var(--mind); color: var(--text); }
+        .bp-sonido--on { border-color: var(--mind); color: var(--mind); }
         .bp-title { font-size: var(--fs-h3); font-weight: var(--fw-medium); margin: 10px 0 8px; }
         .bp-lede { color: var(--dim); max-width: 62ch; margin: 0 0 22px; }
         .bp-cols {
@@ -295,7 +328,11 @@ export default function Blueprint3D({ lang }: Props) {
           display: grid;
           place-items: center;
           cursor: grab;
-          touch-action: none;
+          /* pan-y y no none: con none, el dedo apoyado sobre la escena
+             secuestraba el desplazamiento de la pagina y en el movil te
+             quedabas atascado en un bloque de 330 px. Asi el arrastre
+             horizontal gira y el vertical sigue desplazando la pagina. */
+          touch-action: pan-y;
           border-radius: var(--r-card);
         }
         .bp-escena:active { cursor: grabbing; }

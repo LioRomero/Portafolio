@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { PUZZLE, PUZZLE_UI, shuffle, seedFor, type PuzzleVariant } from '../content/puzzle';
-import { sonar, leerSonido } from '../lib/sonido';
+import { sonar, leerSonido, activarSonido } from '../lib/sonido';
 import { leerAvance, guardarAvance } from '../lib/prefs';
 import type { Lang } from '../content/ui';
 
@@ -19,6 +19,7 @@ export default function Puzzle({ variant, lang }: Props) {
 
   const [pz, setPz] = useState(0);
   const [wrong, setWrong] = useState(false);
+  const [suena, setSuena] = useState(false);
   const timer = useRef<number | undefined>(undefined);
 
   /* Arrastre. Es una capa encima del toque, nunca en lugar de el: la WCAG
@@ -38,7 +39,7 @@ export default function Puzzle({ variant, lang }: Props) {
   const done = pz >= n;
 
   useEffect(() => {
-    leerSonido();
+    setSuena(leerSonido());
     /* El avance se recupera despues del montaje y no en el useState inicial:
        en el render del servidor no hay sessionStorage, y sembrarlo ahi
        desajustaria la hidratacion. */
@@ -152,6 +153,21 @@ export default function Puzzle({ variant, lang }: Props) {
         <span class="pz-badge">{c.badge}</span>
         <span class="pz-kind">{c.kind}</span>
         <span class="pz-spacer" />
+        {/* El interruptor de sonido tambien vive en el panel curioso, pero
+            ahi no lo encuentra quien esta jugando. Aqui esta donde suena. */}
+        <button
+          type="button"
+          class={suena ? 'pz-sonido pz-sonido--on' : 'pz-sonido'}
+          aria-pressed={suena}
+          onClick={() => {
+            const v = !suena;
+            setSuena(v);
+            activarSonido(v);
+            if (v) sonar('elegir');
+          }}
+        >
+          {suena ? ui.sonidoOn : ui.sonidoOff}
+        </button>
         {(pz > 0 || wrong) && (
           <button type="button" class="pz-restart" onClick={restart}>
             {c.restart}
@@ -253,6 +269,17 @@ export default function Puzzle({ variant, lang }: Props) {
           padding: 30px 32px;
           background: var(--bg-2);
         }
+        .pz-sonido {
+          padding: 5px 11px;
+          margin-right: 8px;
+          border-radius: 999px;
+          border: 1px solid var(--line-strong);
+          background: transparent;
+          color: var(--dimmer);
+          font-size: 12.5px;
+        }
+        .pz-sonido:hover { border-color: var(--accent); color: var(--text); }
+        .pz-sonido--on { border-color: var(--accent); color: var(--accent); }
         .pz-shake { animation: pzShake .5s ease; }
         @keyframes pzShake {
           10%, 90% { transform: translateX(-2px); }

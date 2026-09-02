@@ -182,7 +182,7 @@ export const CASES = {
         ['La decisión', 'Tratar la documentación como un sistema reutilizable, no como un anexo que se escribe al final de cada proyecto.'],
         ['El resultado', 'Menos tiempo en capacitaciones, reuniones y aclaraciones dentro de implementaciones que corren de 3 a más de 6 meses.', true],
       ],
-      note: 'Es el caso más reciente y el que menos puedo mostrar: hay NDA. Lo resuelvo con un diagrama abstracto en vez de capturas — un caso honesto sin imágenes convence más que uno ilustrado con material que no debería estar ahí.',
+      note: 'Es el caso más reciente y el que menos puedo mostrar: hay NDA. Las capturas son de Custom Canvas sobre una instancia de ejemplo: Horizon Media Partners no existe. La herramienta es mía; los datos de cliente, de nadie.',
       brief: {
         h2: 'La misma duda, el mismo cliente, meses después',
         p1: 'Trabajo en consultoría de implementación de Adobe Workfront para clientes enterprise. El encargo, proyecto tras proyecto, llegaba formulado igual: resolver dudas puntuales de configuración y ajustar lo que no estaba quedando.',
@@ -214,10 +214,12 @@ export const CASES = {
           ['Lo que descarté: empezar por rediseñar los componentes', 'Era lo obvio y lo más visible: los slots y los botones eran lo que peor se veía. Lo descarté porque construir componentes sobre un sistema de espaciado y color que todavía no existía obligaba a rehacerlos después. El desorden se veía en los componentes, pero vivía en el sistema.', true],
         ],
       },
-      hero: { src: '/assets/diag/qs-dominios.svg', ph: 'Esquema del sistema de dominios y slots' },
+      hero: { src: '/assets/casos/qs-canvas-dominios.png', ph: 'Captura de Custom Canvas: los 17 dominios de una instancia agrupados por categoría, con 63 registros documentados' },
       pairs: [
-        { src: '/assets/diag/qs-nav-antes.svg', ph: 'ANTES — las tres capas de navegación compitiendo', cap: 'Tres formas de llegar al mismo sitio, ninguna clara.' },
-        { src: '/assets/diag/qs-nav-despues.svg', ph: 'DESPUÉS — navegación consolidada en dos niveles', cap: 'Dos niveles, una acción primaria por pantalla.' },
+        { src: '/assets/casos/qs-canvas-permisos.png', ph: 'Captura de Custom Canvas: matriz de permisos de un nivel de acceso, objeto por objeto', cap: 'La matriz de permisos: lo que antes se explicaba en una llamada, escrito una vez.' },
+        { src: '/assets/casos/qs-canvas-deck.png', ph: 'Captura de Custom Canvas: editor de material de entrenamiento con las diapositivas pendientes de captura', cap: 'El material de capacitación se arma dentro de la misma herramienta.' },
+        { src: '/assets/diag/qs-nav-antes.svg', ph: 'ANTES — las tres capas de navegación compitiendo', cap: 'Antes: tres formas de llegar al mismo sitio, ninguna clara. Referencia visual, no captura.' },
+        { src: '/assets/diag/qs-nav-despues.svg', ph: 'DESPUÉS — navegación consolidada en dos niveles', cap: 'Después: dos niveles, una acción primaria por pantalla. Referencia visual, no captura.' },
       ],
       flow: { src: '/assets/qstrauss-flujo.png', ph: 'Diagrama del ciclo de documentación', cap: 'El ciclo que se rompió: de la sesión repetida al material que se produce una vez.' },
       result: {
@@ -241,7 +243,7 @@ export const CASES = {
         ['The decision', 'Treat documentation as a reusable system, not as an appendix written at the end of each project.'],
         ['The outcome', 'Less time spent on training, meetings and clarifications inside implementations that run from 3 to 6+ months.', true],
       ],
-      note: "It's the most recent case and the one I can show least of: there's an NDA. I solve it with an abstract diagram instead of screenshots — an honest case with no images is more convincing than one illustrated with material that shouldn't be there.",
+      note: "It's the most recent case and the one I can show least of: there's an NDA. The screenshots show Custom Canvas running a sample instance: Horizon Media Partners does not exist. The tool is mine; the client data is nobody's.",
       brief: {
         h2: 'The same question, the same client, months later',
         p1: 'I work in Adobe Workfront implementation consulting for enterprise clients. Project after project, the brief arrived framed the same way: resolve specific configuration questions and fix what wasn’t landing.',
@@ -273,10 +275,12 @@ export const CASES = {
           ['What I ruled out: starting by redesigning the components', "It was the obvious, most visible move: the slots and buttons looked worst. I ruled it out because building components on a spacing and colour system that didn't exist yet would force a rebuild later. The disorder showed in the components, but it lived in the system.", true],
         ],
       },
-      hero: { src: '/assets/diag/qs-dominios.svg', ph: 'Diagram of the domain and slot system' },
+      hero: { src: '/assets/casos/qs-canvas-dominios.png', ph: 'Custom Canvas screenshot: the 17 domains of an instance grouped by category, with 63 documented records' },
       pairs: [
-        { src: '/assets/diag/qs-nav-antes.svg', ph: 'BEFORE — three navigation layers competing', cap: 'Three ways to reach the same place, none of them clear.' },
-        { src: '/assets/diag/qs-nav-despues.svg', ph: 'AFTER — navigation consolidated into two levels', cap: 'Two levels, one primary action per screen.' },
+        { src: '/assets/casos/qs-canvas-permisos.png', ph: 'Custom Canvas screenshot: the permissions matrix of an access level, object by object', cap: 'The permissions matrix: what used to be explained on a call, written down once.' },
+        { src: '/assets/casos/qs-canvas-deck.png', ph: 'Custom Canvas screenshot: training-deck editor showing the slides still pending capture', cap: 'Training material is built inside the same tool.' },
+        { src: '/assets/diag/qs-nav-antes.svg', ph: 'BEFORE — three navigation layers competing', cap: 'Before: three ways to reach the same place, none of them clear. Visual reference, not a screenshot.' },
+        { src: '/assets/diag/qs-nav-despues.svg', ph: 'AFTER — navigation consolidated into two levels', cap: 'After: two levels, one primary action per screen. Visual reference, not a screenshot.' },
       ],
       flow: { src: '/assets/qstrauss-flujo.png', ph: 'Documentation cycle diagram', cap: 'The cycle that broke: from the repeated session to material produced once.' },
       result: {
