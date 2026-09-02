@@ -8,6 +8,7 @@ import EmotionCanvas from '../islands/EmotionCanvas.tsx';
 import CuriousLayer from '../islands/CuriousLayer.tsx';
 import CaseNav from '../islands/CaseNav.tsx';
 import CaseGallery, { type Lamina } from '../islands/CaseGallery.tsx';
+import Blueprint3D from '../islands/Blueprint3D.tsx';
 import CaseRail from '../islands/CaseRail.tsx';
 import { CASES, CASES_UI, CASE_ORDER } from '../content/cases';
 import { INTRO } from '../content/intro';
@@ -242,6 +243,14 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
   <section class="section bordered" data-playful>
     <div class="wrap wrap--canvas">
       <Puzzle variant="blueprint" lang={lang} client:visible />
+    </div>
+  </section>
+
+  {/* Y después de armarlo, verlo. El puzzle enseña el orden; esto deja mirar
+      la herramienta por dentro con un caso real encima. */}
+  <section class="section bordered" data-playful>
+    <div class="wrap wrap--canvas">
+      <Blueprint3D lang={lang} client:visible />
     </div>
   </section>
 
