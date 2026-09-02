@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { HOME } from '../content/home';
 import { UI, type Lang } from '../content/ui';
+import { activarSonido, sonidoActivo } from '../lib/sonido';
 import { getFinds, onFindsChange, resetFinds, TOTAL_FINDS } from '../lib/finds';
 import { getMode, onPrefsChange } from '../lib/prefs';
 import {
@@ -157,6 +158,9 @@ export default function CuriousLayer({ lang, research }: Props) {
   const [foco, setFoco] = useState(false);
   const [spotify, setSpotify] = useState(false);
   const [motion, setMotion] = useState(true);
+  /* Apagado de fabrica: el navegador bloquea el audio sin gesto previo, y
+     un portafolio que suena solo es un portafolio que se cierra. */
+  const [sonido, setSonido] = useState(false);
   const [xray, setXray] = useState(false);
   const [hasCases, setHasCases] = useState(false);
   const [researchOn, setResearchOn] = useState(false);
@@ -167,6 +171,10 @@ export default function CuriousLayer({ lang, research }: Props) {
      pintado seguiría corriendo detrás de un `display:none`, gastando batería
      para dibujar algo que nadie ve. */
   const [explorando, setExplorando] = useState(true);
+
+  useEffect(() => {
+    setSonido(sonidoActivo());
+  }, []);
 
   useEffect(() => {
     setExplorando(getMode() !== 'grano');
@@ -620,6 +628,17 @@ export default function CuriousLayer({ lang, research }: Props) {
           />
           <Row label={t.pulse} on={pulse} onLabel={u.on} offLabel={u.off} onClick={() => setPulse(!pulse)} />
           <Row label={t.reduceMotion} on={!motion} onLabel={u.on} offLabel={u.off} onClick={toggleMotion} />
+          <Row
+            label={t.sonido}
+            on={sonido}
+            onLabel={u.on}
+            offLabel={u.off}
+            onClick={() => {
+              const v = !sonido;
+              setSonido(v);
+              activarSonido(v);
+            }}
+          />
 
           {/* Ajustes del pincel, plegados: son de afinado fino y no deben
               competir con los interruptores principales. */}

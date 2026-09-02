@@ -89,6 +89,7 @@ export const HOME = {
     foco: 'Linterna',
     clearPaint: 'Limpiar el fondo pintado',
     pulse: 'Latido en el rastro',
+    sonido: 'Sonido de los juegos',
     spotifyRow: 'Mi playlist en Spotify',
     nowPlaying: 'Suena ahora',
     spotifyNote:
@@ -238,6 +239,7 @@ export const HOME = {
     foco: 'Flashlight',
     clearPaint: 'Clear the painted background',
     pulse: 'Heartbeat in the trail',
+    sonido: 'Game sound',
     spotifyRow: 'My Spotify playlist',
     nowPlaying: 'Now playing',
     spotifyNote: "Skip it if you don't like it. If you do, open it in Spotify — it's my real working playlist.",

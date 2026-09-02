@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { PUZZLE, PUZZLE_UI, shuffle, seedFor, type PuzzleVariant } from '../content/puzzle';
+import { sonar, leerSonido } from '../lib/sonido';
 import type { Lang } from '../content/ui';
 
 interface Props {
@@ -19,21 +20,36 @@ export default function Puzzle({ variant, lang }: Props) {
   const [wrong, setWrong] = useState(false);
   const timer = useRef<number | undefined>(undefined);
 
+  /* Arrastre. Es una capa encima del toque, nunca en lugar de el: la WCAG
+     2.5.7 exige que todo lo que se arrastra se pueda hacer sin arrastrar, y
+     tocar las fichas en orden sigue siendo el camino principal. */
+  const [arrastrando, setArrastrando] = useState<number | null>(null);
+  const [sobreHueco, setSobreHueco] = useState<number | null>(null);
+  const fantasma = useRef<HTMLDivElement | null>(null);
+  const shell = useRef<HTMLElement | null>(null);
+  const movido = useRef(false);
+
   /* Permutación determinista: mismo desorden en cada render y en cada visita. */
   const order = shuffle(n, seedFor(n));
   const done = pz >= n;
 
-  useEffect(() => () => clearTimeout(timer.current), []);
+  useEffect(() => {
+    leerSonido();
+    return () => clearTimeout(timer.current);
+  }, []);
 
   const click = (i: number) => {
     if (i === pz) {
-      setPz(pz + 1);
+      const fin = pz + 1;
+      setPz(fin);
       setWrong(false);
+      sonar(fin >= n ? 'completo' : 'acierto');
       return;
     }
     clearTimeout(timer.current);
     setPz(0);
     setWrong(true);
+    sonar('error');
     timer.current = window.setTimeout(() => setWrong(false), 1600);
   };
 
@@ -43,8 +59,75 @@ export default function Puzzle({ variant, lang }: Props) {
     setWrong(false);
   };
 
+  /* El fantasma es un nodo suelto que sigue al dedo o al cursor. Se mueve con
+     transform para no forzar relayout en cada pointermove. */
+  const moverFantasma = (x: number, y: number) => {
+    if (fantasma.current) fantasma.current.style.transform = `translate(${x}px, ${y}px)`;
+  };
+
+  /**
+   * Que hueco hay bajo el puntero. Primero pregunta al navegador, y si no
+   * responde compara contra los rectangulos de los huecos. La segunda via no
+   * es paranoia: `elementFromPoint` devuelve null si algo se interpone o si la
+   * pestaña esta en segundo plano, y entonces el arrastre se sentiria roto.
+   */
+  const huecoBajo = (x: number, y: number): number | null => {
+    const raiz = shell.current;
+    if (!raiz) return null;
+
+    const el = document.elementFromPoint(x, y);
+    const hueco = el?.closest('[data-hueco]');
+    if (hueco && raiz.contains(hueco)) {
+      const idx = Number((hueco as HTMLElement).dataset.hueco);
+      if (!Number.isNaN(idx)) return idx;
+    }
+
+    for (const nodo of raiz.querySelectorAll<HTMLElement>('[data-hueco]')) {
+      const b = nodo.getBoundingClientRect();
+      if (!b.width) continue;
+      if (x >= b.left && x <= b.right && y >= b.top && y <= b.bottom) {
+        const idx = Number(nodo.dataset.hueco);
+        if (!Number.isNaN(idx)) return idx;
+      }
+    }
+    return null;
+  };
+
+  const empezarArrastre = (i: number, ev: PointerEvent) => {
+    if (ev.button !== undefined && ev.button !== 0) return;
+    const chip = ev.currentTarget as HTMLElement;
+    chip.setPointerCapture(ev.pointerId);
+    movido.current = false;
+    setArrastrando(i);
+    sonar('elegir');
+    moverFantasma(ev.clientX, ev.clientY);
+  };
+
+  const seguirArrastre = (ev: PointerEvent) => {
+    if (arrastrando === null) return;
+    movido.current = true;
+    moverFantasma(ev.clientX, ev.clientY);
+    setSobreHueco(huecoBajo(ev.clientX, ev.clientY));
+  };
+
+  const soltarArrastre = (ev: PointerEvent) => {
+    if (arrastrando === null) return;
+    const i = arrastrando;
+    const destino = huecoBajo(ev.clientX, ev.clientY);
+    setArrastrando(null);
+    setSobreHueco(null);
+    /* Sin desplazamiento real fue un toque, no un arrastre: se trata como clic
+       para que ambos gestos lleguen al mismo sitio. */
+    if (!movido.current) return click(i);
+    /* Soltar fuera de un hueco no penaliza: cancelar no es equivocarse. */
+    if (destino === null) return;
+    if (destino === pz) return click(i);
+    click(-1);
+  };
+
   return (
     <section
+      ref={shell}
       class={wrong ? 'pz-shell pz-shake' : 'pz-shell'}
       style={{ '--accent': accent } as Record<string, string>}
       aria-label={c.title}
@@ -80,8 +163,18 @@ export default function Puzzle({ variant, lang }: Props) {
       <ol class="pz-slots">
         {c.steps.map((label, i) => {
           const filled = i < pz;
+          const activo = !filled && i === pz && arrastrando !== null;
+          const encima = sobreHueco === i && arrastrando !== null;
           return (
-            <li class={filled ? 'pz-slot pz-slot--filled' : 'pz-slot'}>
+            <li
+              data-hueco={i}
+              class={
+                'pz-slot' +
+                (filled ? ' pz-slot--filled' : '') +
+                (activo ? ' pz-slot--activo' : '') +
+                (encima ? (i === pz ? ' pz-slot--encima' : ' pz-slot--encima-mal') : '')
+              }
+            >
               <span class="pz-slot-n tabular">{String(i + 1).padStart(2, '0')}</span>
               <span class="pz-slot-label">{filled ? label : ''}</span>
             </li>
@@ -96,14 +189,30 @@ export default function Puzzle({ variant, lang }: Props) {
             return (
               <button
                 type="button"
-                class={used ? 'pz-chip pz-chip--used' : 'pz-chip'}
+                class={
+                  'pz-chip' +
+                  (used ? ' pz-chip--used' : '') +
+                  (arrastrando === i ? ' pz-chip--viajando' : '')
+                }
                 disabled={used}
-                onClick={() => click(i)}
+                onPointerDown={(e: PointerEvent) => empezarArrastre(i, e)}
+                onPointerMove={seguirArrastre}
+                onPointerUp={soltarArrastre}
+                onPointerCancel={() => {
+                  setArrastrando(null);
+                  setSobreHueco(null);
+                }}
               >
                 {c.steps[i]}
               </button>
             );
           })}
+        </div>
+      )}
+
+      {arrastrando !== null && (
+        <div class="pz-fantasma" ref={fantasma} aria-hidden="true">
+          {c.steps[arrastrando]}
         </div>
       )}
 
@@ -255,6 +364,58 @@ export default function Puzzle({ variant, lang }: Props) {
           transition: border-color var(--dur-hover) var(--ease-hover);
         }
         .pz-chip:hover { border-color: var(--accent); }
+        /* El puntero no arrastra texto ni hace scroll mientras se lleva una
+           ficha; sin esto el gesto pelea con el desplazamiento en tactil. */
+        .pz-chip { touch-action: none; cursor: grab; user-select: none; }
+        .pz-chip--used { cursor: default; }
+        .pz-chip:active { cursor: grabbing; }
+        .pz-chip--viajando {
+          opacity: 0.35;
+          border-style: dashed;
+        }
+
+        /* El hueco que toca encender: respira mientras hay una ficha en el
+           aire, se ilumina si la ficha va bien y se marca en coral si no. */
+        .pz-slot--activo {
+          border-color: var(--accent);
+          box-shadow: 0 0 0 1px var(--accent) inset;
+          animation: pzLatir 1.4s ease-in-out infinite;
+        }
+        .pz-slot--encima {
+          border-color: var(--accent);
+          background: color-mix(in srgb, var(--accent) 16%, transparent);
+          box-shadow: 0 0 24px -4px var(--accent);
+          animation: none;
+        }
+        .pz-slot--encima-mal {
+          border-color: var(--feel);
+          background: color-mix(in srgb, var(--feel) 12%, transparent);
+          animation: none;
+        }
+        @keyframes pzLatir {
+          0%, 100% { box-shadow: 0 0 0 1px var(--accent) inset; }
+          50% { box-shadow: 0 0 0 1px var(--accent) inset, 0 0 18px -6px var(--accent); }
+        }
+        html[data-motion='off'] .pz-slot--activo { animation: none; }
+
+        /* La ficha que viaja con el dedo. Fuera del flujo y sin capturar
+           eventos, para no taparse a si misma bajo elementFromPoint. */
+        .pz-fantasma {
+          position: fixed;
+          top: 0;
+          left: 0;
+          z-index: 60;
+          pointer-events: none;
+          transform: translate(-100px, -100px);
+          margin: -18px 0 0 -60px;
+          padding: 10px 16px;
+          border-radius: var(--r-control);
+          border: 1px solid var(--accent);
+          background: var(--bg-2);
+          color: var(--text);
+          font-size: 14px;
+          box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+        }
         .pz-chip--used {
           border-color: var(--line);
           background: var(--bg-2);
