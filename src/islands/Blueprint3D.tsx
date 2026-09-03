@@ -36,7 +36,7 @@ export default function Blueprint3D({ lang }: Props) {
      cinco capas, así que el 3D aparece incluso antes de hidratar. */
   const [puestas, setPuestas] = useState<number>(t.capas.length);
   const [fallo, setFallo] = useState(false);
-  const [suena, setSuena] = useState(false);
+  const [suena, setSuena] = useState(true);
   const montado = puestas >= t.capas.length;
   const arrastre = useRef<{ x: number; y: number; rx: number; ry: number } | null>(null);
   const girando = useRef(false);

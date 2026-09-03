@@ -19,7 +19,7 @@ export default function Puzzle({ variant, lang }: Props) {
 
   const [pz, setPz] = useState(0);
   const [wrong, setWrong] = useState(false);
-  const [suena, setSuena] = useState(false);
+  const [suena, setSuena] = useState(true);
   const timer = useRef<number | undefined>(undefined);
 
   /* Arrastre. Es una capa encima del toque, nunca en lugar de el: la WCAG

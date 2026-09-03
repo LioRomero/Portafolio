@@ -14,15 +14,22 @@
 const CLAVE = 'em-sound';
 
 let ctx: AudioContext | null = null;
-let encendido = false;
+/* Encendido por defecto: el sonido está activo salvo que lo apaguen. No suena
+   solo al cargar —el navegador bloquea el audio hasta el primer gesto— así que
+   el primer sonido llega recién cuando el usuario interactúa (coloca una capa,
+   abre un cajón), que es justo cuando se espera. */
+let encendido = true;
 
-/** Lee la preferencia guardada. En SSR no hay `window`, así que devuelve false. */
+/**
+ * Lee la preferencia guardada. Por defecto está ACTIVADO: solo se considera
+ * apagado si el usuario lo apagó explícitamente (queda guardado como '0').
+ */
 export const sonidoActivo = (): boolean => {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === 'undefined') return true;
   try {
-    return window.localStorage.getItem(CLAVE) === '1';
+    return window.localStorage.getItem(CLAVE) !== '0';
   } catch {
-    return false;
+    return true;
   }
 };
 

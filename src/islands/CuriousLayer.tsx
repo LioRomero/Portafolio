@@ -160,7 +160,7 @@ export default function CuriousLayer({ lang, research }: Props) {
   const [motion, setMotion] = useState(true);
   /* Apagado de fabrica: el navegador bloquea el audio sin gesto previo, y
      un portafolio que suena solo es un portafolio que se cierra. */
-  const [sonido, setSonido] = useState(false);
+  const [sonido, setSonido] = useState(true);
   const [xray, setXray] = useState(false);
   const [hasCases, setHasCases] = useState(false);
   const [researchOn, setResearchOn] = useState(false);
