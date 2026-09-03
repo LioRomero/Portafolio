@@ -14,9 +14,14 @@ interface Props {
   description: string;
   lang: Lang;
   page: PageKey;
+  /* Equivalente en el otro idioma, sin el prefijo de despliegue. Las páginas de
+     caso lo pasan (/casos/ropofy ↔ /en/cases/ropofy) porque su ruta no está en
+     ROUTES, que solo conoce los índices. El resto usa el índice de su sección. */
+  altEs?: string;
+  altEn?: string;
 }
 
-const { title, description, lang, page } = Astro.props;
+const { title, description, lang, page, altEs, altEn } = Astro.props;
 
 /* `Astro.url.pathname` ya incluye el `base`. Se fuerza la barra final para que
    la canónica coincida con lo que sirve GitHub Pages y con el sitemap: si no,
@@ -24,10 +29,12 @@ const { title, description, lang, page } = Astro.props;
 const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
 const canonical = new URL(path, Astro.site);
 /* El sitio es bilingüe: cada página declara su equivalente en el otro idioma. */
+const rutaEs = altEs ?? ROUTES.es[page];
+const rutaEn = altEn ?? ROUTES.en[page];
 const alternates = [
-  { hreflang: 'es', href: new URL(withBase(ROUTES.es[page]), Astro.site).href },
-  { hreflang: 'en', href: new URL(withBase(ROUTES.en[page]), Astro.site).href },
-  { hreflang: 'x-default', href: new URL(withBase(ROUTES.es[page]), Astro.site).href },
+  { hreflang: 'es', href: new URL(withBase(rutaEs), Astro.site).href },
+  { hreflang: 'en', href: new URL(withBase(rutaEn), Astro.site).href },
+  { hreflang: 'x-default', href: new URL(withBase(rutaEs), Astro.site).href },
 ];
 const ogImage = new URL(withBase('/og.jpg'), Astro.site).href;
 const favicon = withBase('/favicon.svg');

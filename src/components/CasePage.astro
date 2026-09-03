@@ -3,31 +3,46 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ContactSection from './ContactSection.astro';
 import Intro from '../islands/Intro.tsx';
 import Tutorial from '../islands/Tutorial.tsx';
-import Puzzle from '../islands/Puzzle.tsx';
-import EmotionCanvas from '../islands/EmotionCanvas.tsx';
 import CuriousLayer from '../islands/CuriousLayer.tsx';
 import CaseNav from '../islands/CaseNav.tsx';
 import CaseGallery, { type Lamina } from '../islands/CaseGallery.tsx';
-import Blueprint3D from '../islands/Blueprint3D.tsx';
 import { PASOS } from '../content/pasos';
 import CaseRail from '../islands/CaseRail.tsx';
-import { CASES, CASES_UI, CASE_ORDER } from '../content/cases';
-import { INTRO } from '../content/intro';
+import { CASES, CASES_UI, CASE_ORDER, type CaseKey } from '../content/cases';
 import { ROUTES, type Lang } from '../content/ui';
 import { withBase, diagrama } from '../lib/paths';
 
 interface Props {
   lang: Lang;
+  caseKey: CaseKey;
 }
 
-const { lang } = Astro.props;
+const { lang, caseKey } = Astro.props;
 const ui = CASES_UI[lang];
 const r = ROUTES[lang];
 
-const title = lang === 'es' ? 'Casos — Emilio Romero' : 'Cases — Emilio Romero';
-const description = CASES.ropofy[lang].sub;
+/* Cada caso vive en su propia URL: /casos/ropofy, etc. La página renderiza uno
+   solo, y la navegación anterior/siguiente lleva a sus hermanos. Así el lector
+   sabe siempre dónde empieza y termina un caso: lo marca la propia dirección. */
+const key = caseKey;
+const c = CASES[key];
+const d = c[lang];
 
-const tabs = CASE_ORDER.map((k) => ({ key: k, label: CASES[k].tab, accent: CASES[k].accent }));
+const ci = CASE_ORDER.indexOf(key);
+const prevKey = CASE_ORDER[(ci - 1 + CASE_ORDER.length) % CASE_ORDER.length]!;
+const nextKey = CASE_ORDER[(ci + 1) % CASE_ORDER.length]!;
+
+const caseHref = (k: CaseKey) => withBase(`${r.cases}/${k}`);
+
+const title = `${c.tab} — ${lang === 'es' ? 'Caso' : 'Case'} · Emilio Romero`;
+const description = d.sub;
+
+const tabs = CASE_ORDER.map((k) => ({
+  key: k,
+  label: CASES[k].tab,
+  accent: CASES[k].accent,
+  href: caseHref(k),
+}));
 
 /**
  * Todas las imágenes de un caso en un solo carrusel: la principal, el par
@@ -51,7 +66,14 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
 };
 ---
 
-<BaseLayout title={title} description={description} lang={lang} page="cases">
+<BaseLayout
+  title={title}
+  description={description}
+  lang={lang}
+  page="cases"
+  altEs={`${ROUTES.es.cases}/${key}`}
+  altEn={`${ROUTES.en.cases}/${key}`}
+>
   <Intro variant="casos" lang={lang} client:load />
   <Tutorial lang={lang} delay={2600} client:idle />
   <CuriousLayer
@@ -59,21 +81,10 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
     research={{ label: ui.researchMode, hint: ui.shortcutsHint }}
     client:idle
   />
-  <CaseNav tabs={tabs} navLabel={ui.onThisPage} client:idle />
+  <CaseNav tabs={tabs} current={key} navLabel={ui.onThisPage} client:idle />
   <CaseRail etapas={[...ui.rail]} titulo={ui.onThisPage} client:idle />
 
-  {/* La página abre directamente con el primer caso, así que no hay un título
-      visible que sirva de h1. Sin él la jerarquía empieza en h2 y el documento
-      queda sin encabezado principal. */}
-  <h1 class="sr-only">{INTRO.casos[lang].lineA}</h1>
-
-  {
-    CASE_ORDER.map((key, ci) => {
-      const c = CASES[key];
-      const d = c[lang];
-      const nextKey = CASE_ORDER[(ci + 1) % CASE_ORDER.length]!;
-      return (
-        <article class="case" id={key} data-case={key} style={`--accent:${c.accent}`}>
+  <article class="case" id={key} data-case={key} style={`--accent:${c.accent}`}>
           <section class="section">
             <div class="wrap wrap--cases">
               <div class="chips">
@@ -82,7 +93,7 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
                 ))}
               </div>
 
-              <h2 class="case-title">{d.title}</h2>
+              <h1 class="case-title">{d.title}</h1>
               <p class="case-sub">{d.sub}</p>
 
               <div class="cols">
@@ -105,7 +116,7 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
               {/* 01 · El encargo */}
               <section class="block" data-caso={key} data-etapa="0">
                 <div class="kicker label">{ui.kickers[0]}</div>
-                <h3>{d.brief.h2}</h3>
+                <h2>{d.brief.h2}</h2>
                 <p class="body">{d.brief.p1}</p>
                 <p class="body">{d.brief.p2}</p>
                 <div class="ask-real">
@@ -123,7 +134,7 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
               {/* 02 · Investigación */}
               <section class="block" data-caso={key} data-etapa="1">
                 <div class="kicker label">{ui.kickers[1]}</div>
-                <h3>{d.research.h2}</h3>
+                <h2>{d.research.h2}</h2>
                 <p class="body">{d.research.p}</p>
 
                 <div class="col-label method-label">{ui.methodLabel}</div>
@@ -149,12 +160,12 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
               {/* 03 · Hallazgos */}
               <section class="block" data-caso={key} data-etapa="2">
                 <div class="kicker label">{ui.kickers[2]}</div>
-                <h3>{d.findings.h2}</h3>
+                <h2>{d.findings.h2}</h2>
                 <div class="findings">
                   {d.findings.items.map((f) => (
                     <div class={`finding finding--${f.color}`}>
                       <div class="finding-tag">{f.tag}</div>
-                      <h4 class="finding-h">{f.h3}</h4>
+                      <h3 class="finding-h">{f.h3}</h3>
                       <p class="body">{f.p}</p>
                       {'quote' in f && f.quote && (
                         <blockquote class={'plain' in f && f.plain ? 'fq fq--plain' : 'fq'}>
@@ -170,11 +181,11 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
               {/* 04 · Decisiones */}
               <section class="block" data-caso={key} data-etapa="3">
                 <div class="kicker label">{ui.kickers[3]}</div>
-                <h3>{d.decisions.h2}</h3>
+                <h2>{d.decisions.h2}</h2>
                 <ol class="decisions">
                   {d.decisions.items.map((it) => (
                     <li class={it[2] ? 'decision decision--ruled' : 'decision'}>
-                      <h4 class="decision-h">{it[0]}</h4>
+                      <h3 class="decision-h">{it[0]}</h3>
                       <p class="body">{it[1]}</p>
                     </li>
                   ))}
@@ -198,7 +209,7 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
                     hay nada que pueda quedarse en blanco. */}
                 {PASOS[key] && (
                   <div class="ruta">
-                    <h4 class="ruta-h">{PASOS[key]![lang].titulo}</h4>
+                    <h3 class="ruta-h">{PASOS[key]![lang].titulo}</h3>
                     {PASOS[key]![lang].filas.map((fila) => (
                       <div class="ruta-fila">
                         {fila.etiqueta && (
@@ -238,51 +249,31 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
                 <div class="takeaways">
                   {d.takeaways.map(([h, body, tone]) => (
                     <div class={`takeaway takeaway--${tone}`}>
-                      <h4 class="decision-h">{h}</h4>
+                      <h3 class="decision-h">{h}</h3>
                       <p class="body">{body}</p>
                     </div>
                   ))}
                 </div>
               </section>
 
-              <p class="next">
-                <a href={`#${nextKey}`}>
-                  {ui.nextCase}: {CASES[nextKey].tab} →
+              <nav class="casefin" aria-label={ui.onThisPage}>
+                <a class="casefin-link" href={caseHref(prevKey)}>
+                  <span class="casefin-dir">← {ui.prevCase}</span>
+                  <span class="casefin-tab">{CASES[prevKey].tab}</span>
                 </a>
-              </p>
+                <a class="casefin-link casefin-link--next" href={caseHref(nextKey)}>
+                  <span class="casefin-dir">{ui.nextCase} →</span>
+                  <span class="casefin-tab">{CASES[nextKey].tab}</span>
+                </a>
+              </nav>
             </div>
           </section>
         </article>
-      );
-    })
-  }
-
-  <section class="section bordered" data-playful>
-    <div class="wrap wrap--canvas">
-      <Puzzle variant="casos" lang={lang} client:visible />
-    </div>
-  </section>
-
-  {/* El blueprint se armaba antes con un puzzle plano igual que los otros dos,
-      y tres veces el mismo gesto se sentía a plantilla. Ahora se arma dentro
-      de la propia escena 3D: colocar las capas ES el puzzle, y al terminar la
-      pieza queda para explorarla. */}
-  <section class="section bordered" data-playful>
-    <div class="wrap wrap--canvas">
-      <Blueprint3D lang={lang} client:visible />
-    </div>
-  </section>
-
-  <section class="section bordered" data-playful>
-    <div class="wrap wrap--canvas">
-      <EmotionCanvas lang={lang} client:visible />
-    </div>
-  </section>
 
   <ContactSection lang={lang} title={ui.ctaTitle} sub={ui.ctaSub} />
 
   <p class="back-home section">
-    <a href={withBase(r.home)}>{ui.backHome}</a>
+    <a href={withBase(r.cases)}>{ui.back}</a>
   </p>
 </BaseLayout>
 
@@ -426,7 +417,7 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
     margin-bottom: 14px;
   }
 
-  .block h3 {
+  .block h2 {
     max-width: 820px;
     margin-bottom: 16px;
   }
@@ -762,6 +753,42 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
 
   .result-secondary {
     margin-top: 22px;
+  }
+
+  /* Navegación de cierre: anterior y siguiente caso, cada uno con su dirección
+     y el nombre del caso. Cierra la lectura y evita que el usuario tenga que
+     subir a la barra para pasar al siguiente. */
+  .casefin {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 56px;
+    padding-top: 26px;
+    border-top: var(--border);
+  }
+  .casefin-link {
+    display: grid;
+    gap: 4px;
+    padding: 16px 18px;
+    border: var(--border);
+    border-radius: var(--r-card);
+    background: var(--surface);
+    text-decoration: none;
+    transition: border-color var(--dur-hover) var(--ease-hover);
+  }
+  .casefin-link:hover { border-color: var(--accent); }
+  .casefin-link--next { text-align: right; }
+  .casefin-dir {
+    font-size: var(--fs-meta);
+    color: var(--dimmer);
+  }
+  .casefin-tab {
+    font-size: var(--fs-body-lg);
+    color: var(--text);
+  }
+  @media (max-width: 560px) {
+    .casefin { grid-template-columns: 1fr; }
+    .casefin-link--next { text-align: left; }
   }
 
   .next {

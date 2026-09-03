@@ -1,0 +1,205 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactSection from './ContactSection.astro';
+import Intro from '../islands/Intro.tsx';
+import Tutorial from '../islands/Tutorial.tsx';
+import Puzzle from '../islands/Puzzle.tsx';
+import EmotionCanvas from '../islands/EmotionCanvas.tsx';
+import CuriousLayer from '../islands/CuriousLayer.tsx';
+import Blueprint3D from '../islands/Blueprint3D.tsx';
+import { CASES, CASES_UI, CASE_ORDER, type CaseKey } from '../content/cases';
+import { ROUTES, type Lang } from '../content/ui';
+import { withBase } from '../lib/paths';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const ui = CASES_UI[lang];
+const r = ROUTES[lang];
+
+const title = lang === 'es' ? 'Casos — Emilio Romero' : 'Cases — Emilio Romero';
+const description = ui.indexLede;
+
+const caseHref = (k: CaseKey) => withBase(`${r.cases}/${k}`);
+---
+
+<BaseLayout title={title} description={description} lang={lang} page="cases">
+  <Intro variant="casos" lang={lang} client:load />
+  <Tutorial lang={lang} delay={2600} client:idle />
+  <CuriousLayer
+    lang={lang}
+    research={{ label: ui.researchMode, hint: ui.shortcutsHint }}
+    client:idle
+  />
+
+  {/* El índice: la página ya no es un scroll infinito de tres casos pegados.
+      Cada tarjeta lleva a su propia página, así el lector elige por dónde
+      entrar y sabe siempre en cuál está. */}
+  <section class="section">
+    <div class="wrap wrap--cases">
+      <h1 class="idx-h">{ui.indexTitle}</h1>
+      <p class="idx-lede lead">{ui.indexLede}</p>
+
+      <div class="idx-grid">
+        {
+          CASE_ORDER.map((key) => {
+            const c = CASES[key];
+            const d = c[lang];
+            return (
+              <a class="idx-card" href={caseHref(key)} style={`--accent:${c.accent}`}>
+                <div class="chips">
+                  {d.chips.map(([label, kind]) => (
+                    <span class={`chip chip--${kind}`}>{label}</span>
+                  ))}
+                </div>
+                <h2 class="idx-title">{d.title}</h2>
+                <p class="idx-sub">{d.sub}</p>
+                <div class="idx-foot">
+                  <span class="idx-result">{d.result.big}</span>
+                  <span class="idx-more">{ui.readCase} →</span>
+                </div>
+              </a>
+            );
+          })
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* La herramienta del service design: se arma en el espacio y luego se
+      explora. Va en el índice porque es el método detrás de los tres casos. */}
+  <section class="section bordered" data-playful>
+    <div class="wrap wrap--canvas">
+      <Blueprint3D lang={lang} client:visible />
+    </div>
+  </section>
+
+  <section class="section bordered" data-playful>
+    <div class="wrap wrap--canvas">
+      <Puzzle variant="casos" lang={lang} client:visible />
+    </div>
+  </section>
+
+  <section class="section bordered" data-playful>
+    <div class="wrap wrap--canvas">
+      <EmotionCanvas lang={lang} client:visible />
+    </div>
+  </section>
+
+  <ContactSection lang={lang} title={ui.ctaTitle} sub={ui.ctaSub} />
+
+  <p class="back-home section">
+    <a href={withBase(r.home)}>{ui.backHome}</a>
+  </p>
+</BaseLayout>
+
+<style>
+  .bordered {
+    border-top: var(--border);
+  }
+  .idx-h {
+    font-size: var(--fs-h1, 2rem);
+    font-weight: var(--fw-medium);
+    letter-spacing: -0.02em;
+    margin: 0 0 10px;
+  }
+  .idx-lede {
+    color: var(--dim);
+    max-width: 60ch;
+    margin: 0 0 34px;
+  }
+
+  /* Los chips se estilan por componente (no son globales), así que la portada
+     de casos trae los suyos, iguales a los de cada caso. */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+  }
+  .chip {
+    padding: 5px 12px;
+    border-radius: var(--r-tag);
+    font-size: 12px;
+    font-weight: var(--fw-medium);
+  }
+  .chip--clarity { background: var(--clarity-deep); color: var(--on-clarity); }
+  .chip--mind { background: var(--mind-deep); color: var(--on-mind); }
+  .chip--feel { background: var(--feel-deep); color: var(--on-feel); }
+  .chip--line { border: var(--border); color: var(--dim); }
+
+  .idx-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--gap-cards);
+  }
+
+  /* Cada tarjeta es la puerta a un caso. La franja de color arriba es el acento
+     del caso, para que Ropofy, QStrauss y BID se distingan de un vistazo. */
+  .idx-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 24px;
+    border: var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: var(--r-card-lg);
+    background: var(--surface);
+    text-decoration: none;
+    transition:
+      border-color var(--dur-hover) var(--ease-hover),
+      transform var(--dur-hover) var(--ease-hover),
+      box-shadow var(--dur-hover) var(--ease-hover);
+  }
+  .idx-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 22px 50px -30px rgba(0, 0, 0, 0.9);
+  }
+  .idx-card:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .idx-title {
+    font-size: var(--fs-h4, 20px);
+    font-weight: var(--fw-medium);
+    line-height: 1.25;
+    color: var(--text);
+    margin: 0;
+  }
+  .idx-sub {
+    font-size: var(--fs-meta);
+    line-height: var(--lh-meta);
+    color: var(--dim);
+    margin: 0;
+    flex: 1;
+  }
+  .idx-foot {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 6px;
+    padding-top: 14px;
+    border-top: var(--border);
+  }
+  .idx-result {
+    font-size: var(--fs-meta);
+    color: var(--accent);
+    font-weight: var(--fw-medium);
+  }
+  .idx-more {
+    font-size: var(--fs-meta);
+    color: var(--dim);
+  }
+  .idx-card:hover .idx-more {
+    color: var(--text);
+  }
+
+  .back-home {
+    padding-top: 0;
+    font-size: var(--fs-body);
+  }
+</style>

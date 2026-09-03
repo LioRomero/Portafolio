@@ -1,71 +1,53 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 
 export interface CaseTab {
   key: string;
   label: string;
   accent: string;
+  /** Ruta de la página de ese caso, con el prefijo de despliegue ya puesto. */
+  href: string;
 }
 
 interface Props {
   tabs: CaseTab[];
+  /** Caso que se está viendo ahora, para resaltar su pestaña. */
+  current: string;
   /** Etiqueta accesible ya traducida: así la isla no importa el diccionario. */
   navLabel: string;
 }
 
 /**
- * Selector de caso pegado bajo la barra, con `←` `→` para moverse entre casos.
- * Es navegación pura, no capa lúdica: sigue presente en modo "Al grano" y no
- * comparte fila con interruptores — en móvil eso costaba dos líneas fijas.
+ * Selector de caso pegado bajo la barra. Cada caso es su propia página, así que
+ * las pestañas son enlaces de verdad y `←` `→` navegan entre páginas — no hacen
+ * scroll. Es navegación pura, presente también en modo "Al grano".
  *
  * Clases con prefijo `cn-`: los `<style>` de Preact no están encapsulados.
  */
-export default function CaseNav({ tabs, navLabel }: Props) {
+export default function CaseNav({ tabs, current, navLabel }: Props) {
   const order = tabs.map((t) => t.key);
-  const [active, setActive] = useState<string>(order[0]!);
-
-  /* El caso activo se deduce de lo que está en pantalla, no del hash. */
-  useEffect(() => {
-    const sections = order
-      .map((k) => document.getElementById(k))
-      .filter((el): el is HTMLElement => el !== null);
-    if (sections.length === 0) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            const key = (entry.target as HTMLElement).dataset.case;
-            if (key) setActive(key);
-          }
-        }
-      },
-      { rootMargin: '-20% 0px -70% 0px' }
-    );
-    sections.forEach((s) => observer.observe(s));
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const el = e.target as HTMLElement | null;
       if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) return;
       if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-      const i = order.indexOf(active);
+      const i = order.indexOf(current);
+      if (i === -1) return;
       const step = e.key === 'ArrowRight' ? 1 : -1;
-      const next = order[(i + step + order.length) % order.length]!;
-      document.getElementById(next)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const dest = tabs[(i + step + tabs.length) % tabs.length]!;
+      window.location.href = dest.href;
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [active]);
+  }, [current]);
 
   return (
     <nav class="cn-nav" aria-label={navLabel}>
       {tabs.map((t) => (
         <a
-          class={t.key === active ? 'cn-tab cn-tab--on' : 'cn-tab'}
-          href={`#${t.key}`}
-          aria-current={t.key === active ? 'true' : undefined}
+          class={t.key === current ? 'cn-tab cn-tab--on' : 'cn-tab'}
+          href={t.href}
+          aria-current={t.key === current ? 'page' : undefined}
           style={{ '--accent': t.accent } as Record<string, string>}
         >
           {t.label}

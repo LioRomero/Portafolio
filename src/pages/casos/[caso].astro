@@ -1,0 +1,12 @@
+---
+import CasePage from '../../components/CasePage.astro';
+import { CASE_ORDER } from '../../content/cases';
+
+export function getStaticPaths() {
+  return CASE_ORDER.map((caso) => ({ params: { caso } }));
+}
+
+const { caso } = Astro.params;
+---
+
+<CasePage lang="es" caseKey={caso as (typeof CASE_ORDER)[number]} />
