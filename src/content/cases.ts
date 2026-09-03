@@ -218,6 +218,7 @@ export const CASES = {
       pairs: [
         { src: '/assets/casos/qs-canvas-permisos.png', ph: 'Captura de Custom Canvas: matriz de permisos de un nivel de acceso, objeto por objeto', cap: 'La matriz de permisos: lo que antes se explicaba en una llamada, escrito una vez.' },
         { src: '/assets/casos/qs-canvas-deck.png', ph: 'Captura de Custom Canvas: editor de material de entrenamiento con las diapositivas pendientes de captura', cap: 'El material de capacitación se arma dentro de la misma herramienta.' },
+        { src: '/assets/casos/qs-canvas-ia.png', ph: 'Captura de Custom Canvas: cada paso de una guía con un botón para redactarlo con IA', cap: 'Cada paso puede redactarse con IA: escribir la primera versión deja de ser el cuello de botella.' },
         { src: '/assets/diag/qs-nav-antes.svg', ph: 'ANTES — las tres capas de navegación compitiendo', cap: 'Antes: tres formas de llegar al mismo sitio, ninguna clara. Referencia visual, no captura.' },
         { src: '/assets/diag/qs-nav-despues.svg', ph: 'DESPUÉS — navegación consolidada en dos niveles', cap: 'Después: dos niveles, una acción primaria por pantalla. Referencia visual, no captura.' },
       ],
@@ -279,6 +280,7 @@ export const CASES = {
       pairs: [
         { src: '/assets/casos/qs-canvas-permisos.png', ph: 'Custom Canvas screenshot: the permissions matrix of an access level, object by object', cap: 'The permissions matrix: what used to be explained on a call, written down once.' },
         { src: '/assets/casos/qs-canvas-deck.png', ph: 'Custom Canvas screenshot: training-deck editor showing the slides still pending capture', cap: 'Training material is built inside the same tool.' },
+        { src: '/assets/casos/qs-canvas-ia.png', ph: 'Custom Canvas screenshot: every step of a guide with a button to draft it with AI', cap: 'Every step can be drafted with AI: writing the first version stops being the bottleneck.' },
         { src: '/assets/diag/qs-nav-antes.svg', ph: 'BEFORE — three navigation layers competing', cap: 'Before: three ways to reach the same place, none of them clear. Visual reference, not a screenshot.' },
         { src: '/assets/diag/qs-nav-despues.svg', ph: 'AFTER — navigation consolidated into two levels', cap: 'After: two levels, one primary action per screen. Visual reference, not a screenshot.' },
       ],

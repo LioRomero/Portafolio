@@ -59,7 +59,23 @@ export default function CaseGallery({ laminas, anterior, siguiente, imagen, acce
       aria-roledescription="carousel"
     >
       <div class="cg-marco">
-        <img src={actual.src} alt={actual.alt} loading="lazy" decoding="async" />
+        {/*
+          La `key` obliga a Preact a crear un <img> nuevo en cada lamina en vez
+          de reescribir el `src` del mismo nodo. Sin ella la imagen se quedaba
+          en blanco al pasar de lamina: cambiar el `src` de un <img> que ya
+          tiene loading="lazy" hace que el navegador vuelva a diferir la carga,
+          y la nueva imagen no llegaba nunca.
+
+          Y solo la primera va diferida. Las demas se piden en cuanto se
+          navega a ellas, porque para verlas hay que estar mirandolas.
+        */}
+        <img
+          key={actual.src}
+          src={actual.src}
+          alt={actual.alt}
+          loading={i === 0 ? 'lazy' : 'eager'}
+          decoding="async"
+        />
       </div>
 
       <figcaption class="cg-pie">
