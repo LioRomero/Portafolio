@@ -347,7 +347,6 @@ export const CASES = {
       hero: { src: '/assets/casos/bid-mapainversiones.png', ph: 'Captura del tablero MapaInversiones: catálogo de contratos del Gobierno de la República Dominicana, con los medidores de información faltante e inconsistencias en 311 de 622' },
       pairs: [
         { src: '/assets/diag/bid-comparacion.svg', ph: 'Tabla de aplicantes: precio estimado contra precio ofertado, con las líneas inconsistentes marcadas', cap: 'La comparación automática, con los oferentes anonimizados. Referencia visual, no captura.' },
-        { src: '/assets/diag/bid-flujo.svg', ph: 'Flujo: documentos → digitalización → comparación → inconsistencia → decisión', cap: 'El recorrido completo. El paso que antes era manual ahora lo hace la herramienta. Referencia visual, no captura.' },
       ],
       result: {
         big: 'Categoría ganada',
@@ -406,7 +405,6 @@ export const CASES = {
       hero: { src: '/assets/casos/bid-mapainversiones.png', ph: 'Screenshot of the MapaInversiones dashboard: contract catalogue of the Government of the Dominican Republic, with gauges showing 311 of 622 contracts flagged' },
       pairs: [
         { src: '/assets/diag/bid-comparacion.svg', ph: 'Applicants table: estimated price against offered price, with the inconsistent lines flagged', cap: 'The automated comparison, with bidders anonymised. Visual reference, not a screenshot.' },
-        { src: '/assets/diag/bid-flujo.svg', ph: 'Flow: documents → digitisation → comparison → inconsistency → decision', cap: 'The full journey. The step that used to be manual is now the tool’s job. Visual reference, not a screenshot.' },
       ],
       result: {
         big: 'Category won',

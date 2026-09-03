@@ -9,6 +9,7 @@ import CuriousLayer from '../islands/CuriousLayer.tsx';
 import CaseNav from '../islands/CaseNav.tsx';
 import CaseGallery, { type Lamina } from '../islands/CaseGallery.tsx';
 import Blueprint3D from '../islands/Blueprint3D.tsx';
+import { PASOS } from '../content/pasos';
 import CaseRail from '../islands/CaseRail.tsx';
 import { CASES, CASES_UI, CASE_ORDER } from '../content/cases';
 import { INTRO } from '../content/intro';
@@ -44,9 +45,8 @@ interface FuenteLaminas {
 const laminasDe = (d: FuenteLaminas): Lamina[] => {
   const laminas: Lamina[] = [{ src: diagrama(d.hero.src, lang), alt: d.hero.ph, cap: d.hero.ph }];
   for (const p of d.pairs) laminas.push({ src: diagrama(p.src, lang), alt: p.ph, cap: p.cap });
-  if ('flow' in d && d.flow) {
-    laminas.push({ src: diagrama(d.flow.src, lang), alt: d.flow.ph, cap: d.flow.cap });
-  }
+  /* El `flow` ya no entra al carrusel: el recorrido se dibuja con DOM en el
+     bloque de pasos, mas abajo. Una imagen menos que cargar por caso. */
   return laminas;
 };
 ---
@@ -192,6 +192,32 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
                   accent={c.accent}
                   client:visible
                 />
+
+                {/* El recorrido, en DOM y no en imagen: se lee entero sin pasar
+                    laminas, se traduce, lo alcanza un lector de pantalla y no
+                    hay nada que pueda quedarse en blanco. */}
+                {PASOS[key] && (
+                  <div class="ruta">
+                    <h4 class="ruta-h">{PASOS[key]![lang].titulo}</h4>
+                    {PASOS[key]![lang].filas.map((fila) => (
+                      <div class="ruta-fila">
+                        {fila.etiqueta && (
+                          <div class={`col-label ruta-et ruta-et--${fila.tono}`}>{fila.etiqueta}</div>
+                        )}
+                        <ol class="ruta-pasos">
+                          {fila.pasos.map((paso, n) => (
+                            <li class={`ruta-paso ruta-paso--${fila.tono}`}>
+                              <span class="ruta-n tabular">{String(n + 1).padStart(2, '0')}</span>
+                              <span class="ruta-t">{paso.t}</span>
+                              <span class="ruta-d">{paso.d}</span>
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
+                    ))}
+                    <p class="ruta-nota meta">{PASOS[key]![lang].nota}</p>
+                  </div>
+                )}
               </section>
 
               {/* 06 · Resultado */}
@@ -443,6 +469,80 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
 
   .quote-line--real {
     color: var(--on-feel);
+  }
+
+  /* El recorrido de cada caso. Cada paso es una tarjeta con su numero, y la
+     flecha entre pasos se dibuja con un pseudoelemento: sin imagenes, sin
+     iconos y sin nada que pueda no cargar. En movil la fila se apila y la
+     flecha pasa a apuntar hacia abajo. */
+  .ruta {
+    margin-top: 34px;
+    padding-top: 26px;
+    border-top: var(--border);
+  }
+  .ruta-h {
+    font-size: var(--fs-h4, 19px);
+    font-weight: var(--fw-medium);
+    margin: 0 0 18px;
+  }
+  .ruta-fila + .ruta-fila { margin-top: 22px; }
+  .ruta-et { margin-bottom: 10px; }
+  .ruta-et--feel { color: var(--feel); }
+  .ruta-et--clarity { color: var(--clarity); }
+  .ruta-et--mind { color: var(--mind); }
+
+  .ruta-pasos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ruta-paso {
+    position: relative;
+    display: grid;
+    gap: 5px;
+    align-content: start;
+    padding: 14px 16px;
+    border: var(--border);
+    border-top: 2px solid var(--line-strong);
+    border-radius: var(--r-card);
+    background: var(--surface);
+  }
+  .ruta-paso--feel { border-top-color: var(--feel); }
+  .ruta-paso--clarity { border-top-color: var(--clarity); }
+  .ruta-paso--mind { border-top-color: var(--mind); }
+
+  .ruta-paso:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -11px;
+    width: 8px;
+    height: 8px;
+    border-top: 1.5px solid var(--line-strong);
+    border-right: 1.5px solid var(--line-strong);
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  .ruta-n {
+    font-size: 11px;
+    letter-spacing: var(--ls-label);
+    color: var(--dimmer);
+  }
+  .ruta-t { font-size: 15px; color: var(--text); }
+  .ruta-d { font-size: var(--fs-meta); line-height: var(--lh-meta); color: var(--dim); }
+  .ruta-nota { margin: 18px 0 0; }
+
+  @media (max-width: 640px) {
+    /* Apilados, la flecha lateral apuntaria al vacio: baja y gira. */
+    .ruta-paso:not(:last-child)::after {
+      top: auto;
+      bottom: -11px;
+      right: 50%;
+      transform: translateX(50%) rotate(135deg);
+    }
   }
 
   .stats {
