@@ -49,16 +49,19 @@ const caseHref = (k: CaseKey) => withBase(`${r.cases}/${k}`);
             const d = c[lang];
             return (
               <a class="idx-card" href={caseHref(key)} style={`--accent:${c.accent}`}>
-                <div class="chips">
-                  {d.chips.map(([label, kind]) => (
-                    <span class={`chip chip--${kind}`}>{label}</span>
-                  ))}
-                </div>
-                <h2 class="idx-title">{d.title}</h2>
-                <p class="idx-sub">{d.sub}</p>
-                <div class="idx-foot">
-                  <span class="idx-result">{d.result.big}</span>
-                  <span class="idx-more">{ui.readCase} →</span>
+                <span class="idx-glare" aria-hidden="true"></span>
+                <div class="idx-card-body">
+                  <div class="chips">
+                    {d.chips.map(([label, kind]) => (
+                      <span class={`chip chip--${kind}`}>{label}</span>
+                    ))}
+                  </div>
+                  <h2 class="idx-title">{d.title}</h2>
+                  <p class="idx-sub">{d.sub}</p>
+                  <div class="idx-foot">
+                    <span class="idx-result">{d.result.big}</span>
+                    <span class="idx-more">{ui.readCase} →</span>
+                  </div>
                 </div>
               </a>
             );
@@ -107,20 +110,26 @@ const caseHref = (k: CaseKey) => withBase(`${r.cases}/${k}`);
     !reduce.matches && !coarse.matches && document.documentElement.dataset.motion !== 'off';
 
   tarjetas.forEach((card) => {
+    const glare = card.querySelector<HTMLElement>('.idx-glare');
     card.addEventListener('pointerenter', () => {
-      if (activo()) card.style.transition = 'transform 60ms linear';
+      if (activo()) card.style.transition = 'transform 80ms linear';
     });
     card.addEventListener('pointermove', (e) => {
       if (!activo()) return;
       const r = card.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width - 0.5;
-      const py = (e.clientY - r.top) / r.height - 0.5;
+      const fx = (e.clientX - r.left) / r.width; // 0..1
+      const fy = (e.clientY - r.top) / r.height;
+      // Inclinación marcada: hasta ±11°, con un realce y una elevación claros.
       card.style.transform =
-        'perspective(900px) rotateX(' +
-        (-py * 5).toFixed(2) +
+        'perspective(800px) rotateX(' +
+        ((0.5 - fy) * 16).toFixed(2) +
         'deg) rotateY(' +
-        (px * 6).toFixed(2) +
-        'deg) translateY(-4px)';
+        ((fx - 0.5) * 20).toFixed(2) +
+        'deg) translateY(-6px) scale(1.02)';
+      if (glare) {
+        glare.style.setProperty('--mx', (fx * 100).toFixed(1) + '%');
+        glare.style.setProperty('--my', (fy * 100).toFixed(1) + '%');
+      }
     });
     card.addEventListener('pointerleave', () => {
       card.style.transition = '';
@@ -170,30 +179,71 @@ const caseHref = (k: CaseKey) => withBase(`${r.cases}/${k}`);
     gap: var(--gap-cards);
   }
 
-  /* Cada tarjeta es la puerta a un caso. La franja de color arriba es el acento
-     del caso, para que Ropofy, QStrauss y BID se distingan de un vistazo. */
+  /* Cada tarjeta es la puerta a un caso, y se comporta como un objeto físico:
+     se inclina en 3D siguiendo el cursor (lo hace el script del final) y un
+     reflejo la recorre. La franja de color arriba es el acento del caso, para
+     que Ropofy, QStrauss y BID se distingan de un vistazo. */
   .idx-card {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 12px;
     padding: 24px;
     border: var(--border);
     border-top: 3px solid var(--accent);
     border-radius: var(--r-card-lg);
     background: var(--surface);
     text-decoration: none;
+    overflow: hidden;
+    transform-style: preserve-3d;
     transition:
       border-color var(--dur-hover) var(--ease-hover),
       transform var(--dur-hover) var(--ease-hover),
       box-shadow var(--dur-hover) var(--ease-hover);
   }
+  /* Reposo sin cursor encima y respaldo para táctil / movimiento reducido:
+     un realce claro que ya se ve sin depender del script. */
   .idx-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 22px 50px -30px rgba(0, 0, 0, 0.9);
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    box-shadow: 0 26px 60px -28px rgba(0, 0, 0, 0.95), 0 0 40px -14px var(--accent);
   }
   .idx-card:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 3px;
+  }
+
+  /* El reflejo que sigue al cursor. Vive detrás del contenido para no lavar el
+     texto; el script mueve --mx/--my. */
+  .idx-glare {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in srgb, var(--accent) 26%, transparent),
+      transparent 60%
+    );
+    transition: opacity 0.25s var(--ease-hover);
+  }
+  .idx-card:hover .idx-glare {
+    opacity: 1;
+  }
+
+  /* El contenido se adelanta en Z: con la tarjeta inclinada, el texto flota
+     sobre el fondo y el 3D se siente de verdad. Sin script (táctil) queda plano
+     y no pasa nada. */
+  .idx-card-body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: 100%;
+    transform: translateZ(34px);
+    transform-style: preserve-3d;
+  }
+  html[data-motion='off'] .idx-card-body {
+    transform: none;
   }
 
   .idx-title {
