@@ -116,7 +116,7 @@ export const HOME = {
     songMail: 'Enviarme tus canciones →',
     playlistLink: 'Abrir mi playlist en Spotify →',
     playlistHref: 'https://open.spotify.com/playlist/2XIGEB5k7r3OHdYqLVf2lv',
-    panelKeys: 'Teclas: X research · F linterna · P playlist · M movimiento · L idioma · ? este panel.',
+    panelKeys: 'Teclas: F linterna · P playlist · M movimiento · ? este panel. En los casos, R investigador y X radiografía.',
     progress: [
       'Aún no has abierto ninguna. Los puntos laten.',
       'Vas empezando. Quedan siete.',
@@ -252,7 +252,7 @@ export const HOME = {
     songMail: 'Send me your songs →',
     playlistLink: 'Open my playlist on Spotify →',
     playlistHref: 'https://open.spotify.com/playlist/2XIGEB5k7r3OHdYqLVf2lv',
-    panelKeys: 'Keys: X research · F flashlight · P playlist · M motion · L language · ? this panel.',
+    panelKeys: 'Keys: F flashlight · P playlist · M motion · ? this panel. On the cases, R researcher and X x-ray.',
     progress: [
       "You haven't opened any yet. The dots are pulsing.",
       "You're off. Seven to go.",

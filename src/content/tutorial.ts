@@ -31,9 +31,15 @@ export const TUTORIAL = {
       },
       {
         icon: '⁘',
-        title: 'Tres puzzles, uno por página',
-        body: 'Ordena mi proceso, el recorrido de un caso y mi trayectoria. Se resuelven en menos de un minuto y al terminar cuentan algo que no está escrito en ningún otro lado.',
-        why: 'Vengo del game design. Ordenar algo con las manos se recuerda mejor que leerlo — y me deja mostrar cómo pienso en vez de solo afirmarlo.',
+        title: 'Tres puzzles y un archivador que se arma',
+        body: 'Ordena mi proceso, el recorrido de un caso y mi trayectoria: un puzzle por página, cada uno en menos de un minuto. Y en la página de Casos hay un archivador de servicio en 3D — se arma en el espacio, se abre capa por capa y puedes rearmarlo cuando quieras.',
+        why: 'Vengo del game design. Ordenar algo con las manos se recuerda mejor que leerlo, y el archivador es, literal, cómo construyo un servicio: por capas, hasta que se sostiene solo.',
+      },
+      {
+        icon: '◫',
+        title: 'En los casos: enséñame el porqué',
+        body: 'Cada caso trae dos interruptores. Modo investigador (tecla R) descubre mis notas de diseño sobre las pantallas. Y hay un botón honesto (tecla X) que apaga esos insights y deja solo el “antes y después” — que es como se ve la mayoría de los portafolios.',
+        why: 'Una pantalla bonita no prueba criterio. Prefiero enseñarte la decisión y su razón, y hasta cómo se ve el mismo trabajo cuando le quitas el porqué. Si eso no convence, la pantalla tampoco lo iba a hacer.',
       },
       {
         icon: '◉',
@@ -44,8 +50,14 @@ export const TUTORIAL = {
       {
         icon: '◍',
         title: 'El fondo se pinta contigo',
-        body: 'Tu cursor deja rastros de luz que viven unos segundos y se apagan solos. Late a 55 pulsaciones por minuto y va cambiando de color entre las tres emociones: violeta cuando pienso, cian cuando aclaro, coral cuando algo se siente.',
+        body: 'Tu cursor deja rastros de luz que viven unos segundos y se apagan solos. Late a 55 pulsaciones por minuto y va cambiando de color entre las tres emociones: violeta cuando pienso, cian cuando aclaro, coral cuando algo se siente. El trazo es configurable desde el panel: estela o gotas de agua, intensidad, caída, tamaño y color.',
         why: 'Es el argumento de todo el portafolio hecho interacción: quien está del otro lado deja huella, aunque no la vea. Se borra rápido para que nunca estorbe la lectura.',
+      },
+      {
+        icon: '⊞',
+        title: 'Todo se maneja desde un panel',
+        body: 'Abajo a la derecha está el Modo curioso (o pulsa ?). Ahí viven todos los interruptores de esta capa, tu progreso de notas, el botón de empezar de nuevo y el sonido de los juegos — que viene encendido y se apaga desde ahí. Atajos: F linterna, P playlist, M movimiento, ? el panel; y en los casos, R investigador y X radiografía.',
+        why: 'Nada de esto debería estorbar. Un solo lugar para encender, apagar y medir: la página es tuya, no un espectáculo que no puedes bajar.',
       },
       {
         icon: '✎',
@@ -78,9 +90,15 @@ export const TUTORIAL = {
       },
       {
         icon: '⁘',
-        title: 'Three puzzles, one per page',
-        body: "Order my process, the arc of a case, and my track record. Each takes under a minute and ends with something that isn't written anywhere else.",
-        why: 'I come from game design. Ordering something with your hands sticks better than reading it — and it lets me show how I think instead of just claiming it.',
+        title: 'Three puzzles and a cabinet you build',
+        body: "Order my process, the arc of a case, and my track record: one puzzle per page, each under a minute. And on the Cases page there's a 3D service cabinet — you assemble it in space, open it layer by layer, and rebuild it whenever you like.",
+        why: 'I come from game design. Ordering something with your hands sticks better than reading it, and the cabinet is, literally, how I build a service: in layers, until it stands on its own.',
+      },
+      {
+        icon: '◫',
+        title: 'On the cases: show me the why',
+        body: 'Each case carries two switches. Researcher mode (press R) reveals my design notes over the screens. And there’s an honest button (press X) that switches those insights off and leaves only the “before and after” — which is how most portfolios look.',
+        why: "A pretty screen doesn't prove judgement. I'd rather show you the decision and its reason, and even what the same work looks like once you strip the why out. If that doesn't convince you, the screen wasn't going to either.",
       },
       {
         icon: '◉',
@@ -91,8 +109,14 @@ export const TUTORIAL = {
       {
         icon: '◍',
         title: 'The background paints with you',
-        body: 'Your cursor leaves light trails that live for a few seconds and fade on their own. They beat at 55 per minute and drift through the three emotions: violet when I think, cyan when I clarify, coral when something is felt.',
+        body: 'Your cursor leaves light trails that live for a few seconds and fade on their own. They beat at 55 per minute and drift through the three emotions: violet when I think, cyan when I clarify, coral when something is felt. The stroke is adjustable from the panel: light trail or water drops, intensity, fall, size and colour.',
         why: "It's the whole argument of this portfolio turned into interaction: the person on the other side leaves a mark, even when they can't see it. It fades fast so it never gets in the way of reading.",
+      },
+      {
+        icon: '⊞',
+        title: 'Everything runs from one panel',
+        body: 'Bottom right is Curious mode (or press ?). That’s where every switch in this layer lives, along with your note progress, the start-over button and the game sound — which comes on and turns off right there. Shortcuts: F flashlight, P playlist, M motion, ? the panel; and on the cases, R researcher and X x-ray.',
+        why: "None of this should get in the way. One place to switch things on, off and measure them: the page is yours, not a show you can't turn down.",
       },
       {
         icon: '✎',
