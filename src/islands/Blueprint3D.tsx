@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { BLUEPRINT } from '../content/blueprint';
 import { sonar, leerSonido, activarSonido } from '../lib/sonido';
-import { leerAvance, guardarAvance } from '../lib/prefs';
 import type { Lang } from '../content/ui';
 
 interface Props {
@@ -30,10 +29,12 @@ export default function Blueprint3D({ lang }: Props) {
   /* La capa abierta sale del archivador: sube, se acerca y despliega su ficha
      dentro. Se cierra volviendo a tocarla, como un cajon. */
   const [abierta, setAbierta] = useState<number | null>(null);
-  /* Fase de montaje: hasta que las cinco capas no estan puestas, el
-     archivador no existe. Asi el puzzle de esta pagina deja de ser otra lista
-     de fichas en orden y pasa a construirse en el espacio. */
-  const [puestas, setPuestas] = useState(0);
+  /* Arranca ARMADO: el archivador 3D se ve desde que carga la página. Antes
+     empezaba vacío y había que colocar las cinco fichas para que apareciera —
+     por eso parecía que no había 3D. El montaje queda como opción ("Rearmar"),
+     no como peaje para ver la pieza. Al arrancar lleno, el SSR ya pinta las
+     cinco capas, así que el 3D aparece incluso antes de hidratar. */
+  const [puestas, setPuestas] = useState<number>(t.capas.length);
   const [fallo, setFallo] = useState(false);
   const [suena, setSuena] = useState(false);
   const montado = puestas >= t.capas.length;
@@ -42,8 +43,6 @@ export default function Blueprint3D({ lang }: Props) {
 
   useEffect(() => {
     setSuena(leerSonido());
-    const guardado = leerAvance('blueprint');
-    if (guardado > 0 && guardado <= t.capas.length) setPuestas(guardado);
   }, []);
 
   const limitar = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
@@ -117,16 +116,22 @@ export default function Blueprint3D({ lang }: Props) {
     if (i === puestas) {
       const fin = puestas + 1;
       setPuestas(fin);
-      guardarAvance('blueprint', fin);
       setFallo(false);
       sonar(fin >= t.capas.length ? 'completo' : 'acierto');
       return;
     }
     setPuestas(0);
-    guardarAvance('blueprint', 0);
     setFallo(true);
     sonar('error');
     window.setTimeout(() => setFallo(false), 1500);
+  };
+
+  /* Vaciar el archivador para volver a armarlo paso a paso: el montaje deja de
+     ser obligatorio y pasa a ser un juego opcional para quien quiera. */
+  const rearmar = () => {
+    setAbierta(null);
+    setActiva(null);
+    setPuestas(0);
   };
 
   const abrirCajon = (i: number) => {
@@ -281,9 +286,14 @@ export default function Blueprint3D({ lang }: Props) {
           )}
 
           {montado && (
-          <button type="button" class="bp-reset" onClick={reiniciar}>
-            {t.reiniciar}
-          </button>
+          <div class="bp-acciones">
+            <button type="button" class="bp-reset" onClick={reiniciar}>
+              {t.reiniciar}
+            </button>
+            <button type="button" class="bp-reset bp-reset--ghost" onClick={rearmar}>
+              {t.rearmar}
+            </button>
+          </div>
           )}
 
           <p class="bp-nota meta">{t.lineaNota}</p>
@@ -498,6 +508,9 @@ export default function Blueprint3D({ lang }: Props) {
           font-size: 14px;
         }
         .bp-reset:hover { border-color: var(--mind); }
+        .bp-acciones { display: flex; gap: 10px; flex-wrap: wrap; }
+        .bp-reset--ghost { color: var(--dimmer); }
+        .bp-reset--ghost:hover { color: var(--text); }
         .bp-nota { margin: 0; }
         .bp-cierre {
           margin: 24px 0 0;

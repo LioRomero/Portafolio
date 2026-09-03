@@ -95,6 +95,40 @@ const caseHref = (k: CaseKey) => withBase(`${r.cases}/${k}`);
   </p>
 </BaseLayout>
 
+<script>
+  /* Inclinación 3D de las tarjetas siguiendo el cursor. 3D de CSS puro, sin
+     librería: la portada de casos se siente como objetos físicos, a juego con
+     el archivador 3D de abajo. Se apaga en táctil (no hay hover) y con
+     movimiento reducido. */
+  const tarjetas = document.querySelectorAll<HTMLElement>('.idx-card');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const coarse = matchMedia('(pointer: coarse)');
+  const activo = () =>
+    !reduce.matches && !coarse.matches && document.documentElement.dataset.motion !== 'off';
+
+  tarjetas.forEach((card) => {
+    card.addEventListener('pointerenter', () => {
+      if (activo()) card.style.transition = 'transform 60ms linear';
+    });
+    card.addEventListener('pointermove', (e) => {
+      if (!activo()) return;
+      const r = card.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      card.style.transform =
+        'perspective(900px) rotateX(' +
+        (-py * 5).toFixed(2) +
+        'deg) rotateY(' +
+        (px * 6).toFixed(2) +
+        'deg) translateY(-4px)';
+    });
+    card.addEventListener('pointerleave', () => {
+      card.style.transition = '';
+      card.style.transform = '';
+    });
+  });
+</script>
+
 <style>
   .bordered {
     border-top: var(--border);
