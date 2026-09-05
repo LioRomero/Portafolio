@@ -170,16 +170,20 @@ export const ABOUT = {
     k4: 'Habilidades',
     skills: [
       {
-        label: 'Diseño y producto',
-        items: ['UX Research', 'Estrategia de producto', 'Entrevistas y síntesis', 'Journey maps', 'Service blueprints', 'Arquitectura de información', 'Pruebas de usabilidad', 'Prototipado', 'Design systems', 'Diseño UX/UI', 'Accesibilidad (WCAG)', 'Documentación como producto', 'Storytelling y gamificación'],
+        label: 'Análisis de negocio',
+        items: ['Levantamiento de requerimientos', 'Mapeo y rediseño de procesos', 'Casos de uso', 'Gestión de stakeholders', 'Definición de KPIs y métricas', 'Priorización (impacto vs esfuerzo)', 'Diseño de modelos operativos'],
       },
       {
-        label: 'Plataforma y procesos',
-        items: ['Diseño de servicios', 'Diseño de modelos operativos', 'Mapeo y rediseño de procesos', 'Análisis de negocio', 'Levantamiento de requerimientos', 'Definición de KPIs', 'Priorización', 'Consultoría de implementación', 'Documentación técnica y enablement', 'Análisis de riesgos', 'Gestión de stakeholders', 'Adobe Workfront'],
+        label: 'Estrategia de experiencia',
+        items: ['UX research', 'Entrevistas y síntesis de hallazgos', 'Journey y service blueprints', 'Pruebas de usabilidad', 'Arquitectura de información', 'Diseño UX/UI', 'Prototipado', 'Estrategia de producto', 'Design systems', 'Accesibilidad (WCAG)', 'Storytelling y gamificación'],
+      },
+      {
+        label: 'Entrega',
+        items: ['Documentación funcional', 'Documentación como producto', 'Consultoría de implementación', 'Análisis de riesgos', 'Capacitación y habilitación', 'Metodologías ágiles'],
       },
       {
         label: 'Herramientas',
-        items: ['Figma', 'Webflow', 'Adobe Creative Suite', 'Power BI', 'HubSpot', 'HTML / CSS / JS', 'Confluence / Jira', 'Google Workspace', 'Microsoft 365', 'Claude, Gemini, NotebookLM'],
+        items: ['Figma', 'Webflow', 'Adobe Workfront', 'Adobe Creative Suite', 'Power BI', 'HubSpot', 'HTML / CSS / JS', 'Confluence / Jira', 'Google Workspace', 'Microsoft 365', 'Claude, Gemini, NotebookLM'],
       },
     ],
     k5: 'Formación',
@@ -257,16 +261,20 @@ export const ABOUT = {
     k4: 'Skills',
     skills: [
       {
-        label: 'Design & product',
-        items: ['UX research', 'Product strategy', 'Interviews and synthesis', 'Journey maps', 'Service blueprints', 'Information architecture', 'Usability testing', 'Prototyping', 'Design systems', 'UX/UI design', 'Accessibility (WCAG)', 'Documentation as a product', 'Storytelling and gamification'],
+        label: 'Business analysis',
+        items: ['Requirements gathering', 'Process mapping and redesign', 'Use cases', 'Stakeholder management', 'KPI and metric definition', 'Prioritization (impact vs effort)', 'Operating model design'],
       },
       {
-        label: 'Platform & process',
-        items: ['Service design', 'Operating model design', 'Process mapping and redesign', 'Business analysis', 'Requirements gathering', 'KPI definition', 'Prioritization', 'Implementation consulting', 'Technical documentation and enablement', 'Risk analysis', 'Stakeholder management', 'Adobe Workfront'],
+        label: 'Experience strategy',
+        items: ['UX research', 'Interviews and synthesis', 'Journey and service blueprints', 'Usability testing', 'Information architecture', 'UX/UI design', 'Prototyping', 'Product strategy', 'Design systems', 'Accessibility (WCAG)', 'Storytelling and gamification'],
+      },
+      {
+        label: 'Delivery',
+        items: ['Functional documentation', 'Documentation as a product', 'Implementation consulting', 'Risk analysis', 'Training and enablement', 'Agile methodologies'],
       },
       {
         label: 'Tools',
-        items: ['Figma', 'Webflow', 'Adobe Creative Suite', 'Power BI', 'HubSpot', 'HTML / CSS / JS', 'Confluence / Jira', 'Google Workspace', 'Microsoft 365', 'Claude, Gemini, NotebookLM'],
+        items: ['Figma', 'Webflow', 'Adobe Workfront', 'Adobe Creative Suite', 'Power BI', 'HubSpot', 'HTML / CSS / JS', 'Confluence / Jira', 'Google Workspace', 'Microsoft 365', 'Claude, Gemini, NotebookLM'],
       },
     ],
     k5: 'Education',

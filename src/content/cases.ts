@@ -186,7 +186,7 @@ export const CASES = {
       title: 'Entregábamos la plataforma configurada. El conocimiento se quedaba con nosotros.',
       sub: 'Las implementaciones salían bien. Meses después, el cliente seguía llamando para preguntar cómo funcionaba lo que ya tenía.',
       cols: [
-        ['Mi rol', 'Consultoría de implementación, diagnóstico de configuración y diseño de la documentación como producto.'],
+        ['Mi rol', 'Consultoría de implementación, levantamiento de requerimientos, diagnóstico de configuración y diseño de la documentación como producto.'],
         ['La decisión', 'Tratar la documentación como un sistema reutilizable, no como un anexo que se escribe al final de cada proyecto.'],
         ['El resultado', 'Menos tiempo en capacitaciones, reuniones y aclaraciones dentro de implementaciones que corren de 3 a más de 6 meses.', true],
       ],
@@ -248,7 +248,7 @@ export const CASES = {
       title: 'We delivered the platform configured. The knowledge stayed with us.',
       sub: 'The implementations went well. Months later the client was still calling to ask how the thing they already owned worked.',
       cols: [
-        ['My role', 'Implementation consulting, configuration diagnosis, and designing documentation as a product.'],
+        ['My role', 'Implementation consulting, requirements gathering, configuration diagnosis, and designing documentation as a product.'],
         ['The decision', 'Treat documentation as a reusable system, not as an appendix written at the end of each project.'],
         ['The outcome', 'Less time spent on training, meetings and clarifications inside implementations that run from 3 to 6+ months.', true],
       ],
@@ -315,7 +315,7 @@ export const CASES = {
       title: 'Los documentos estaban publicados. Verificarlos seguía siendo trabajo manual.',
       sub: 'El BID convocó un TechSprint con cuatro problemáticas para dar mayor transparencia a los procesos gubernamentales. Con el equipo Trust elegimos la verificación de licitaciones: el funcionario que revisa tiene que encontrar a mano cualquier inconsistencia entre lo que se pidió y lo que se ofertó.',
       cols: [
-        ['Mi rol', 'UX/UI Designer del equipo Trust: investigación de abordajes, definición del usuario objetivo y diseño de la interfaz de verificación.'],
+        ['Mi rol', 'UX/UI Designer del equipo Trust: investigación de abordajes, análisis del proceso de verificación, definición del usuario objetivo y diseño de la interfaz.'],
         ['La decisión', 'Digitalizar los documentos de la licitación y automatizar la comparación, para que la herramienta señale la inconsistencia en vez de dejar que la busque una persona.'],
         ['El resultado', 'Ganadores de la categoría “Distinción en Democratización de Datos” en el Demo Day. Washington D.C., 28 de agosto de 2024.', true],
       ],
@@ -347,7 +347,7 @@ export const CASES = {
         h2: 'Que la herramienta encuentre la inconsistencia, no la persona',
         items: [
           ['Digitalizar los documentos de la licitación', 'Una aplicación web sobre Power BI, con inteligencia artificial para leer los documentos y convertirlos en datos comparables.'],
-          ['Comparar de forma automática', 'La herramienta contrasta lo solicitado con lo ofertado y señala el tipo de inconsistencia: precios, datos faltantes o incorrectos, y productos que no corresponden.'],
+          ['Comparar de forma automática', 'La herramienta contrasta los requerimientos de la licitación con lo ofertado y señala el tipo de inconsistencia: precios, datos faltantes o incorrectos, y productos que no corresponden.'],
           ['Abierta y adaptable', 'Se pensó como una solución de código abierto, para que otra entidad pudiera adoptarla y ajustarla a su propio proceso de licitación.'],
           ['Lo que no hicimos: decidir por el funcionario', 'La herramienta señala dónde mirar. Adjudicar sigue siendo una decisión humana, y por eso auditable: quien firma tiene que poder explicar por qué eligió.', true],
         ],
@@ -373,7 +373,7 @@ export const CASES = {
       title: 'The documents were published. Verifying them was still manual work.',
       sub: 'The IDB ran a TechSprint with four challenges around bringing more transparency to government processes. With team Trust we picked tender verification: the officer reviewing a bid has to find, by hand, any inconsistency between what was asked for and what was offered.',
       cols: [
-        ['My role', 'UX/UI Designer on team Trust: researching approaches, defining the target user, and designing the verification interface.'],
+        ['My role', 'UX/UI Designer on team Trust: researching approaches, analysing the verification process, defining the target user, and designing the interface.'],
         ['The decision', 'Digitise the tender documents and automate the comparison, so the tool flags the inconsistency instead of leaving a person to hunt for it.'],
         ['The outcome', 'Winners of the “Distinction in Data Democratisation” category at the Demo Day. Washington D.C., 28 August 2024.', true],
       ],
@@ -405,7 +405,7 @@ export const CASES = {
         h2: 'Let the tool find the inconsistency, not the person',
         items: [
           ['Digitise the tender documents', 'A web application built on Power BI, using AI to read the documents and turn them into comparable data.'],
-          ['Compare automatically', 'The tool contrasts what was requested against what was offered and flags the type of inconsistency: prices, missing or incorrect data, and products that do not match.'],
+          ['Compare automatically', 'The tool contrasts the tender requirements against what was offered and flags the type of inconsistency: prices, missing or incorrect data, and products that do not match.'],
           ['Open and adaptable', 'It was designed as an open-source solution, so another institution could adopt it and adapt it to its own tendering process.'],
           ["What we didn't do: decide for the officer", 'The tool points at where to look. Awarding remains a human decision, and therefore auditable: whoever signs has to be able to explain why they chose.', true],
         ],

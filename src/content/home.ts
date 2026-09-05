@@ -439,7 +439,7 @@ export const HOME_CASES = [
       lede: 'Me contrataron para rediseñar la web. A los pocos meses el encargo cambió solo: el sitio no era el cuello de botella — la espera del cliente sí lo era.',
       rows: [
         ['Insight', 'Las consultas entraban por WhatsApp, web e Instagram a la vez y se perdían entre canales. El abandono no pasaba en el checkout: pasaba en la espera.', 'insight'],
-        ['Decisión', 'Rediseñé la web alrededor del contacto, no del catálogo, y pasé a acompañar la estrategia para que ninguna conversación quedara suelta.', 'insight'],
+        ['Decisión', 'Rediseñé la web alrededor del contacto, no del catálogo, y pasé a acompañar la estrategia de negocio para que ninguna conversación quedara suelta.', 'insight'],
         ['Resultado', 'El rediseño acompañó el crecimiento de tráfico y de generación de leads durante la etapa de estabilización de la compañía.', 'win'],
       ],
       tags: [['Espera', 'feel'], ['Desconfianza', 'line'], ['→ Hábito', 'clarity']],
@@ -455,7 +455,7 @@ export const HOME_CASES = [
       lede: "They hired me to redesign the website. Within months the brief changed on its own: the site wasn't the bottleneck — the customer's wait was.",
       rows: [
         ['Insight', "Enquiries arrived via WhatsApp, web and Instagram at once and got lost between channels. Drop-off wasn't at checkout: it was in the wait.", 'insight'],
-        ['Decision', 'I rebuilt the site around getting in touch rather than the catalogue, then stayed on to shape the strategy so no conversation was left loose.', 'insight'],
+        ['Decision', 'I rebuilt the site around getting in touch rather than the catalogue, then stayed on to shape the business strategy so no conversation was left loose.', 'insight'],
         ['Outcome', 'The redesign accompanied the growth in traffic and lead generation during the company’s stabilisation stage.', 'win'],
       ],
       tags: [['Waiting', 'feel'], ['Distrust', 'line'], ['→ Habit', 'clarity']],
