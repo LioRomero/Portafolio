@@ -20,8 +20,8 @@ export const JOBS: Job[] = [
     dates: 'Abr 2026 — Actualidad',
     datesEn: 'Apr 2026 — Present',
     org: 'QStrauss Consulting · Code and Theory Network (Stagwell)',
-    title: 'Technical Architect',
-    titleEn: 'Technical Architect',
+    title: 'Technical Architect / Business Analyst',
+    titleEn: 'Technical Architect / Business Analyst',
     lede: 'Lidero la consultoría técnica sobre implementaciones de Adobe Workfront para clientes enterprise de retail, banca y consumo masivo.',
     ledeEn:
       'I lead the technical consulting on Adobe Workfront implementations for enterprise clients across retail, banking and consumer goods.',
@@ -49,8 +49,8 @@ export const JOBS: Job[] = [
     datesEn: 'Jun 2025 — Apr 2026',
     org: 'Ropofy · SaaS B2B (CRM y automatización)',
     orgEn: 'Ropofy · B2B SaaS (CRM and automation)',
-    title: 'Consultor UX / Diseñador UX',
-    titleEn: 'UX Consultant / UX Designer',
+    title: 'Consultor UX / Business Analyst',
+    titleEn: 'UX Consultant / Business Analyst',
     lede: 'Dos frentes a la vez: la cartera de clientes y el sitio del producto.',
     ledeEn: 'Two fronts at once: the client portfolio and the product website.',
     bullets: [
@@ -89,8 +89,8 @@ export const JOBS: Job[] = [
     datesEn: 'Feb 2024 — Aug 2024',
     org: 'ETB · Telecomunicaciones',
     orgEn: 'ETB · Telecommunications',
-    title: 'Practicante de Diseño UX/UI',
-    titleEn: 'UX/UI Design Intern',
+    title: 'Practicante UX / Análisis de Experiencia',
+    titleEn: 'UX / Experience Analysis Intern',
     lede: 'Plataformas internas usadas por más de 500 personas al mes: el primer lugar donde vi que el problema casi nunca está en la pantalla.',
     ledeEn:
       'Internal platforms used by 500+ people a month: the first place I saw that the problem is rarely on the screen.',

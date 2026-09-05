@@ -59,7 +59,7 @@ export const CASES = {
     tab: 'Ropofy',
     accent: '#22D3EE',
     es: {
-      chips: [['SaaS · CRM', 'clarity'], ['Consultor UX / Diseñador UX', 'line'], ['Jun 2025 – Abr 2026', 'line']],
+      chips: [['SaaS · CRM', 'clarity'], ['Consultor UX / Business Analyst', 'line'], ['Jun 2025 – Abr 2026', 'line']],
       title: 'Me contrataron para rediseñar una web. El problema estaba en el silencio.',
       sub: 'Ropofy vendía bien y perdía clientes sin saber dónde. El sitio no era el cuello de botella: lo era el tiempo que tardaban en responder.',
       cols: [
@@ -118,7 +118,7 @@ export const CASES = {
       ],
     },
     en: {
-      chips: [['SaaS · CRM', 'clarity'], ['UX Consultant / UX Designer', 'line'], ['Jun 2025 – Apr 2026', 'line']],
+      chips: [['SaaS · CRM', 'clarity'], ['UX Consultant / Business Analyst', 'line'], ['Jun 2025 – Apr 2026', 'line']],
       title: 'They hired me to redesign a website. The problem was the silence.',
       sub: "Ropofy was selling well and losing customers without knowing where. The site wasn't the bottleneck — how long they took to reply was.",
       cols: [
@@ -182,7 +182,7 @@ export const CASES = {
     tab: 'QStrauss',
     accent: '#8B7BF0',
     es: {
-      chips: [['Consultoría · Enterprise', 'mind'], ['Technical Architect', 'line'], ['Abr 2026 – Actualidad', 'line']],
+      chips: [['Consultoría · Enterprise', 'mind'], ['Technical Architect / Business Analyst', 'line'], ['Abr 2026 – Actualidad', 'line']],
       title: 'Entregábamos la plataforma configurada. El conocimiento se quedaba con nosotros.',
       sub: 'Las implementaciones salían bien. Meses después, el cliente seguía llamando para preguntar cómo funcionaba lo que ya tenía.',
       cols: [
@@ -244,7 +244,7 @@ export const CASES = {
       ],
     },
     en: {
-      chips: [['Consulting · Enterprise', 'mind'], ['Technical Architect', 'line'], ['Apr 2026 – Present', 'line']],
+      chips: [['Consulting · Enterprise', 'mind'], ['Technical Architect / Business Analyst', 'line'], ['Apr 2026 – Present', 'line']],
       title: 'We delivered the platform configured. The knowledge stayed with us.',
       sub: 'The implementations went well. Months later the client was still calling to ask how the thing they already owned worked.',
       cols: [

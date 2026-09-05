@@ -94,7 +94,7 @@ export const PUZZLE = {
       steps: [
         'ETB · practicante',
         'genia · freelance',
-        'Ropofy · consultor jr',
+        'Ropofy · consultor UX',
         'QStrauss · technical architect',
       ],
       solvedLabel: 'Ese es el camino',
@@ -110,7 +110,7 @@ export const PUZZLE = {
       steps: [
         'ETB · intern',
         'genia · freelance',
-        'Ropofy · jr consultant',
+        'Ropofy · UX consultant',
         'QStrauss · technical architect',
       ],
       solvedLabel: "That's the path",
