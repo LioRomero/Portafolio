@@ -112,7 +112,7 @@ export const ABOUT = {
     back: 'Inicio',
     cases: 'Casos',
     kicker: 'Sobre mí',
-    role: 'Service Designer · UX Research & Diseño de Negocio',
+    role: 'UX Strategist & Business Analyst · Research aplicado a decisiones de negocio',
     hook: 'Investigo para entender el negocio y a su gente, y diseño el sistema que resuelve lo que encuentro. No creo que una cosa se pueda hacer bien sin la otra.',
     chips: ['Bogotá, Colombia', 'Remoto / Híbrido', 'Inglés C1', 'Adobe Workfront'],
     k1: 'Quién soy',
@@ -171,11 +171,11 @@ export const ABOUT = {
     skills: [
       {
         label: 'Diseño y producto',
-        items: ['UX Research', 'Entrevistas y síntesis', 'Journey maps', 'Service blueprints', 'Arquitectura de información', 'Pruebas de usabilidad', 'Prototipado', 'Design systems', 'Diseño UX/UI', 'Accesibilidad (WCAG)', 'Documentación como producto', 'Storytelling y gamificación'],
+        items: ['UX Research', 'Estrategia de producto', 'Entrevistas y síntesis', 'Journey maps', 'Service blueprints', 'Arquitectura de información', 'Pruebas de usabilidad', 'Prototipado', 'Design systems', 'Diseño UX/UI', 'Accesibilidad (WCAG)', 'Documentación como producto', 'Storytelling y gamificación'],
       },
       {
         label: 'Plataforma y procesos',
-        items: ['Diseño de servicios', 'Diseño de modelos operativos', 'Mapeo y rediseño de procesos', 'Análisis de negocio', 'Levantamiento de requerimientos', 'Consultoría de implementación', 'Documentación técnica y enablement', 'Análisis de riesgos', 'Gestión de stakeholders', 'Adobe Workfront'],
+        items: ['Diseño de servicios', 'Diseño de modelos operativos', 'Mapeo y rediseño de procesos', 'Análisis de negocio', 'Levantamiento de requerimientos', 'Definición de KPIs', 'Priorización', 'Consultoría de implementación', 'Documentación técnica y enablement', 'Análisis de riesgos', 'Gestión de stakeholders', 'Adobe Workfront'],
       },
       {
         label: 'Herramientas',
@@ -203,7 +203,7 @@ export const ABOUT = {
     back: 'Home',
     cases: 'Cases',
     kicker: 'About me',
-    role: 'Service Designer · UX Research & Business Design',
+    role: 'UX Strategist & Business Analyst · Research applied to business decisions',
     hook: 'I research to understand the business and the people in it, and I design the system that solves what I find. I don’t think either half can be done well without the other.',
     chips: ['Bogotá, Colombia', 'Remote / Hybrid', 'English C1', 'Adobe Workfront'],
     k1: 'Who I am',
@@ -258,11 +258,11 @@ export const ABOUT = {
     skills: [
       {
         label: 'Design & product',
-        items: ['UX research', 'Interviews and synthesis', 'Journey maps', 'Service blueprints', 'Information architecture', 'Usability testing', 'Prototyping', 'Design systems', 'UX/UI design', 'Accessibility (WCAG)', 'Documentation as a product', 'Storytelling and gamification'],
+        items: ['UX research', 'Product strategy', 'Interviews and synthesis', 'Journey maps', 'Service blueprints', 'Information architecture', 'Usability testing', 'Prototyping', 'Design systems', 'UX/UI design', 'Accessibility (WCAG)', 'Documentation as a product', 'Storytelling and gamification'],
       },
       {
         label: 'Platform & process',
-        items: ['Service design', 'Operating model design', 'Process mapping and redesign', 'Business analysis', 'Requirements gathering', 'Implementation consulting', 'Technical documentation and enablement', 'Risk analysis', 'Stakeholder management', 'Adobe Workfront'],
+        items: ['Service design', 'Operating model design', 'Process mapping and redesign', 'Business analysis', 'Requirements gathering', 'KPI definition', 'Prioritization', 'Implementation consulting', 'Technical documentation and enablement', 'Risk analysis', 'Stakeholder management', 'Adobe Workfront'],
       },
       {
         label: 'Tools',
