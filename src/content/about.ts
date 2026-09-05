@@ -114,7 +114,7 @@ export const ABOUT = {
     kicker: 'Sobre mí',
     role: 'UX Strategist & Business Analyst · Research aplicado a decisiones de negocio',
     hook: 'Investigo para entender el negocio y a su gente, y diseño el sistema que resuelve lo que encuentro. No creo que una cosa se pueda hacer bien sin la otra.',
-    chips: ['Bogotá, Colombia', 'Remoto / Híbrido', 'Inglés C1', 'Adobe Workfront'],
+    chips: ['Análisis de negocio', 'Levantamiento de requerimientos', 'Mapeo de procesos', 'Definición de KPIs', 'Gestión de stakeholders', 'UX Research', 'Bogotá · Remoto', 'Inglés C1'],
     k1: 'Quién soy',
     who: [
       'Soy diseñador interactivo de la Universidad Jorge Tadeo Lozano. Lo que me mueve es crear experiencias nuevas: entender de verdad qué necesita la persona del otro lado y traducirlo en herramientas que funcionen, se puedan replicar, se puedan automatizar y dejen un impacto medible.',
@@ -209,7 +209,7 @@ export const ABOUT = {
     kicker: 'About me',
     role: 'UX Strategist & Business Analyst · Research applied to business decisions',
     hook: 'I research to understand the business and the people in it, and I design the system that solves what I find. I don’t think either half can be done well without the other.',
-    chips: ['Bogotá, Colombia', 'Remote / Hybrid', 'English C1', 'Adobe Workfront'],
+    chips: ['Business analysis', 'Requirements gathering', 'Process mapping', 'KPI definition', 'Stakeholder management', 'UX research', 'Bogotá · Remote', 'English C1'],
     k1: 'Who I am',
     who: [
       "I'm an interactive designer from Universidad Jorge Tadeo Lozano. What drives me is building new experiences: genuinely understanding what the person on the other side needs, and turning that into tools that work, that can be replicated, that can be automated, and that leave measurable impact.",
