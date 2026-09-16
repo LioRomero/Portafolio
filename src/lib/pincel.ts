@@ -30,16 +30,18 @@ export interface Pincel {
 }
 
 /**
- * Por defecto la luz es discreta: el fondo acompaña la lectura, no compite con
- * ella. Quien quiera un rastro más presente lo sube desde el panel.
+ * Por defecto son ondas discretas —anillos que se abren y se apagan—, no
+ * estelas: distraen menos que una mancha de luz que sigue al cursor. El fondo
+ * acompaña la lectura, no compite con ella. Quien quiera otra cosa la cambia
+ * desde el panel.
  */
 export const PINCEL_DEFECTO: Pincel = {
-  tipo: 'estela',
-  intensidad: 0.42,
-  dispersion: 0.3,
+  tipo: 'ondas',
+  intensidad: 0.38,
+  dispersion: 0.5,
   caida: 0,
-  duracion: 4.2,
-  tamano: 90,
+  duracion: 3.2,
+  tamano: 70,
   modoColor: 'ciclo',
 };
 
@@ -65,7 +67,10 @@ export const LIMITES = {
   tamano: { min: 30, max: 160, step: 5 },
 } as const;
 
-const CLAVE = 'em-pincel';
+/* Se versiona la clave: al cambiar el pincel por defecto de estela a ondas,
+   quien ya tuviera uno guardado vería el viejo. Con la clave nueva todos parten
+   del nuevo default y sus ajustes posteriores se guardan igual. */
+const CLAVE = 'em-pincel-2';
 
 const acotar = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
 
@@ -75,7 +80,7 @@ export function normalizar(bruto: Partial<Pincel> | null | undefined): Pincel {
   const modos: ModoColor[] = ['ciclo', 'mind', 'clarity', 'feel'];
   const tipos: TipoPincel[] = ['estela', 'ondas'];
   return {
-    tipo: tipos.includes(p.tipo) ? p.tipo : 'estela',
+    tipo: tipos.includes(p.tipo) ? p.tipo : 'ondas',
     intensidad: acotar(Number(p.intensidad) || PINCEL_DEFECTO.intensidad, 0.1, 1),
     dispersion: acotar(Number(p.dispersion) ?? PINCEL_DEFECTO.dispersion, 0, 1),
     caida: acotar(Number(p.caida) ?? PINCEL_DEFECTO.caida, 0, 1),

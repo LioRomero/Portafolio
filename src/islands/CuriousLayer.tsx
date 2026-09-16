@@ -172,9 +172,39 @@ export default function CuriousLayer({ lang, research }: Props) {
      para dibujar algo que nadie ve. */
   const [explorando, setExplorando] = useState(true);
 
+  /* Los interruptores del ambiente (fondo pintado y su latido) se recuerdan
+     entre páginas: antes se reiniciaban en cada navegación —apagabas el lienzo
+     y volvía a encenderse al cambiar de página—, lo que obligaba a reajustar
+     todo el tiempo. Se guardan como el sonido y el movimiento. */
   useEffect(() => {
     setSonido(sonidoActivo());
+    try {
+      if (localStorage.getItem('em-paint') === '0') setPaint(false);
+      if (localStorage.getItem('em-pulse') === '0') setPulse(false);
+    } catch {
+      /* almacenamiento bloqueado: se quedan encendidos por defecto */
+    }
   }, []);
+
+  const togglePaint = () => {
+    const v = !paint;
+    setPaint(v);
+    try {
+      localStorage.setItem('em-paint', v ? '1' : '0');
+    } catch {
+      /* modo privado: el ajuste dura lo que la pestaña */
+    }
+  };
+
+  const togglePulse = () => {
+    const v = !pulse;
+    setPulse(v);
+    try {
+      localStorage.setItem('em-pulse', v ? '1' : '0');
+    } catch {
+      /* modo privado: el ajuste dura lo que la pestaña */
+    }
+  };
 
   useEffect(() => {
     setExplorando(getMode() !== 'grano');
@@ -624,9 +654,9 @@ export default function CuriousLayer({ lang, research }: Props) {
             on={paint}
             onLabel={u.on}
             offLabel={u.off}
-            onClick={() => setPaint(!paint)}
+            onClick={togglePaint}
           />
-          <Row label={t.pulse} on={pulse} onLabel={u.on} offLabel={u.off} onClick={() => setPulse(!pulse)} />
+          <Row label={t.pulse} on={pulse} onLabel={u.on} offLabel={u.off} onClick={togglePulse} />
           <Row label={t.reduceMotion} on={!motion} onLabel={u.on} offLabel={u.off} onClick={toggleMotion} />
           <Row
             label={t.sonido}
