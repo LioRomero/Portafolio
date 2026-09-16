@@ -190,7 +190,7 @@ export const ABOUT = {
     education: [
       { what: 'Diseñador Interactivo, énfasis en UX/UI y Game Design', where: 'Universidad Jorge Tadeo Lozano · 2020 – 2024' },
       { what: 'Bootcamp UX Front-End', where: 'Cymetria · 2024' },
-      { what: 'Certificación Adobe Workfront', where: 'En curso' },
+      { what: 'Bachillerato', where: 'Gimnasio Moderno · Bogotá' },
     ],
     k6: 'Idiomas',
     langs: [
@@ -281,7 +281,7 @@ export const ABOUT = {
     education: [
       { what: 'BA Interactive Design, focus on UX/UI and Game Design', where: 'Universidad Jorge Tadeo Lozano · 2020 – 2024' },
       { what: 'UX Front-End Bootcamp', where: 'Cymetria · 2024' },
-      { what: 'Adobe Workfront Certification', where: 'In progress' },
+      { what: 'High school', where: 'Gimnasio Moderno · Bogotá' },
     ],
     k6: 'Languages',
     langs: [

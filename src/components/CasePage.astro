@@ -96,13 +96,31 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
               <h1 class="case-title">{d.title}</h1>
               <p class="case-sub">{d.sub}</p>
 
-              <div class="cols">
-                {d.cols.map((col) => (
-                  <div class={col[2] ? 'col col--win' : 'col'}>
-                    <div class="col-label">{col[0]}</div>
-                    <p class="col-text">{col[1]}</p>
-                  </div>
-                ))}
+              {/* El rol es contexto, no protagonista: baja a una línea meta.
+                  También vive en los chips de arriba. */}
+              <p class="case-role">
+                <span class="case-role-label">{d.cols[0][0]}</span>
+                {d.cols[0][1]}
+              </p>
+
+              {/* Banda de escaneo: lo esencial del caso en 30 segundos, con el
+                  mismo lenguaje del sitio (Insight → Decisión → Resultado) y la
+                  cifra de resultado en grande. Todo reusa texto que ya vive más
+                  abajo (findings.h2, la decisión, result.big): es jerarquía, no
+                  contenido nuevo. El detalle completo sigue en los bloques 01–07. */}
+              <div class="scan">
+                <div class="scan-cell scan-cell--insight">
+                  <div class="col-label">Insight</div>
+                  <p class="scan-insight">{d.findings.h2}</p>
+                </div>
+                <div class="scan-cell">
+                  <div class="col-label">{d.cols[1][0]}</div>
+                  <p class="scan-decision">{d.cols[1][1]}</p>
+                </div>
+                <div class="scan-cell scan-cell--result">
+                  <div class="col-label">{d.cols[2][0]}</div>
+                  <span class="scan-big">{d.result.big}</span>
+                </div>
               </div>
 
               {/* La nota de diseño explica por qué el caso está contado así.
@@ -343,22 +361,40 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
     color: var(--dim);
   }
 
-  .cols {
+  /* El rol, como línea meta discreta bajo el subtítulo. */
+  .case-role {
+    font-size: var(--fs-body-sm);
+    line-height: var(--lh-body-sm);
+    color: var(--dim);
+    max-width: var(--max-read);
+    margin-bottom: 30px;
+  }
+
+  .case-role-label {
+    margin-right: 10px;
+    font-size: var(--fs-label);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    color: var(--dimmer);
+  }
+
+  /* Banda de escaneo: tres celdas alineadas al lenguaje del sitio
+     (Insight → Decisión → Resultado). El resultado es la celda dominante
+     —acento en el borde y cifra grande— para que el payoff salte primero. */
+  .scan {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: 1fr 1fr 1.15fr;
     gap: var(--gap-cards);
   }
 
-  .col {
-    border: var(--border);
-    border-radius: var(--r-card);
-    padding: 20px 22px;
-    background: var(--surface);
+  .scan-cell {
+    border-top: 2px solid var(--line-strong);
+    padding-top: 16px;
   }
 
-  .col--win {
-    border-color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 10%, transparent);
+  .scan-cell--result {
+    border-top-color: var(--accent);
   }
 
   .col-label {
@@ -370,14 +406,37 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
     margin-bottom: 10px;
   }
 
-  .col--win .col-label {
+  .scan-cell--result .col-label {
     color: var(--accent);
   }
 
-  .col-text {
+  .scan-insight {
+    font-size: 18px;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+
+  .scan-decision {
     font-size: var(--fs-body-sm);
     line-height: var(--lh-body-sm);
     color: var(--dim);
+  }
+
+  .scan-big {
+    display: block;
+    font-size: 30px;
+    font-weight: var(--fw-light);
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+    color: var(--accent);
+  }
+
+  @media (max-width: 760px) {
+    .scan {
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
   }
 
   /* Oculta salvo en modo investigador. Nada del caso vive aquí: es metacomentario. */
