@@ -110,7 +110,7 @@ const title = P.homeTitle;
                       <span class={`chip chip--${kind}`}>{label}</span>
                     ))}
                   </div>
-                  <h3>{d.title}</h3>
+                  <h3>{P.caseTitles?.[c.key] ?? d.title}</h3>
                   <p class="case-lede">{d.lede}</p>
 
                   <dl class="rows">

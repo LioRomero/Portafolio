@@ -66,6 +66,8 @@ interface ProfileText {
   aboutSkills: readonly SkillGroup[];
   /** Títulos de la trayectoria que cambian respecto de about.ts. */
   jobTitles?: Partial<Record<JobId, string>>;
+  /** Título de la tarjeta de un caso en la home, si el perfil lo enfatiza distinto. */
+  caseTitles?: Partial<Record<CaseKey, string>>;
   /** Rol del chip de un caso, si cambia respecto de cases.ts. */
   caseRoles?: Partial<Record<CaseKey, string>>;
   /** Formación, si cambia respecto de about.ts. */
@@ -241,6 +243,13 @@ export const PROFILES: Record<Profile, ProfileDef> = {
         },
       ],
       jobTitles: { qstrauss: 'Technical Architect', ropofy: 'Consultor UX / Diseñador UX', etb: 'Practicante UX/UI' },
+      /* Cada subtítulo nombra la jugada de UX del caso, con frases que ya están
+         en el propio caso; los casos no se reescriben. */
+      caseTitles: {
+        ropofy: 'Ropofy · Del rediseño a la estrategia: la investigación que cambió el proyecto',
+        qstrauss: 'QStrauss · El desorden se veía en los componentes, pero vivía en el sistema',
+        bid: 'BID · Primero el usuario: datos claros para quien decide',
+      },
       caseRoles: { ropofy: 'Consultor UX / Diseñador UX', qstrauss: 'Technical Architect' },
       education: [
         { what: 'Diseñador Interactivo, énfasis en UX/UI y Game Design', where: 'Universidad Jorge Tadeo Lozano · 2020 – 2024' },
@@ -298,6 +307,11 @@ export const PROFILES: Record<Profile, ProfileDef> = {
         },
       ],
       jobTitles: { qstrauss: 'Technical Architect', ropofy: 'UX Consultant / UX Designer', etb: 'UX/UI Design Intern' },
+      caseTitles: {
+        ropofy: 'Ropofy · From redesign to strategy: the research that changed the project',
+        qstrauss: 'QStrauss · The disorder showed in the components, but lived in the system',
+        bid: 'IDB · User first: clear data for decision-makers',
+      },
       caseRoles: { ropofy: 'UX Consultant / UX Designer', qstrauss: 'Technical Architect' },
       education: [
         { what: 'Interactive Designer, UX/UI and Game Design emphasis', where: 'Universidad Jorge Tadeo Lozano · 2020 – 2024' },
