@@ -8,16 +8,19 @@ import EmotionCanvas from '../islands/EmotionCanvas.tsx';
 import CuriousLayer from '../islands/CuriousLayer.tsx';
 import Blueprint3D from '../islands/Blueprint3D.tsx';
 import { CASES, CASES_UI, CASE_ORDER, type CaseKey } from '../content/cases';
-import { ROUTES, type Lang } from '../content/ui';
+import type { Lang } from '../content/ui';
+import { chipsConRol, perfil, type Profile } from '../content/profiles';
 import { withBase } from '../lib/paths';
 
 interface Props {
   lang: Lang;
+  profile?: Profile;
 }
 
-const { lang } = Astro.props;
+const { lang, profile = 'ba' } = Astro.props;
 const ui = CASES_UI[lang];
-const r = ROUTES[lang];
+const P = perfil(profile, lang);
+const r = P.rutas;
 
 const title = lang === 'es' ? 'Casos — Emilio Romero' : 'Cases — Emilio Romero';
 const description = ui.indexLede;
@@ -25,7 +28,7 @@ const description = ui.indexLede;
 const caseHref = (k: CaseKey) => withBase(`${r.cases}/${k}`);
 ---
 
-<BaseLayout title={title} description={description} lang={lang} page="cases">
+<BaseLayout title={title} description={description} lang={lang} page="cases" profile={profile}>
   <Intro variant="casos" lang={lang} client:load />
   <Tutorial lang={lang} delay={2600} client:idle />
   <CuriousLayer
@@ -52,7 +55,7 @@ const caseHref = (k: CaseKey) => withBase(`${r.cases}/${k}`);
                 <span class="idx-glare" aria-hidden="true"></span>
                 <div class="idx-card-body">
                   <div class="chips">
-                    {d.chips.map(([label, kind]) => (
+                    {chipsConRol(d.chips, P.caseRoles?.[key]).map(([label, kind]) => (
                       <span class={`chip chip--${kind}`}>{label}</span>
                     ))}
                   </div>
@@ -91,7 +94,7 @@ const caseHref = (k: CaseKey) => withBase(`${r.cases}/${k}`);
     </div>
   </section>
 
-  <ContactSection lang={lang} title={ui.ctaTitle} sub={ui.ctaSub} />
+  <ContactSection lang={lang} title={ui.ctaTitle} sub={ui.ctaSub} profile={profile} />
 
   <p class="back-home section">
     <a href={withBase(r.home)}>{ui.backHome}</a>

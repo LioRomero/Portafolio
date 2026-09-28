@@ -55,12 +55,7 @@ export const UI = {
     pincelNota:
       'En estela, la dispersión abre la mancha al envejecer. En ondas, decide hasta dónde llega el anillo. La caída deja el trazo escurrir hacia abajo.',
     skipToContent: 'Saltar al contenido',
-    role: 'UX Strategist & Business Analyst · Research aplicado a decisiones de negocio',
     location: 'Bogotá · Remoto global',
-    /* Encima del titular: quien llega desde LinkedIn tiene que saber qué eres
-       antes de leer la frase. Va en el estilo discreto del kicker para no
-       competir con ella. */
-    heroKicker: 'UX Strategist & Business Analyst · Research aplicado a decisiones de negocio — Bogotá · Remoto global',
   },
   en: {
     navCases: 'Cases',
@@ -103,23 +98,9 @@ export const UI = {
     pincelNota:
       'On a light trail, spread opens the blob as it ages. On ripples, it sets how far the ring travels. Fall lets the stroke run downwards.',
     skipToContent: 'Skip to content',
-    role: 'UX Strategist & Business Analyst · Research applied to business decisions',
     location: 'Bogotá · Remote worldwide',
-    heroKicker: 'UX Strategist & Business Analyst · Research applied to business decisions — Bogotá · Remote worldwide',
   },
 } as const;
-
-/**
- * Hojas de vida en PDF, en `public/uploads/`.
- *
- * Si alguna se pone en `null` su enlace desaparece del contacto, en vez de
- * quedar como texto en color de enlace que no lleva a ninguna parte.
- * Para actualizarlas basta con reemplazar el archivo conservando el nombre.
- */
-export const CV_PDFS: { es: string | null; en: string | null } = {
-  es: '/uploads/cv-emilio-romero-es.pdf',
-  en: '/uploads/cv-emilio-romero-en.pdf',
-};
 
 /** Rutas equivalentes en cada idioma, para el conmutador de la barra. */
 export const ROUTES = {

@@ -1,6 +1,10 @@
 /** Contenido de Sobre mí. Copiado de `Sobre mi Emilio.dc.html`. */
 
+export type JobId = 'qstrauss' | 'ropofy' | 'genia' | 'etb';
+
 export interface Job {
+  /** Estable: los perfiles sobreescriben títulos por id, no por posición. */
+  id: JobId;
   dates: string;
   datesEn: string;
   org: string;
@@ -17,6 +21,7 @@ export interface Job {
 
 export const JOBS: Job[] = [
   {
+    id: 'qstrauss',
     dates: 'Abr 2026 — Actualidad',
     datesEn: 'Apr 2026 — Present',
     org: 'QStrauss Consulting · Code and Theory Network (Stagwell)',
@@ -45,6 +50,7 @@ export const JOBS: Job[] = [
     noteEn: 'Client names are covered by non-disclosure agreements.',
   },
   {
+    id: 'ropofy',
     dates: 'Jun 2025 — Abr 2026',
     datesEn: 'Jun 2025 — Apr 2026',
     org: 'Ropofy · SaaS B2B (CRM y automatización)',
@@ -67,6 +73,7 @@ export const JOBS: Job[] = [
     ],
   },
   {
+    id: 'genia',
     dates: 'Oct 2024 — Abr 2025',
     datesEn: 'Oct 2024 — Apr 2025',
     org: 'genia · Freelance',
@@ -85,6 +92,7 @@ export const JOBS: Job[] = [
     ],
   },
   {
+    id: 'etb',
     dates: 'Feb 2024 — Ago 2024',
     datesEn: 'Feb 2024 — Aug 2024',
     org: 'ETB · Telecomunicaciones',
@@ -112,9 +120,6 @@ export const ABOUT = {
     back: 'Inicio',
     cases: 'Casos',
     kicker: 'Sobre mí',
-    role: 'UX Strategist & Business Analyst · Research aplicado a decisiones de negocio',
-    hook: 'Investigo para entender el negocio y a su gente, y diseño el sistema que resuelve lo que encuentro. No creo que una cosa se pueda hacer bien sin la otra.',
-    chips: ['Análisis de negocio', 'Levantamiento de requerimientos', 'Mapeo de procesos', 'Definición de KPIs', 'Gestión de stakeholders', 'UX Research', 'Bogotá · Remoto', 'Inglés C1'],
     k1: 'Quién soy',
     who: [
       'Soy diseñador interactivo de la Universidad Jorge Tadeo Lozano. Lo que me mueve es crear experiencias nuevas: entender de verdad qué necesita la persona del otro lado y traducirlo en herramientas que funcionen, se puedan replicar, se puedan automatizar y dejen un impacto medible.',
@@ -168,24 +173,6 @@ export const ABOUT = {
         'Lo pongo como pieza y no como caso a propósito: no tengo research ni una métrica de resultado que enseñar, y prefiero decirlo antes que rellenar el formato con humo.',
     },
     k4: 'Habilidades',
-    skills: [
-      {
-        label: 'Análisis de negocio',
-        items: ['Levantamiento de requerimientos', 'Mapeo y rediseño de procesos', 'Casos de uso', 'Gestión de stakeholders', 'Definición de KPIs y métricas', 'Priorización (impacto vs esfuerzo)', 'Diseño de modelos operativos'],
-      },
-      {
-        label: 'Estrategia de experiencia',
-        items: ['UX research', 'Entrevistas y síntesis de hallazgos', 'Journey y service blueprints', 'Pruebas de usabilidad', 'Arquitectura de información', 'Diseño UX/UI', 'Prototipado', 'Estrategia de producto', 'Design systems', 'Accesibilidad (WCAG)', 'Storytelling y gamificación'],
-      },
-      {
-        label: 'Entrega',
-        items: ['Documentación funcional', 'Documentación como producto', 'Consultoría de implementación', 'Análisis de riesgos', 'Capacitación y habilitación', 'Metodologías ágiles'],
-      },
-      {
-        label: 'Herramientas',
-        items: ['Figma', 'Webflow', 'Adobe Workfront', 'Adobe Creative Suite', 'Power BI', 'HubSpot', 'HTML / CSS / JS', 'Confluence / Jira', 'Google Workspace', 'Microsoft 365', 'Claude, Gemini, NotebookLM'],
-      },
-    ],
     k5: 'Formación',
     education: [
       { what: 'Diseñador Interactivo, énfasis en UX/UI y Game Design', where: 'Universidad Jorge Tadeo Lozano · 2020 – 2024' },
@@ -207,9 +194,6 @@ export const ABOUT = {
     back: 'Home',
     cases: 'Cases',
     kicker: 'About me',
-    role: 'UX Strategist & Business Analyst · Research applied to business decisions',
-    hook: 'I research to understand the business and the people in it, and I design the system that solves what I find. I don’t think either half can be done well without the other.',
-    chips: ['Business analysis', 'Requirements gathering', 'Process mapping', 'KPI definition', 'Stakeholder management', 'UX research', 'Bogotá · Remote', 'English C1'],
     k1: 'Who I am',
     who: [
       "I'm an interactive designer from Universidad Jorge Tadeo Lozano. What drives me is building new experiences: genuinely understanding what the person on the other side needs, and turning that into tools that work, that can be replicated, that can be automated, and that leave measurable impact.",
@@ -259,24 +243,6 @@ export const ABOUT = {
         "It's here as a piece, not a case, on purpose: I have no research and no outcome metric to show, and I'd rather say so than pad the format.",
     },
     k4: 'Skills',
-    skills: [
-      {
-        label: 'Business analysis',
-        items: ['Requirements gathering', 'Process mapping and redesign', 'Use cases', 'Stakeholder management', 'KPI and metric definition', 'Prioritization (impact vs effort)', 'Operating model design'],
-      },
-      {
-        label: 'Experience strategy',
-        items: ['UX research', 'Interviews and synthesis', 'Journey and service blueprints', 'Usability testing', 'Information architecture', 'UX/UI design', 'Prototyping', 'Product strategy', 'Design systems', 'Accessibility (WCAG)', 'Storytelling and gamification'],
-      },
-      {
-        label: 'Delivery',
-        items: ['Functional documentation', 'Documentation as a product', 'Implementation consulting', 'Risk analysis', 'Training and enablement', 'Agile methodologies'],
-      },
-      {
-        label: 'Tools',
-        items: ['Figma', 'Webflow', 'Adobe Workfront', 'Adobe Creative Suite', 'Power BI', 'HubSpot', 'HTML / CSS / JS', 'Confluence / Jira', 'Google Workspace', 'Microsoft 365', 'Claude, Gemini, NotebookLM'],
-      },
-    ],
     k5: 'Education',
     education: [
       { what: 'BA Interactive Design, focus on UX/UI and Game Design', where: 'Universidad Jorge Tadeo Lozano · 2020 – 2024' },

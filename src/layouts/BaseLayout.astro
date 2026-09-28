@@ -6,7 +6,8 @@ import '@fontsource/inter/latin-600.css';
 import '../styles/global.css';
 import TopBar from '../components/TopBar.astro';
 import { DEFAULTS, KEYS } from '../lib/prefs';
-import { ROUTES, UI, type Lang, type PageKey } from '../content/ui';
+import { UI, type Lang, type PageKey } from '../content/ui';
+import { PROFILES, rutas, type Profile } from '../content/profiles';
 import { withBase } from '../lib/paths';
 
 interface Props {
@@ -19,24 +20,28 @@ interface Props {
      ROUTES, que solo conoce los índices. El resto usa el índice de su sección. */
   altEs?: string;
   altEn?: string;
+  /** Perfil de la página: `ba` en la raíz, `ux` bajo /ux/. */
+  profile?: Profile;
 }
 
-const { title, description, lang, page, altEs, altEn } = Astro.props;
+const { title, description, lang, page, altEs, altEn, profile = 'ba' } = Astro.props;
 
 /* `Astro.url.pathname` ya incluye el `base`. Se fuerza la barra final para que
    la canónica coincida con lo que sirve GitHub Pages y con el sitemap: si no,
    la home queda como `/portafolio` y el sitemap dice `/portafolio/`. */
 const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
 const canonical = new URL(path, Astro.site);
-/* El sitio es bilingüe: cada página declara su equivalente en el otro idioma. */
-const rutaEs = altEs ?? ROUTES.es[page];
-const rutaEn = altEn ?? ROUTES.en[page];
+/* El sitio es bilingüe: cada página declara su equivalente en el otro idioma,
+   siempre dentro de su perfil. */
+const rutaEs = altEs ?? rutas(profile, 'es')[page];
+const rutaEn = altEn ?? rutas(profile, 'en')[page];
 const alternates = [
   { hreflang: 'es', href: new URL(withBase(rutaEs), Astro.site).href },
   { hreflang: 'en', href: new URL(withBase(rutaEn), Astro.site).href },
   { hreflang: 'x-default', href: new URL(withBase(rutaEs), Astro.site).href },
 ];
-const ogImage = new URL(withBase('/og.jpg'), Astro.site).href;
+const ogImage = new URL(withBase(PROFILES[profile].ogImage), Astro.site).href;
+const noindex = PROFILES[profile].noindex;
 const favicon = withBase('/favicon.svg');
 ---
 
@@ -47,6 +52,7 @@ const favicon = withBase('/favicon.svg');
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
     <link rel="icon" href={favicon} type="image/svg+xml" />
 
     <link rel="canonical" href={canonical} />
@@ -89,7 +95,7 @@ const favicon = withBase('/favicon.svg');
 
     <div id="read-progress" aria-hidden="true"></div>
 
-    <TopBar lang={lang} page={page} />
+    <TopBar lang={lang} page={page} profile={profile} />
 
     <main id="main">
       <slot />

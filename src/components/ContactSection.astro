@@ -2,7 +2,8 @@
 import { HOME } from '../content/home';
 import { CONTACT_EMAIL } from '../content/canvas';
 import HiddenNote from '../islands/HiddenNote.tsx';
-import { CV_PDFS, type Lang } from '../content/ui';
+import type { Lang } from '../content/ui';
+import { PROFILES, type Profile } from '../content/profiles';
 import { withBase } from '../lib/paths';
 
 interface Props {
@@ -11,9 +12,12 @@ interface Props {
   sub?: string;
   /** Solo la home reparte notas escondidas; las otras páginas omiten esto. */
   noteIndex?: number;
+  /** Cada perfil descarga su propia hoja de vida. */
+  profile?: Profile;
 }
 
-const { lang, noteIndex } = Astro.props;
+const { lang, noteIndex, profile = 'ba' } = Astro.props;
+const CV_PDFS = PROFILES[profile].cv;
 const t = HOME[lang];
 const title = Astro.props.title ?? t.ctaTitle;
 const sub = Astro.props.sub ?? t.ctaSub;

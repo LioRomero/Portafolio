@@ -11,20 +11,24 @@ import perfil from '../images/perfil-emilio.jpg';
 import cyberEntrada from '../images/cybernexo-entrada.png';
 import cyberNiveles from '../images/cybernexo-niveles.png';
 import { ABOUT, JOBS } from '../content/about';
+/* `perfil` ya es la foto; la función del perfil entra con otro nombre. */
+import { perfil as datosDePerfil, type Profile } from '../content/profiles';
 import type { Lang } from '../content/ui';
 
 interface Props {
   lang: Lang;
+  profile?: Profile;
 }
 
-const { lang } = Astro.props;
+const { lang, profile = 'ba' } = Astro.props;
 const t = ABOUT[lang];
+const P = datosDePerfil(profile, lang);
 const es = lang === 'es';
 
 const title = es ? 'Sobre mí — Emilio Romero' : 'About — Emilio Romero';
 ---
 
-<BaseLayout title={title} description={t.hook} lang={lang} page="about">
+<BaseLayout title={title} description={P.aboutDescription ?? P.aboutHook} lang={lang} page="about" profile={profile}>
   <Intro variant="sobre" lang={lang} client:load />
   <Tutorial lang={lang} delay={2600} client:idle />
   <CuriousLayer lang={lang} client:idle />
@@ -35,10 +39,10 @@ const title = es ? 'Sobre mí — Emilio Romero' : 'About — Emilio Romero';
       <div>
         <p class="label kicker">{t.kicker}</p>
         <h1 class="name">Emilio Romero</h1>
-        <p class="role">{t.role}</p>
-        <p class="hook">{t.hook}</p>
+        <p class="role">{P.aboutRole}</p>
+        <p class="hook">{P.aboutHook}</p>
         <div class="chips">
-          {t.chips.map((c) => <span class="chip">{c}</span>)}
+          {P.aboutChips.map((c) => <span class="chip">{c}</span>)}
         </div>
       </div>
 
@@ -90,7 +94,7 @@ const title = es ? 'Sobre mí — Emilio Romero' : 'About — Emilio Romero';
             <li class="job">
               <div class="job-when meta tabular">{es ? j.dates : j.datesEn}</div>
               <div class="job-body">
-                <h3 class="job-title">{es ? j.title : j.titleEn}</h3>
+                <h3 class="job-title">{P.jobTitles?.[j.id] ?? (es ? j.title : j.titleEn)}</h3>
                 <p class="job-org">{es ? j.org : (j.orgEn ?? j.org)}</p>
                 <p class="body job-lede">{es ? j.lede : j.ledeEn}</p>
                 <ul class="bullets">
@@ -173,7 +177,7 @@ const title = es ? 'Sobre mí — Emilio Romero' : 'About — Emilio Romero';
       <h2 class="section-h">{t.k4}</h2>
       <div class="skills">
         {
-          t.skills.map((g) => (
+          P.aboutSkills.map((g) => (
             <div class="skill-group">
               <div class="col-label">{g.label}</div>
               <div class="chips">
@@ -191,7 +195,7 @@ const title = es ? 'Sobre mí — Emilio Romero' : 'About — Emilio Romero';
           <h2 class="section-h">{t.k5}</h2>
           <ul class="plain-list">
             {
-              t.education.map((e) => (
+              (P.education ?? t.education).map((e) => (
                 <li>
                   <span class="li-what">{e.what}</span>
                   <span class="meta">{e.where}</span>
@@ -225,7 +229,7 @@ const title = es ? 'Sobre mí — Emilio Romero' : 'About — Emilio Romero';
     </div>
   </section>
 
-  <ContactSection lang={lang} title={t.ctaTitle} sub={t.ctaSub} />
+  <ContactSection lang={lang} title={t.ctaTitle} sub={t.ctaSub} profile={profile} />
 </BaseLayout>
 
 <style>

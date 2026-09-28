@@ -1,19 +1,22 @@
 ---
-import { UI, ROUTES, type Lang, type PageKey } from '../content/ui';
+import { UI, type Lang, type PageKey } from '../content/ui';
+import { rutas, type Profile } from '../content/profiles';
 import { withBase } from '../lib/paths';
 import ModeSwitch from '../islands/ModeSwitch.tsx';
 
 interface Props {
   lang: Lang;
   page: PageKey;
+  profile?: Profile;
 }
 
-const { lang, page } = Astro.props;
+const { lang, page, profile = 'ba' } = Astro.props;
 const t = UI[lang];
-const r = ROUTES[lang];
+const r = rutas(profile, lang);
 const other = lang === 'es' ? 'en' : 'es';
-/** El conmutador de idioma lleva a la misma página en el otro idioma. */
-const otherHref = ROUTES[other][page];
+/** El conmutador de idioma lleva a la misma página en el otro idioma, sin
+    salir del perfil: desde /ux/ nunca se cae a la versión BA. */
+const otherHref = rutas(profile, other)[page];
 ---
 
 <header class="bar">

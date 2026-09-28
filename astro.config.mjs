@@ -28,7 +28,8 @@ export default defineConfig({
     preact({ compat: true }),
     sitemap({
       i18n: { defaultLocale: 'es', locales: { es: 'es-CO', en: 'en' } },
-      filter: (page) => !page.includes('/404'),
+      // /ux/ lleva noindex: no se anuncia en el sitemap.
+      filter: (page) => !page.includes('/404') && !page.includes('/ux/'),
     }),
   ],
   i18n: {

@@ -32,6 +32,23 @@ import { withBase } from '../lib/paths';
       </nav>
     </div>
   </section>
+
+  {/* GitHub Pages sirve una sola 404 para todo el sitio. Si quien se perdió
+      venía de /ux/, todos los enlaces lo devuelven a /ux/ y nunca a la
+      versión BA. Sin JS los enlaces van a la raíz, que también existe. */}
+  <script is:inline define:vars={{ base: import.meta.env.BASE_URL }}>
+    (function () {
+      var b = base.replace(/\/$/, '');
+      var ux = b + '/ux';
+      var p = location.pathname;
+      if (p !== ux && p.indexOf(ux + '/') !== 0) return;
+      document.querySelectorAll('a[href^="' + b + '/"]').forEach(function (a) {
+        var h = a.getAttribute('href');
+        if (h === ux || h.indexOf(ux + '/') === 0 || h.indexOf(b + '/uploads/') === 0) return;
+        a.setAttribute('href', ux + h.slice(b.length));
+      });
+    })();
+  </script>
 </BaseLayout>
 
 <style>

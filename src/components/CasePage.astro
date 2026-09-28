@@ -9,17 +9,20 @@ import CaseGallery, { type Lamina } from '../islands/CaseGallery.tsx';
 import { PASOS } from '../content/pasos';
 import CaseRail from '../islands/CaseRail.tsx';
 import { CASES, CASES_UI, CASE_ORDER, type CaseKey } from '../content/cases';
-import { ROUTES, type Lang } from '../content/ui';
+import type { Lang } from '../content/ui';
+import { chipsConRol, perfil, rutas, type Profile } from '../content/profiles';
 import { withBase, diagrama } from '../lib/paths';
 
 interface Props {
   lang: Lang;
   caseKey: CaseKey;
+  profile?: Profile;
 }
 
-const { lang, caseKey } = Astro.props;
+const { lang, caseKey, profile = 'ba' } = Astro.props;
 const ui = CASES_UI[lang];
-const r = ROUTES[lang];
+const P = perfil(profile, lang);
+const r = P.rutas;
 
 /* Cada caso vive en su propia URL: /casos/ropofy, etc. La página renderiza uno
    solo, y la navegación anterior/siguiente lleva a sus hermanos. Así el lector
@@ -71,8 +74,9 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
   description={description}
   lang={lang}
   page="cases"
-  altEs={`${ROUTES.es.cases}/${key}`}
-  altEn={`${ROUTES.en.cases}/${key}`}
+  altEs={`${rutas(profile, 'es').cases}/${key}`}
+  altEn={`${rutas(profile, 'en').cases}/${key}`}
+  profile={profile}
 >
   <Intro variant="casos" lang={lang} client:load />
   <Tutorial lang={lang} delay={2600} client:idle />
@@ -88,7 +92,7 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
           <section class="section">
             <div class="wrap wrap--cases">
               <div class="chips">
-                {d.chips.map(([label, kind]) => (
+                {chipsConRol(d.chips, P.caseRoles?.[key]).map(([label, kind]) => (
                   <span class={`chip chip--${kind}`}>{label}</span>
                 ))}
               </div>
@@ -288,7 +292,7 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
           </section>
         </article>
 
-  <ContactSection lang={lang} title={ui.ctaTitle} sub={ui.ctaSub} />
+  <ContactSection lang={lang} title={ui.ctaTitle} sub={ui.ctaSub} profile={profile} />
 
   <p class="back-home section">
     <a href={withBase(r.cases)}>{ui.back}</a>

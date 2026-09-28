@@ -12,25 +12,25 @@ import SongBlock from '../islands/SongBlock.tsx';
 import { Image } from 'astro:assets';
 import proceso from '../images/carrusel-1.jpg';
 import { HOME, HOME_CASES } from '../content/home';
-import { UI, ROUTES, type Lang } from '../content/ui';
+import { UI, type Lang } from '../content/ui';
+import { perfil, type Profile } from '../content/profiles';
 import { withBase, diagrama } from '../lib/paths';
 
 interface Props {
   lang: Lang;
+  profile?: Profile;
 }
 
-const { lang } = Astro.props;
+const { lang, profile = 'ba' } = Astro.props;
 const t = HOME[lang];
 const u = UI[lang];
-const r = ROUTES[lang];
+const P = perfil(profile, lang);
+const r = P.rutas;
 
-const title =
-  lang === 'es'
-    ? 'Emilio Romero — UX Strategist & Business Analyst en Bogotá'
-    : 'Emilio Romero — UX Strategist & Business Analyst in Bogotá';
+const title = P.homeTitle;
 ---
 
-<BaseLayout title={title} description={t.heroSub} lang={lang} page="home">
+<BaseLayout title={title} description={P.homeDescription} lang={lang} page="home" profile={profile}>
   <Intro variant="home" lang={lang} client:load />
   <Tutorial lang={lang} delay={6000} client:idle />
   <CuriousLayer lang={lang} client:idle />
@@ -38,7 +38,7 @@ const title =
   {/* --- Hero --------------------------------------------------------- */}
   <section class="section hero">
     <div class="wrap">
-      <p class="label kicker">{u.heroKicker}</p>
+      <p class="label kicker">{P.heroKicker}</p>
 
       <h1 class="hero-title">
         {t.heroA} <em class="em-mind">{t.heroB}</em>{' '}
@@ -213,7 +213,7 @@ const title =
         </div>
 
         <div class="chips">
-          {t.skills.map((s) => <span class="chip chip--plain">{s}</span>)}
+          {P.homeSkills.map((s) => <span class="chip chip--plain">{s}</span>)}
         </div>
 
         <aside class="ghost" data-ghost="sobre" data-playful>
@@ -257,7 +257,7 @@ const title =
   </section>
 
   {/* La nota 4 ("Yo también odio los formularios de contacto") solo va en la home. */}
-  <ContactSection lang={lang} noteIndex={4} />
+  <ContactSection lang={lang} noteIndex={4} profile={profile} />
 </BaseLayout>
 
 <style>
