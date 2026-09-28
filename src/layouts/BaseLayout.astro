@@ -78,14 +78,32 @@ const favicon = withBase('/favicon.svg');
       Modo, idioma y movimiento se aplican antes del primer pintado. Sin esto,
       quien guardó "explorar" vería un parpadeo del modo por defecto al cargar.
     */}
-    <script is:inline define:vars={{ KEYS, DEFAULTS }}>
+    <script is:inline define:vars={{ KEYS, DEFAULTS, PERFIL: profile }}>
+      var root = document.documentElement;
       try {
-        var root = document.documentElement;
         var mode = localStorage.getItem(KEYS.mode);
         root.dataset.mode = mode === 'grano' || mode === 'explorar' ? mode : DEFAULTS.mode;
         if (localStorage.getItem('em-motion') === 'off') root.dataset.motion = 'off';
       } catch (e) {
         /* almacenamiento bloqueado: se queda con los valores por defecto */
+      }
+      /* Atajo Shift + Alt + P: el perfil elegido sigue al navegar en esta
+         pestaña, y al recargar vuelve el de la URL. Si esta página tiene que
+         mostrar el otro, sus textos de perfil se ocultan hasta que llegan, para
+         que no se vea un parpadeo del perfil de la URL. */
+      try {
+        var nav = performance.getEntriesByType('navigation')[0];
+        if (nav && nav.type === 'reload') sessionStorage.removeItem('em-perfil');
+        var visto = sessionStorage.getItem('em-perfil');
+        if (visto && visto !== PERFIL) {
+          root.setAttribute('data-pv-pendiente', '');
+          /* Red de seguridad: si el otro perfil no llega, vuelve el de la URL. */
+          setTimeout(function () {
+            root.removeAttribute('data-pv-pendiente');
+          }, 2500);
+        }
+      } catch (e) {
+        /* sin almacenamiento de sesión: cada página muestra el perfil de su URL */
       }
     </script>
   </head>
@@ -134,19 +152,37 @@ const favicon = withBase('/favicon.svg');
     {/*
       Atajo privado Shift + Alt + P: alterna entre perfiles en esta pestaña,
       para mostrar una u otra versión en una entrevista sin cambiar la URL.
-      Sin indicador y sin guardarse: al recargar vuelve el perfil de la URL.
+      Sin indicador. El perfil elegido se mantiene al navegar dentro de la
+      pestaña (sessionStorage) y al recargar vuelve el perfil de la URL.
       Trae la misma página del otro perfil y cambia solo lo marcado con
-      data-pv (textos y chips); las islas interactivas no se tocan.
+      data-pv (textos, chips y CV); las islas interactivas no se tocan.
       No es un mecanismo de seguridad: el HTML de las dos versiones es público.
     */}
     <script>
       const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+      const CLAVE = 'em-perfil';
+
+      const resto = location.pathname.slice(base.length);
+      const enUx = resto === '/ux' || resto.startsWith('/ux/');
+      const propioPerfil = enUx ? 'ux' : 'ba';
+      const otroPerfil = enUx ? 'ba' : 'ux';
 
       /** La misma página en el otro perfil: /x ↔ /ux/x. */
-      const otraRuta = () => {
-        const resto = location.pathname.slice(base.length);
-        const enUx = resto === '/ux' || resto.startsWith('/ux/');
-        return base + (enUx ? resto.slice(3) || '/' : '/ux' + resto);
+      const otraRuta = () => base + (enUx ? resto.slice(3) || '/' : '/ux' + resto);
+
+      const leer = (): string | null => {
+        try {
+          return sessionStorage.getItem(CLAVE);
+        } catch {
+          return null;
+        }
+      };
+      const guardar = (perfil: string) => {
+        try {
+          sessionStorage.setItem(CLAVE, perfil);
+        } catch {
+          /* sin almacenamiento: el cambio vale solo para esta página */
+        }
       };
 
       type Foto = Map<string, string>;
@@ -170,10 +206,10 @@ const favicon = withBase('/favicon.svg');
       let mostrandoOtra = false;
       let cargando = false;
 
-      const alternar = async () => {
-        if (cargando) return;
+      const mostrar = async (quiereOtra: boolean) => {
+        if (quiereOtra === mostrandoOtra) return;
         propia ??= fotografiar(document);
-        if (!otra) {
+        if (quiereOtra && !otra) {
           cargando = true;
           try {
             const r = await fetch(otraRuta());
@@ -185,9 +221,27 @@ const favicon = withBase('/favicon.svg');
             cargando = false;
           }
         }
-        mostrandoOtra = !mostrandoOtra;
-        aplicar(mostrandoOtra ? otra : propia);
+        mostrandoOtra = quiereOtra;
+        aplicar(quiereOtra && otra ? otra : propia);
       };
+
+      const alternar = async () => {
+        if (cargando) return;
+        await mostrar(!mostrandoOtra);
+        guardar(mostrandoOtra ? otroPerfil : propioPerfil);
+      };
+
+      /* Al cargar (y al volver con el botón Atrás, que restaura la página tal
+         como quedó) se muestra el perfil que eligió esta pestaña. */
+      const sincronizar = async () => {
+        const visto = leer();
+        await mostrar(visto !== null && visto !== propioPerfil);
+        document.documentElement.removeAttribute('data-pv-pendiente');
+      };
+      void sincronizar();
+      addEventListener('pageshow', (e) => {
+        if (e.persisted) void sincronizar();
+      });
 
       /* En captura: va antes que las teclas del panel, que también usan la P. */
       addEventListener(
