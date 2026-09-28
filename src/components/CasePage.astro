@@ -91,7 +91,7 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
   <article class="case" id={key} data-case={key} style={`--accent:${c.accent}`}>
           <section class="section">
             <div class="wrap wrap--cases">
-              <div class="chips">
+              <div class="chips" data-pv="case-chips">
                 {chipsConRol(d.chips, P.caseRoles?.[key]).map(([label, kind]) => (
                   <span class={`chip chip--${kind}`}>{label}</span>
                 ))}

@@ -536,6 +536,10 @@ export default function CuriousLayer({ lang, research }: Props) {
     const onKey = (e: KeyboardEvent) => {
       const el = e.target as HTMLElement | null;
       if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) return;
+      /* Ctrl+F es buscar y Ctrl+P imprimir: con cualquier modificador la tecla
+         es del navegador (o del atajo de perfil), no del panel. Shift sí vale:
+         es como se escribe '?'. */
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
       const k = e.key;
       if (k === '?') setPanel((p) => !p);
       else if (k === 'Escape') setPanel(false);

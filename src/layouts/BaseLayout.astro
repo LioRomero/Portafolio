@@ -131,6 +131,79 @@ const favicon = withBase('/favicon.svg');
       }
     </script>
 
+    {/*
+      Atajo privado Shift + Alt + P: alterna entre perfiles en esta pestaña,
+      para mostrar una u otra versión en una entrevista sin cambiar la URL.
+      Sin indicador y sin guardarse: al recargar vuelve el perfil de la URL.
+      Trae la misma página del otro perfil y cambia solo lo marcado con
+      data-pv (textos y chips); las islas interactivas no se tocan.
+      No es un mecanismo de seguridad: el HTML de las dos versiones es público.
+    */}
+    <script>
+      const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+      /** La misma página en el otro perfil: /x ↔ /ux/x. */
+      const otraRuta = () => {
+        const resto = location.pathname.slice(base.length);
+        const enUx = resto === '/ux' || resto.startsWith('/ux/');
+        return base + (enUx ? resto.slice(3) || '/' : '/ux' + resto);
+      };
+
+      type Foto = Map<string, string>;
+      const fotografiar = (doc: Document): Foto => {
+        const m: Foto = new Map([['__title', doc.title]]);
+        doc.querySelectorAll<HTMLElement>('[data-pv]').forEach((el) => {
+          m.set(el.dataset.pv ?? '', el.innerHTML);
+        });
+        return m;
+      };
+      const aplicar = (m: Foto) => {
+        document.querySelectorAll<HTMLElement>('[data-pv]').forEach((el) => {
+          const html = m.get(el.dataset.pv ?? '');
+          if (html !== undefined) el.innerHTML = html;
+        });
+        document.title = m.get('__title') ?? document.title;
+      };
+
+      let propia: Foto | null = null;
+      let otra: Foto | null = null;
+      let mostrandoOtra = false;
+      let cargando = false;
+
+      const alternar = async () => {
+        if (cargando) return;
+        propia ??= fotografiar(document);
+        if (!otra) {
+          cargando = true;
+          try {
+            const r = await fetch(otraRuta());
+            if (!r.ok) return;
+            otra = fotografiar(new DOMParser().parseFromString(await r.text(), 'text/html'));
+          } catch {
+            return;
+          } finally {
+            cargando = false;
+          }
+        }
+        mostrandoOtra = !mostrandoOtra;
+        aplicar(mostrandoOtra ? otra : propia);
+      };
+
+      /* En captura: va antes que las teclas del panel, que también usan la P. */
+      addEventListener(
+        'keydown',
+        (e) => {
+          if (!e.shiftKey || !e.altKey || e.ctrlKey || e.metaKey || e.code !== 'KeyP') return;
+          const t = e.target as HTMLElement | null;
+          if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+          e.preventDefault();
+          e.stopPropagation();
+          void alternar();
+        },
+        true
+      );
+    </script>
+
     <style>
       #read-progress {
         position: fixed;

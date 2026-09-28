@@ -51,7 +51,7 @@ const sub = Astro.props.sub ?? t.ctaSub;
         </a>
         {
           (CV_PDFS.es || CV_PDFS.en) && (
-            <div class="cvs">
+            <div class="cvs" data-pv="cvs">
               {CV_PDFS.es && (
                 <a href={withBase(CV_PDFS.es)} download>
                   {t.cvEs}

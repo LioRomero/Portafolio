@@ -38,7 +38,7 @@ const title = P.homeTitle;
   {/* --- Hero --------------------------------------------------------- */}
   <section class="section hero">
     <div class="wrap">
-      <p class="label kicker">{P.heroKicker}</p>
+      <p class="label kicker" data-pv="kicker">{P.heroKicker}</p>
 
       <h1 class="hero-title">
         {t.heroA} <em class="em-mind">{t.heroB}</em>{' '}
@@ -109,7 +109,7 @@ const title = P.homeTitle;
                       <span class={`chip chip--${kind}`}>{label}</span>
                     ))}
                   </div>
-                  <h3>{P.caseTitles?.[c.key] ?? d.title}</h3>
+                  <h3 data-pv={`case-${c.key}`}>{P.caseTitles?.[c.key] ?? d.title}</h3>
                   <p class="case-lede">{d.lede}</p>
 
                   <dl class="rows">
@@ -211,7 +211,7 @@ const title = P.homeTitle;
           <HiddenNote index={3} lang={lang} client:idle />
         </div>
 
-        <div class="chips">
+        <div class="chips" data-pv="home-skills">
           {P.homeSkills.map((s) => <span class="chip chip--plain">{s}</span>)}
         </div>
 

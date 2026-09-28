@@ -39,9 +39,9 @@ const title = es ? 'Sobre mí — Emilio Romero' : 'About — Emilio Romero';
       <div>
         <p class="label kicker">{t.kicker}</p>
         <h1 class="name">Emilio Romero</h1>
-        <p class="role">{P.aboutRole}</p>
-        <p class="hook">{P.aboutHook}</p>
-        <div class="chips">
+        <p class="role" data-pv="about-role">{P.aboutRole}</p>
+        <p class="hook" data-pv="about-hook">{P.aboutHook}</p>
+        <div class="chips" data-pv="about-chips">
           {P.aboutChips.map((c) => <span class="chip">{c}</span>)}
         </div>
       </div>
@@ -94,7 +94,7 @@ const title = es ? 'Sobre mí — Emilio Romero' : 'About — Emilio Romero';
             <li class="job">
               <div class="job-when meta tabular">{es ? j.dates : j.datesEn}</div>
               <div class="job-body">
-                <h3 class="job-title">{P.jobTitles?.[j.id] ?? (es ? j.title : j.titleEn)}</h3>
+                <h3 class="job-title" data-pv={`job-${j.id}`}>{P.jobTitles?.[j.id] ?? (es ? j.title : j.titleEn)}</h3>
                 <p class="job-org">{es ? j.org : (j.orgEn ?? j.org)}</p>
                 {j.metric && (
                   <p class="job-metric">
@@ -181,7 +181,7 @@ const title = es ? 'Sobre mí — Emilio Romero' : 'About — Emilio Romero';
   <section class="section bordered">
     <div class="wrap wrap--cases">
       <h2 class="section-h">{t.k4}</h2>
-      <div class="skills">
+      <div class="skills" data-pv="skills">
         {
           P.aboutSkills.map((g) => (
             <div class="skill-group">
@@ -199,7 +199,7 @@ const title = es ? 'Sobre mí — Emilio Romero' : 'About — Emilio Romero';
       <div class="two-up">
         <div>
           <h2 class="section-h">{t.k5}</h2>
-          <ul class="plain-list">
+          <ul class="plain-list" data-pv="education">
             {
               (P.education ?? t.education).map((e) => (
                 <li>

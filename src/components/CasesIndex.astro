@@ -54,7 +54,7 @@ const caseHref = (k: CaseKey) => withBase(`${r.cases}/${k}`);
               <a class="idx-card" href={caseHref(key)} style={`--accent:${c.accent}`}>
                 <span class="idx-glare" aria-hidden="true"></span>
                 <div class="idx-card-body">
-                  <div class="chips">
+                  <div class="chips" data-pv={`chips-${key}`}>
                     {chipsConRol(d.chips, P.caseRoles?.[key]).map(([label, kind]) => (
                       <span class={`chip chip--${kind}`}>{label}</span>
                     ))}
