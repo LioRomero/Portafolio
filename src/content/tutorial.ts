@@ -31,9 +31,9 @@ export const TUTORIAL = {
       },
       {
         icon: '⁘',
-        title: 'Tres puzzles y un archivador que se arma',
-        body: 'Ordena mi proceso, el recorrido de un caso y mi trayectoria: un puzzle por página, cada uno en menos de un minuto. Y en la página de Casos hay un archivador de servicio en 3D — se arma en el espacio, se abre capa por capa y puedes rearmarlo cuando quieras.',
-        why: 'Vengo del game design. Ordenar algo con las manos se recuerda mejor que leerlo, y el archivador es, literal, cómo construyo un servicio: por capas, hasta que se sostiene solo.',
+        title: 'Tres puzzles, tres mecánicas, y un archivador',
+        body: 'Cada puzzle juega distinto porque enseña algo distinto: en la home ordenas mi proceso, en Casos separas lo que pidió el cliente del problema real, y en Sobre mí unes cada trabajo con quién estaba del otro lado. Cada uno explica por qué está hecho así. Y en Casos hay un archivador de servicio en 3D que se abre capa por capa.',
+        why: 'Vengo del game design, y ahí la regla es simple: la mecánica es el mensaje. Ordenar, clasificar y emparejar no son adorno: son tres formas de pensar que uso en el trabajo.',
       },
       {
         icon: '◫',
@@ -90,9 +90,9 @@ export const TUTORIAL = {
       },
       {
         icon: '⁘',
-        title: 'Three puzzles and a cabinet you build',
-        body: "Order my process, the arc of a case, and my track record: one puzzle per page, each under a minute. And on the Cases page there's a 3D service cabinet — you assemble it in space, open it layer by layer, and rebuild it whenever you like.",
-        why: 'I come from game design. Ordering something with your hands sticks better than reading it, and the cabinet is, literally, how I build a service: in layers, until it stands on its own.',
+        title: 'Three puzzles, three mechanics, and a cabinet',
+        body: "Each puzzle plays differently because it teaches something different: on the home page you order my process, on Cases you separate what the client asked for from the real problem, and on About you match each job with who was on the other side. Each one explains why it's built that way. And on Cases there's a 3D service cabinet you open layer by layer.",
+        why: "I come from game design, where the rule is simple: the mechanic is the message. Ordering, sorting and matching aren't decoration — they're three ways of thinking I use at work.",
       },
       {
         icon: '◫',
