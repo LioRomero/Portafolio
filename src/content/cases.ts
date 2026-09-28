@@ -190,7 +190,7 @@ export const CASES = {
         ['La decisión', 'Tratar la documentación como un sistema reutilizable, no como un anexo que se escribe al final de cada proyecto.'],
         ['El resultado', 'Menos tiempo en capacitaciones, reuniones y aclaraciones dentro de implementaciones que corren de 3 a más de 6 meses.', true],
       ],
-      note: 'Es el caso más reciente y el que menos puedo mostrar: hay NDA. Las capturas son de Custom Canvas sobre una instancia de ejemplo: Horizon Media Partners no existe. La herramienta es mía; los datos de cliente, de nadie.',
+      note: 'Es el caso más reciente y el que menos puedo mostrar: hay NDA. Por eso lo enseño con esquemas redibujados y no con capturas: ni los datos de cliente ni la herramienta interna salen de la empresa.',
       brief: {
         h2: 'La misma duda, el mismo cliente, meses después',
         p1: 'Trabajo en consultoría de implementación de Adobe Workfront para clientes enterprise. El encargo, proyecto tras proyecto, llegaba formulado igual: resolver dudas puntuales de configuración y ajustar lo que no estaba quedando.',
@@ -222,11 +222,8 @@ export const CASES = {
           ['Lo que descarté: empezar por rediseñar los componentes', 'Era lo obvio y lo más visible: los slots y los botones eran lo que peor se veía. Lo descarté porque construir componentes sobre un sistema de espaciado y color que todavía no existía obligaba a rehacerlos después. El desorden se veía en los componentes, pero vivía en el sistema.', true],
         ],
       },
-      hero: { src: '/assets/casos/qs-canvas-dominios.png', ph: 'Captura de Custom Canvas: los 17 dominios de una instancia agrupados por categoría, con 63 registros documentados' },
+      hero: { src: '/assets/diag/qs-dominios.svg', ph: 'Esquema del sistema de dominios y slots' },
       pairs: [
-        { src: '/assets/casos/qs-canvas-permisos.png', ph: 'Captura de Custom Canvas: matriz de permisos de un nivel de acceso, objeto por objeto', cap: 'La matriz de permisos: lo que antes se explicaba en una llamada, escrito una vez.' },
-        { src: '/assets/casos/qs-canvas-deck.png', ph: 'Captura de Custom Canvas: editor de material de entrenamiento con las diapositivas pendientes de captura', cap: 'El material de capacitación se arma dentro de la misma herramienta.' },
-        { src: '/assets/casos/qs-canvas-ia.png', ph: 'Captura de Custom Canvas: cada paso de una guía con un botón para redactarlo con IA', cap: 'Cada paso puede redactarse con IA: escribir la primera versión deja de ser el cuello de botella.' },
         { src: '/assets/diag/qs-nav-antes.svg', ph: 'ANTES — las tres capas de navegación compitiendo', cap: 'Antes: tres formas de llegar al mismo sitio, ninguna clara. Referencia visual, no captura.' },
         { src: '/assets/diag/qs-nav-despues.svg', ph: 'DESPUÉS — navegación consolidada en dos niveles', cap: 'Después: dos niveles, una acción primaria por pantalla. Referencia visual, no captura.' },
       ],
@@ -252,7 +249,7 @@ export const CASES = {
         ['The decision', 'Treat documentation as a reusable system, not as an appendix written at the end of each project.'],
         ['The outcome', 'Less time spent on training, meetings and clarifications inside implementations that run from 3 to 6+ months.', true],
       ],
-      note: "It's the most recent case and the one I can show least of: there's an NDA. The screenshots show Custom Canvas running a sample instance: Horizon Media Partners does not exist. The tool is mine; the client data is nobody's.",
+      note: "It's the most recent case and the one I can show least of: there's an NDA. So I show it with redrawn diagrams, not screenshots: neither client data nor the internal tool leaves the company.",
       brief: {
         h2: 'The same question, the same client, months later',
         p1: 'I work in Adobe Workfront implementation consulting for enterprise clients. Project after project, the brief arrived framed the same way: resolve specific configuration questions and fix what wasn’t landing.',
@@ -284,11 +281,8 @@ export const CASES = {
           ['What I ruled out: starting by redesigning the components', "It was the obvious, most visible move: the slots and buttons looked worst. I ruled it out because building components on a spacing and colour system that didn't exist yet would force a rebuild later. The disorder showed in the components, but it lived in the system.", true],
         ],
       },
-      hero: { src: '/assets/casos/qs-canvas-dominios.png', ph: 'Custom Canvas screenshot: the 17 domains of an instance grouped by category, with 63 documented records' },
+      hero: { src: '/assets/diag/qs-dominios.svg', ph: 'Diagram of the domain and slot system' },
       pairs: [
-        { src: '/assets/casos/qs-canvas-permisos.png', ph: 'Custom Canvas screenshot: the permissions matrix of an access level, object by object', cap: 'The permissions matrix: what used to be explained on a call, written down once.' },
-        { src: '/assets/casos/qs-canvas-deck.png', ph: 'Custom Canvas screenshot: training-deck editor showing the slides still pending capture', cap: 'Training material is built inside the same tool.' },
-        { src: '/assets/casos/qs-canvas-ia.png', ph: 'Custom Canvas screenshot: every step of a guide with a button to draft it with AI', cap: 'Every step can be drafted with AI: writing the first version stops being the bottleneck.' },
         { src: '/assets/diag/qs-nav-antes.svg', ph: 'BEFORE — three navigation layers competing', cap: 'Before: three ways to reach the same place, none of them clear. Visual reference, not a screenshot.' },
         { src: '/assets/diag/qs-nav-despues.svg', ph: 'AFTER — navigation consolidated into two levels', cap: 'After: two levels, one primary action per screen. Visual reference, not a screenshot.' },
       ],

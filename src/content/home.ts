@@ -159,7 +159,7 @@ export const HOME = {
       ['La verdad sobre la curiosidad', 'Pregunto demasiado. En mi primer trabajo me lo dijeron como defecto y tardé años en entenderlo como herramienta. Todavía me cuesta callarme cuando algo no me cuadra — ya dejé de intentarlo.'],
       ['Yo también odio los formularios de contacto', 'Por eso no hay ninguno. Tres canales, todos directos, y ninguno pide tu cargo ni el tamaño de tu empresa antes de dejarte hablar.'],
       ['Ropofy: la conversación difícil', 'A los dos meses tuve que decirle al cliente que le estaba cobrando por lo equivocado. Rediseñar la web no iba a mover su número. Fue incómodo y fue el momento en que el proyecto empezó a servir.'],
-      ['QStrauss: cómo enseño algo con NDA', 'Los clientes están bajo acuerdo, así que las capturas son de la herramienta corriendo una instancia de ejemplo: Horizon Media Partners no existe. La herramienta es mía; los datos de cliente, de nadie.'],
+      ['QStrauss: cómo enseño algo con NDA', 'Los clientes están bajo acuerdo y la herramienta es interna, así que nada de lo que ves es una captura: son esquemas redibujados. Muestro la estructura del problema, no los datos de nadie.'],
       ['BID: ganamos una categoría, no el sprint', 'En la general quedamos segundos. Nos llevamos la Distinción en Democratización de Datos, que era justo la parte que nos importaba. Lo cuento entero porque un segundo puesto con criterio enseña más que un primero con suerte.'],
     ],
   },
@@ -312,7 +312,7 @@ export const HOME = {
       ['The truth about the curiosity', "I ask too much. In my first job it was framed as a flaw and it took me years to understand it as a tool. I still struggle to stay quiet when something doesn't add up — I've stopped trying."],
       ['I hate contact forms too', "Which is why there isn't one. Three channels, all direct, and none of them ask for your job title or company size before letting you speak."],
       ['Ropofy: the hard conversation', "Two months in I had to tell the client I was charging them for the wrong thing. Redesigning the site wasn't going to move their number. It was uncomfortable, and it's the moment the project started to be useful."],
-      ['QStrauss: how I show something under NDA', "Clients are under agreement, so the screenshots show the tool running a sample instance: Horizon Media Partners does not exist. The tool is mine; the client data is nobody's."],
+      ['QStrauss: how I show something under NDA', "Clients are under agreement and the tool is internal, so nothing you see is a screenshot: they're redrawn diagrams. I show the shape of the problem, not anyone's data."],
       ['IDB: we won a category, not the sprint', "We came second overall. We took the Distinction in Data Democratisation, which was exactly the part we cared about. I tell the whole thing because second place with judgement teaches more than first place with luck."],
     ],
   },
@@ -473,7 +473,6 @@ export const HOME_CASES = [
     shots: [
       { src: '/assets/diag/qs-flujo.svg', es: ['Diagrama de flujo del caso (sin NDA)', 'El ciclo que se rompió: de la sesión repetida al material que se produce una vez.'], en: ['Case flow diagram (NDA-safe)', 'The cycle that broke: from repeated session to material produced once.'] },
       { src: '/assets/diag/qs-nav-despues.svg', es: ['Esquema de la navegación consolidada — sin datos reales', 'La navegación consolidada en dos niveles.'], en: ['Redrawn Custom Canvas wireframe — no real data', 'Navigation consolidated into two levels.'] },
-      { src: '/assets/casos/qs-canvas-dominios.png', es: ['Custom Canvas: 17 dominios documentados', 'La herramienta interna donde se escribe una vez lo que antes se explicaba cada vez.'], en: ['Custom Canvas: 17 documented domains', 'The internal tool where what used to be explained every time gets written once.'] },,
     ],
     es: {
       chips: [['Consultoría · Enterprise', 'mind'], ['Diseño de servicios', 'line'], ['Actualidad', 'line']],
