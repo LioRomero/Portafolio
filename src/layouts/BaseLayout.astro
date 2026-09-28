@@ -95,7 +95,12 @@ const favicon = withBase('/favicon.svg');
 
     <div id="read-progress" aria-hidden="true"></div>
 
-    <TopBar lang={lang} page={page} profile={profile} />
+    <TopBar
+      lang={lang}
+      page={page}
+      profile={profile}
+      otherHref={lang === 'es' ? rutaEn : rutaEs}
+    />
 
     <main id="main">
       <slot />

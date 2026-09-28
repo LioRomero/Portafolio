@@ -8,6 +8,8 @@ interface Props {
   lang: Lang;
   page: PageKey;
   profile?: Profile;
+  /** Esta misma página en el otro idioma. En un caso es ese caso, no el índice. */
+  otherHref?: string;
 }
 
 const { lang, page, profile = 'ba' } = Astro.props;
@@ -16,7 +18,7 @@ const r = rutas(profile, lang);
 const other = lang === 'es' ? 'en' : 'es';
 /** El conmutador de idioma lleva a la misma página en el otro idioma, sin
     salir del perfil: desde /ux/ nunca se cae a la versión BA. */
-const otherHref = rutas(profile, other)[page];
+const otherHref = Astro.props.otherHref ?? rutas(profile, other)[page];
 ---
 
 <header class="bar">
