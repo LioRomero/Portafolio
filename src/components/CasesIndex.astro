@@ -26,6 +26,14 @@ const title = lang === 'es' ? 'Casos — Emilio Romero' : 'Cases — Emilio Rome
 const description = ui.indexLede;
 
 const caseHref = (k: CaseKey) => withBase(`${r.cases}/${k}`);
+
+/* El puzzle de clasificar usa las frases reales de los casos (lo que pidieron y
+   el problema real). Se le pasan desde aquí para no duplicarlas en puzzle.ts ni
+   cargar cases.ts entero dentro de la isla. */
+const frasesPuzzle = CASE_ORDER.flatMap((k) => [
+  { texto: CASES[k][lang].brief.asked, bin: 0 as const, fuente: CASES[k].tab },
+  { texto: CASES[k][lang].brief.real, bin: 1 as const, fuente: CASES[k].tab },
+]);
 ---
 
 <BaseLayout title={title} description={description} lang={lang} page="cases" profile={profile}>
@@ -84,7 +92,13 @@ const caseHref = (k: CaseKey) => withBase(`${r.cases}/${k}`);
 
   <section class="section bordered" data-playful>
     <div class="wrap wrap--canvas">
-      <Puzzle variant="casos" lang={lang} client:visible />
+      <Puzzle
+        variant="casos"
+        lang={lang}
+        frases={frasesPuzzle}
+        columnas={[ui.theBrief, ui.realProblem]}
+        client:visible
+      />
     </div>
   </section>
 
@@ -178,7 +192,7 @@ const caseHref = (k: CaseKey) => withBase(`${r.cases}/${k}`);
 
   .idx-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
     gap: var(--gap-cards);
   }
 
