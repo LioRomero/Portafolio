@@ -240,8 +240,8 @@ export default function EmotionCanvas({ lang }: { lang: Lang }) {
           margin: 12px 0 18px;
         }
         .ec-who {
-          flex: 1;
-          min-width: 240px;
+          flex: 1 1 240px;
+          min-width: 0;
           padding: 12px 16px;
           border-radius: var(--r-control);
           border: var(--border);
@@ -301,7 +301,7 @@ export default function EmotionCanvas({ lang }: { lang: Lang }) {
 
         .ec-wall {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
           gap: 14px;
           margin: 0;
           padding: 0;

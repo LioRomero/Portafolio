@@ -527,7 +527,7 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
 
   .ask-real {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
     gap: var(--gap-cards);
     margin-top: 26px;
   }
@@ -576,7 +576,7 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
 
   .ruta-pasos {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
     gap: 14px;
     margin: 0;
     padding: 0;
@@ -630,7 +630,7 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
 
   .stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
     gap: var(--gap-cards);
     margin: 26px 0 0;
     padding: 0;
@@ -641,6 +641,7 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
      los datos se leen como evidencia y no como prosa: tarjeta propia y cifra
      grande, del mismo peso que la franja de metricas de la portada. */
   .stats li {
+    min-width: 0;
     border: var(--border);
     border-top: 2px solid var(--accent);
     border-radius: var(--r-card);
@@ -654,7 +655,12 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
 
   .stat-n {
     display: block;
-    font-size: 40px;
+    /* Casi siempre es un número, pero en BID son palabras ("Necesidades y
+       frustraciones"): el tamaño se adapta al ancho y una palabra larga se
+       parte con guion en vez de salirse de la tarjeta. */
+    font-size: clamp(28px, 2.4vw + 16px, 40px);
+    hyphens: auto;
+    overflow-wrap: break-word;
     font-weight: var(--fw-medium);
     letter-spacing: -0.03em;
     line-height: 1.05;
@@ -692,7 +698,7 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
 
   .findings {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
     gap: var(--gap-cards);
     margin-top: 26px;
   }
@@ -759,7 +765,7 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
   .decisions,
   .takeaways {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
     gap: var(--gap-cards);
     margin: 26px 0 0;
     padding: 0;
@@ -835,8 +841,9 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
   }
 
   .result-p {
-    flex: 1;
-    min-width: 280px;
+    /* Cede y baja bajo la cifra en pantallas angostas, sin empujar la página. */
+    flex: 1 1 260px;
+    min-width: 0;
     font-size: var(--fs-body-lg);
     line-height: var(--lh-body-lg);
     color: var(--dim);

@@ -333,8 +333,15 @@ export default function Blueprint3D({ lang }: Props) {
         /* La perspectiva vive en el contenedor y la rotación en la pila: si se
            mezclan, cada capa se deforma por su cuenta. */
         .bp-escena {
+          /* La escena mide su propio ancho: la pila se adapta a él (cqw) en vez
+             de a la pantalla, así funciona igual en una columna o en dos. */
+          container-type: inline-size;
           perspective: 1100px;
-          height: 430px;
+          /* El relleno de arriba es el aire del cajón abierto: sale hacia delante
+             y hacia arriba, y sin este margen tapaba el texto de encima. La pila
+             sigue centrada en los 430 px de siempre. */
+          height: 462px;
+          padding-top: 32px;
           display: grid;
           place-items: center;
           cursor: grab;
@@ -350,7 +357,11 @@ export default function Blueprint3D({ lang }: Props) {
 
         .bp-pila {
           position: relative;
-          width: 300px;
+          /* 300 px en escritorio. En un teléfono la escena tiene ~240 px, y el giro
+             más la profundidad empujan las capas de delante hacia un lado: con 300
+             fijos se salían de la pantalla. Se angosta la pila, no se encoge el
+             texto, que sigue legible a su tamaño real. */
+          width: min(300px, 78cqw);
           height: 190px;
           transform-style: preserve-3d;
           /* El giro sigue al dedo y por eso va corto: una manipulacion directa
@@ -519,9 +530,26 @@ export default function Blueprint3D({ lang }: Props) {
           color: var(--dim);
         }
 
+        /* Escena angosta (teléfono): el título de cada capa va en una sola línea.
+           Partido en dos, las franjas de las capas de atrás se enciman y no se
+           lee ninguna; el título completo aparece igual al abrir el cajón. */
+        @container (max-width: 300px) {
+          .bp-capa { padding: 11px 12px 0; }
+          .bp-fila { gap: 8px; }
+          .bp-t {
+            min-width: 0;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .bp-tirador { width: 14px; }
+          .bp-capa--activa .bp-tirador { width: 20px; }
+        }
+
         @media (max-width: 860px) {
           .bp-cols { grid-template-columns: 1fr; }
-          .bp-escena { height: 330px; }
+          .bp-escena { height: 412px; padding-top: 82px; }
           .bp-shell { padding: 24px 20px; }
         }
       `}</style>

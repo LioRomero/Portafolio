@@ -152,8 +152,8 @@ export default function SongBlock({ lang }: { lang: Lang }) {
 
         .sb-fila { display: flex; gap: 10px; flex-wrap: wrap; }
         .sb-input {
-          flex: 1;
-          min-width: 260px;
+          flex: 1 1 260px;
+          min-width: 0;
           padding: 12px 16px;
           border-radius: var(--r-control);
           border: var(--border);

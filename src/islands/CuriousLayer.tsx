@@ -196,6 +196,17 @@ export default function CuriousLayer({ lang, research }: Props) {
     }
   };
 
+  /* La playlist recuerda si la cerraste: antes se reabría en cada página, que
+     es justo el reproceso que no debe haber. */
+  const ponerPlaylist = (v: boolean) => {
+    setSpotify(v);
+    try {
+      localStorage.setItem('em-playlist', v ? '1' : '0');
+    } catch {
+      /* modo privado: la decisión dura lo que la pestaña */
+    }
+  };
+
   const togglePulse = () => {
     const v = !pulse;
     setPulse(v);
@@ -525,6 +536,17 @@ export default function CuriousLayer({ lang, research }: Props) {
   useEffect(() => {
     const alTerminarIntro = () => {
       if (document.documentElement.dataset.mode === 'grano') return;
+      let pref: string | null = null;
+      try {
+        pref = localStorage.getItem('em-playlist');
+      } catch {
+        /* sin almacenamiento: se decide solo por la pantalla */
+      }
+      /* Si la cerraste, no vuelve sola. Si nunca decidiste, solo se ofrece sola
+         donde hay espacio: en un teléfono taparía un tercio de la pantalla, así
+         que ahí queda a un toque desde el panel. */
+      if (pref === '0') return;
+      if (pref !== '1' && !window.matchMedia('(min-width: 901px) and (pointer: fine)').matches) return;
       setSpotify(true);
     };
     window.addEventListener('em-intro-done', alTerminarIntro);
@@ -545,7 +567,7 @@ export default function CuriousLayer({ lang, research }: Props) {
       else if (k === 'Escape') setPanel(false);
       else if (k === 'm' || k === 'M') toggleMotion();
       else if (k === 'f' || k === 'F') setFoco((p) => !p);
-      else if (k === 'p' || k === 'P') setSpotify((p) => !p);
+      else if (k === 'p' || k === 'P') ponerPlaylist(!spotify);
       else if (k === 'x' || k === 'X') setXray((p) => !p);
       else if ((k === 'r' || k === 'R') && research) setResearchOn((p) => !p);
     };
@@ -651,7 +673,7 @@ export default function CuriousLayer({ lang, research }: Props) {
             on={spotify}
             onLabel={u.on}
             offLabel={u.off}
-            onClick={() => setSpotify(!spotify)}
+            onClick={() => ponerPlaylist(!spotify)}
           />
           <Row
             label={u.paintBg}
@@ -808,7 +830,7 @@ export default function CuriousLayer({ lang, research }: Props) {
               type="button"
               class="cl-player-x"
               aria-label={u.closePlayer}
-              onClick={() => setSpotify(false)}
+              onClick={() => ponerPlaylist(false)}
             >
               ✕
             </button>

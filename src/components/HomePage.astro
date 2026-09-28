@@ -394,7 +394,7 @@ const title = P.homeTitle;
 
   .proof {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
     gap: var(--gap-cards);
     margin: 44px 0 0;
     padding: 0;
@@ -641,7 +641,7 @@ const title = P.homeTitle;
   /* --- Método --- */
   .steps {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
     gap: var(--gap-cards);
     margin: 36px 0 0;
     padding: 0;

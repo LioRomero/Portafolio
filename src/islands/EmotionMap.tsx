@@ -112,7 +112,7 @@ export default function EmotionMap({ lang }: { lang: Lang }) {
           position: relative;
           overflow: hidden;
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
           gap: 28px;
           border: var(--border);
           border-radius: var(--r-card-lg);
