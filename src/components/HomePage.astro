@@ -95,7 +95,6 @@ const title = P.homeTitle;
   <section class="section bordered" id="casos">
     <div class="wrap">
       <h2>{t.casesTitle}</h2>
-      <p class="lead cases-hint">{t.casesHint}</p>
 
       <div class="cases">
         {
@@ -423,7 +422,6 @@ const title = P.homeTitle;
   }
 
   .map-foot,
-  .cases-hint,
   .case-method,
   .case-discard {
     max-width: var(--max-read);
@@ -433,12 +431,9 @@ const title = P.homeTitle;
     margin-top: 24px;
   }
 
-  .cases-hint {
-    margin: 12px 0 36px;
-  }
-
   /* --- Casos --- */
   .cases {
+    margin-top: 36px;
     display: flex;
     flex-direction: column;
     gap: 64px;

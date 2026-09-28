@@ -17,6 +17,8 @@ export interface Job {
   bulletsEn: string[];
   note?: string;
   noteEn?: string;
+  /** Cifra que ya está en los bullets, puesta a la vista junto al puesto. */
+  metric?: { n: string; l: string; lEn: string };
 }
 
 export const JOBS: Job[] = [
@@ -93,6 +95,7 @@ export const JOBS: Job[] = [
   },
   {
     id: 'etb',
+    metric: { n: '30%', l: 'más eficiencia de navegación · 500+ usuarios/mes', lEn: 'better navigation efficiency · 500+ users/month' },
     dates: 'Feb 2024 — Ago 2024',
     datesEn: 'Feb 2024 — Aug 2024',
     org: 'ETB · Telecomunicaciones',

@@ -96,6 +96,12 @@ const title = es ? 'Sobre mí — Emilio Romero' : 'About — Emilio Romero';
               <div class="job-body">
                 <h3 class="job-title">{P.jobTitles?.[j.id] ?? (es ? j.title : j.titleEn)}</h3>
                 <p class="job-org">{es ? j.org : (j.orgEn ?? j.org)}</p>
+                {j.metric && (
+                  <p class="job-metric">
+                    <span class="job-metric-n tabular">{j.metric.n}</span>
+                    <span class="job-metric-l">{es ? j.metric.l : j.metric.lEn}</span>
+                  </p>
+                )}
                 <p class="body job-lede">{es ? j.lede : j.ledeEn}</p>
                 <ul class="bullets">
                   {(es ? j.bullets : j.bulletsEn).map((b) => (
@@ -380,6 +386,29 @@ const title = es ? 'Sobre mí — Emilio Romero' : 'About — Emilio Romero';
     line-height: 1.25;
     letter-spacing: -0.025em;
     margin-bottom: 4px;
+  }
+
+  /* La cifra del puesto, con el mismo peso que la franja de métricas de la
+     portada: se ve sin tener que leer el bullet. */
+  .job-metric {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 2px 10px;
+    margin: 0 0 14px;
+  }
+
+  .job-metric-n {
+    font-size: 26px;
+    font-weight: var(--fw-medium);
+    letter-spacing: -0.03em;
+    color: var(--on-clarity);
+  }
+
+  .job-metric-l {
+    font-size: var(--fs-meta);
+    line-height: var(--lh-meta);
+    color: var(--dim);
   }
 
   .job-org {

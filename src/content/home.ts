@@ -29,7 +29,6 @@ export const HOME = {
     originalQuote: 'Cita original',
     seenIn: 'Visto en',
     casesTitle: 'Tres casos, tres decisiones difíciles',
-    casesHint: 'Insight → Decisión → Resultado. Y la evidencia debajo.',
     xrayOn: 'Devolver la capa de research',
     xrayOff: 'Quitar la capa de research',
     xrayHintOff:
@@ -173,7 +172,6 @@ export const HOME = {
     originalQuote: 'Original quote',
     seenIn: 'Seen in',
     casesTitle: 'Three cases, three hard decisions',
-    casesHint: 'Insight → Decision → Outcome. With the evidence underneath.',
     xrayOn: 'Put the research layer back',
     xrayOff: 'Strip the research layer',
     xrayHintOff:
