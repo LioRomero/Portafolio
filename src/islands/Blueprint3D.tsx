@@ -40,9 +40,11 @@ export default function Blueprint3D({ lang }: Props) {
   const montado = puestas >= t.capas.length;
   const arrastre = useRef<{ x: number; y: number; rx: number; ry: number } | null>(null);
   const girando = useRef(false);
+  const temporizadorFallo = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     setSuena(leerSonido());
+    return () => clearTimeout(temporizadorFallo.current);
   }, []);
 
   const limitar = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
@@ -123,7 +125,9 @@ export default function Blueprint3D({ lang }: Props) {
     setPuestas(0);
     setFallo(true);
     sonar('error');
-    window.setTimeout(() => setFallo(false), 1500);
+    /* Tres segundos para leer el aviso. Un segundo fallo reinicia la cuenta. */
+    clearTimeout(temporizadorFallo.current);
+    temporizadorFallo.current = window.setTimeout(() => setFallo(false), 3000);
   };
 
   /* Vaciar el archivador para volver a armarlo paso a paso: el montaje deja de

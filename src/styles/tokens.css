@@ -124,8 +124,8 @@
   --dur-hover: 200ms;         /* hover, cambio de color */
   --dur-state: 275ms;         /* cambio de estado, progreso — 250–300ms */
   --dur-enter: 425ms;         /* entrada de elemento — 400–450ms */
-  --dur-intro-short: 1900ms;  /* barrido de intro corta */
-  --dur-intro-long: 5400ms;   /* secuencia de intro larga */
+  --dur-intro-short: 3400ms;  /* barrido de intro corta */
+  --dur-intro-long: 9400ms;   /* secuencia de intro larga */
 
   --ease-hover: ease;
   --ease-state: ease;

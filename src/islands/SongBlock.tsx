@@ -57,7 +57,7 @@ export default function SongBlock({ lang }: { lang: Lang }) {
     setBorrador('');
     setGracias(true);
     clearTimeout(temporizador.current);
-    temporizador.current = window.setTimeout(() => setGracias(false), 2600);
+    temporizador.current = window.setTimeout(() => setGracias(false), 4000);
   };
 
   if (encontradas < DESBLOQUEO) return null;

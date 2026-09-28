@@ -274,7 +274,7 @@ export default function CuriousLayer({ lang, research }: Props) {
 
     setAviso(true);
     clearTimeout(temporizadorAviso.current);
-    temporizadorAviso.current = window.setTimeout(() => setAviso(false), 2600);
+    temporizadorAviso.current = window.setTimeout(() => setAviso(false), 4200);
   }, [found]);
 
   useEffect(() => () => clearTimeout(temporizadorAviso.current), []);
@@ -899,13 +899,14 @@ export default function CuriousLayer({ lang, research }: Props) {
           font-weight: var(--fw-medium);
           box-shadow: 0 14px 34px rgba(0, 0, 0, .5);
           pointer-events: none;
-          animation: clAviso 2.6s ease both;
+          animation: clAviso 4.2s ease both;
         }
-        /* Entra rápido, se sostiene y se desvanece sin que haya que cerrarlo. */
+        /* Entra rápido, se sostiene unos tres segundos y medio y se desvanece
+           sin que haya que cerrarlo. Debe durar lo mismo que su temporizador. */
         @keyframes clAviso {
           0% { opacity: 0; transform: translate(-50%, -10px); }
-          9% { opacity: 1; transform: translate(-50%, 0); }
-          76% { opacity: 1; transform: translate(-50%, 0); }
+          7% { opacity: 1; transform: translate(-50%, 0); }
+          88% { opacity: 1; transform: translate(-50%, 0); }
           100% { opacity: 0; transform: translate(-50%, -6px); }
         }
         html[data-motion='off'] .cl-aviso { animation: none; }

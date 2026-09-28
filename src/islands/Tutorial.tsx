@@ -32,8 +32,19 @@ export default function Tutorial({ lang, delay }: Props) {
   /* Aparece una sola vez por visitante; reabrible con el botón `?` de la barra. */
   useEffect(() => {
     let timer: number | undefined;
+    /* Si la intro sigue en pantalla, espera a que termine: abrir el tour
+       encima taparía el texto que se está leyendo. */
+    const trasIntro = () => {
+      timer = window.setTimeout(() => setOpen(true), 900);
+    };
     if (!isTutorialSeen()) {
-      timer = window.setTimeout(() => setOpen(true), delay);
+      timer = window.setTimeout(() => {
+        if (document.documentElement.hasAttribute('data-scroll-locked')) {
+          window.addEventListener('em-intro-done', trasIntro, { once: true });
+        } else {
+          setOpen(true);
+        }
+      }, delay);
     }
     const onOpen = () => {
       setI(0);
@@ -42,6 +53,7 @@ export default function Tutorial({ lang, delay }: Props) {
     window.addEventListener('em-open-tutorial', onOpen);
     return () => {
       clearTimeout(timer);
+      window.removeEventListener('em-intro-done', trasIntro);
       window.removeEventListener('em-open-tutorial', onOpen);
     };
   }, [delay]);

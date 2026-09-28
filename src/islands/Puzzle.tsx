@@ -222,7 +222,7 @@ function PuzzleOrden({ variant, lang }: Props) {
     guardarAvance(variant, 0);
     setWrong(true);
     sonar('error');
-    timer.current = window.setTimeout(() => setWrong(false), 1600);
+    timer.current = window.setTimeout(() => setWrong(false), 3200);
   };
 
   const reiniciar = () => {
@@ -378,7 +378,7 @@ function PuzzleClasificar({ variant, lang, frases = [], columnas = ['', ''] }: P
     setMal(i);
     setAviso('wrong');
     sonar('error');
-    timer.current = window.setTimeout(() => setMal(null), 700);
+    timer.current = window.setTimeout(() => setMal(null), 1400);
   };
 
   const elegir = (i: number) => {
@@ -572,7 +572,7 @@ function PuzzleEmparejar({ variant, lang }: Props) {
     setMal([j, p]);
     setAviso('wrong');
     sonar('error');
-    timer.current = window.setTimeout(() => setMal(null), 700);
+    timer.current = window.setTimeout(() => setMal(null), 1400);
   };
 
   /* Se puede empezar por cualquiera de los dos lados. */

@@ -8,6 +8,18 @@ interface Props {
   lang: Lang;
 }
 
+/**
+ * Tiempos de la intro, en ms. Se dimensionan por lectura, no por efecto: el
+ * cierre de la larga tiene 16 palabras y necesita unos cuatro segundos quieto
+ * en pantalla; el título de la corta, unos dos. Es la misma en móvil y en
+ * escritorio: se lee igual de rápido en las dos pantallas. Clic, cualquier
+ * tecla o «Saltar» la cierran antes.
+ */
+const TIEMPO = {
+  largo: { total: 9400, fundido: 1100 },
+  corto: { total: 3400, fundido: 900 },
+} as const;
+
 const prefersReducedMotion = (): boolean => {
   try {
     return (
@@ -49,10 +61,7 @@ export default function Intro({ variant, lang }: Props) {
       window.dispatchEvent(new CustomEvent('em-intro-done', { detail: { variant } }));
     };
 
-    /* En móvil la intro larga baja a ~3s. */
-    const narrow = window.innerWidth < 900;
-    const ms = long ? (narrow ? 3000 : 5400) : 1900;
-    const timer = window.setTimeout(release, ms);
+    const timer = window.setTimeout(release, (long ? TIEMPO.largo : TIEMPO.corto).total);
     const onKey = () => release();
     window.addEventListener('keydown', onKey);
 
@@ -65,7 +74,7 @@ export default function Intro({ variant, lang }: Props) {
 
   if (!showing) return null;
 
-  const dur = long ? '5.4s' : '1.9s';
+  const tiempo = long ? TIEMPO.largo : TIEMPO.corto;
   const hue = 'hue' in c ? c.hue : '#22D3EE';
 
   const dismiss = () => {
@@ -77,7 +86,14 @@ export default function Intro({ variant, lang }: Props) {
   return (
     <div
       class="intro-veil"
-      style={{ '--dur': dur, '--hue': hue } as Record<string, string>}
+      style={
+        {
+          '--dur': `${tiempo.total}ms`,
+          '--fundido': `${tiempo.fundido}ms`,
+          '--sosten': `${tiempo.total - tiempo.fundido}ms`,
+          '--hue': hue,
+        } as Record<string, string>
+      }
       onClick={dismiss}
     >
       {long ? (
@@ -99,7 +115,7 @@ export default function Intro({ variant, lang }: Props) {
                   class="intro-beat"
                   style={{
                     color: BEAT_HUES[i % 3],
-                    animationDelay: `${(2.1 + i * 0.42).toFixed(2)}s`,
+                    animationDelay: `${(2.6 + i * 0.5).toFixed(2)}s`,
                   }}
                 >
                   {word}
@@ -134,9 +150,11 @@ export default function Intro({ variant, lang }: Props) {
           overflow: hidden;
           background: var(--bg);
           cursor: pointer;
-          animation: introVeil var(--dur) ease both;
+          /* Se sostiene opaca y solo al final se funde: el texto no empieza a
+             desaparecer mientras todavía se está leyendo. */
+          animation: introVeil var(--fundido) ease var(--sosten) both;
         }
-        @keyframes introVeil { 0%, 72% { opacity: 1; } 100% { opacity: 0; } }
+        @keyframes introVeil { from { opacity: 1; } to { opacity: 0; } }
 
         .intro-halo {
           position: absolute;
@@ -145,7 +163,7 @@ export default function Intro({ variant, lang }: Props) {
           border-radius: var(--r-pill);
           pointer-events: none;
           background: radial-gradient(circle, var(--mind-22) 0%, transparent 66%);
-          animation: introHalo 5s ease-out both;
+          animation: introHalo var(--dur) ease-out both;
         }
         @keyframes introHalo {
           0% { transform: scale(.6); opacity: 0; }
@@ -183,7 +201,7 @@ export default function Intro({ variant, lang }: Props) {
           text-transform: uppercase;
           color: var(--clarity);
           margin-top: 22px;
-          animation: introRise .8s ease .3s both;
+          animation: introRise .7s ease .2s both;
         }
         .intro-kicker--short {
           margin-top: 0;
@@ -202,7 +220,7 @@ export default function Intro({ variant, lang }: Props) {
           text-transform: uppercase;
           color: var(--text);
           margin-top: 12px;
-          animation: introRise .8s ease .6s both;
+          animation: introRise .7s ease .45s both;
         }
 
         .intro-rule {
@@ -211,7 +229,7 @@ export default function Intro({ variant, lang }: Props) {
           background: var(--line-strong);
           margin-top: 22px;
           transform-origin: center;
-          animation: introLine .9s cubic-bezier(.2, .7, .3, 1) 1s both;
+          animation: introLine .8s cubic-bezier(.2, .7, .3, 1) .8s both;
         }
         @keyframes introLine { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
@@ -223,7 +241,7 @@ export default function Intro({ variant, lang }: Props) {
           color: var(--text);
           margin-top: 26px;
           max-width: 760px;
-          animation: introRise 1s ease 1.35s both;
+          animation: introRise .9s ease 1.1s both;
         }
 
         .intro-beats {
@@ -237,7 +255,7 @@ export default function Intro({ variant, lang }: Props) {
           font-size: 19px;
           font-weight: var(--fw-regular);
           letter-spacing: -0.01em;
-          animation: introOut 1.5s ease both;
+          animation: introOut 2s ease both;
         }
         @keyframes introOut {
           0% { opacity: 0; transform: translate3d(0, 10px, 0); }
@@ -252,7 +270,9 @@ export default function Intro({ variant, lang }: Props) {
           color: var(--dim);
           margin-top: 30px;
           max-width: 520px;
-          animation: introRise 1s ease 3.5s both;
+          /* Entra a los 3.6s y queda completa a los 4.5s: unos cuatro segundos
+             quieta antes del fundido. */
+          animation: introRise .9s ease 3.6s both;
         }
 
         .intro-wipe {
@@ -263,11 +283,11 @@ export default function Intro({ variant, lang }: Props) {
             color-mix(in srgb, var(--hue) 18%, #080b16) 0%,
             #080b16 62%
           );
-          animation: introWipe 1.9s var(--ease-sweep) both;
+          animation: introWipe var(--dur) var(--ease-sweep) both;
         }
         @keyframes introWipe {
           0% { transform: translate3d(-101%, 0, 0); }
-          46% { transform: none; }
+          26%, 70% { transform: none; }
           100% { transform: translate3d(101%, 0, 0); }
         }
 
@@ -275,12 +295,13 @@ export default function Intro({ variant, lang }: Props) {
           position: relative;
           text-align: center;
           padding: 0 32px;
-          animation: introRush 1.7s var(--ease-enter) both;
+          animation: introRush var(--dur) var(--ease-enter) both;
         }
+        /* Entra en medio segundo y se queda quieta unos dos para leer el título. */
         @keyframes introRush {
           0% { opacity: 0; transform: scale(1.5); }
-          30% { opacity: 1; transform: scale(1); }
-          72% { opacity: 1; transform: scale(1); }
+          15% { opacity: 1; transform: scale(1); }
+          80% { opacity: 1; transform: scale(1); }
           100% { opacity: 0; transform: scale(.9); }
         }
 
