@@ -78,32 +78,14 @@ const favicon = withBase('/favicon.svg');
       Modo, idioma y movimiento se aplican antes del primer pintado. Sin esto,
       quien guardó "explorar" vería un parpadeo del modo por defecto al cargar.
     */}
-    <script is:inline define:vars={{ KEYS, DEFAULTS, PERFIL: profile }}>
-      var root = document.documentElement;
+    <script is:inline define:vars={{ KEYS, DEFAULTS }}>
       try {
+        var root = document.documentElement;
         var mode = localStorage.getItem(KEYS.mode);
         root.dataset.mode = mode === 'grano' || mode === 'explorar' ? mode : DEFAULTS.mode;
         if (localStorage.getItem('em-motion') === 'off') root.dataset.motion = 'off';
       } catch (e) {
         /* almacenamiento bloqueado: se queda con los valores por defecto */
-      }
-      /* Atajo Shift + Alt + P: el perfil elegido sigue al navegar en esta
-         pestaña, y al recargar vuelve el de la URL. Si esta página tiene que
-         mostrar el otro, sus textos de perfil se ocultan hasta que llegan, para
-         que no se vea un parpadeo del perfil de la URL. */
-      try {
-        var nav = performance.getEntriesByType('navigation')[0];
-        if (nav && nav.type === 'reload') sessionStorage.removeItem('em-perfil');
-        var visto = sessionStorage.getItem('em-perfil');
-        if (visto && visto !== PERFIL) {
-          root.setAttribute('data-pv-pendiente', '');
-          /* Red de seguridad: si el otro perfil no llega, vuelve el de la URL. */
-          setTimeout(function () {
-            root.removeAttribute('data-pv-pendiente');
-          }, 2500);
-        }
-      } catch (e) {
-        /* sin almacenamiento de sesión: cada página muestra el perfil de su URL */
       }
     </script>
   </head>
@@ -150,98 +132,56 @@ const favicon = withBase('/favicon.svg');
     </script>
 
     {/*
-      Atajo privado Shift + Alt + P: alterna entre perfiles en esta pestaña,
-      para mostrar una u otra versión en una entrevista sin cambiar la URL.
-      Sin indicador. El perfil elegido se mantiene al navegar dentro de la
-      pestaña (sessionStorage) y al recargar vuelve el perfil de la URL.
-      Trae la misma página del otro perfil y cambia solo lo marcado con
-      data-pv (textos, chips y CV); las islas interactivas no se tocan.
-      No es un mecanismo de seguridad: el HTML de las dos versiones es público.
+      Atajo privado Shift + Alt + P: abre esta misma página en el otro perfil
+      (/x ↔ /ux/x). La URL es la única que decide qué perfil se ve: lo que hay
+      en pantalla y lo que se copia de la barra de direcciones siempre
+      coinciden, y al seguir navegando se sigue en ese perfil. Sin indicador.
+      No es un mecanismo de seguridad: las dos versiones son públicas.
     */}
     <script>
       const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-      const CLAVE = 'em-perfil';
-
-      const resto = location.pathname.slice(base.length);
-      const enUx = resto === '/ux' || resto.startsWith('/ux/');
-      const propioPerfil = enUx ? 'ux' : 'ba';
-      const otroPerfil = enUx ? 'ba' : 'ux';
+      const ALTURA = 'em-altura-perfil';
 
       /** La misma página en el otro perfil: /x ↔ /ux/x. */
-      const otraRuta = () => base + (enUx ? resto.slice(3) || '/' : '/ux' + resto);
-
-      const leer = (): string | null => {
-        try {
-          return sessionStorage.getItem(CLAVE);
-        } catch {
-          return null;
-        }
-      };
-      const guardar = (perfil: string) => {
-        try {
-          sessionStorage.setItem(CLAVE, perfil);
-        } catch {
-          /* sin almacenamiento: el cambio vale solo para esta página */
-        }
+      const otraRuta = () => {
+        const resto = location.pathname.slice(base.length);
+        const enUx = resto === '/ux' || resto.startsWith('/ux/');
+        return base + (enUx ? resto.slice(3) || '/' : '/ux' + resto);
       };
 
-      type Foto = Map<string, string>;
-      const fotografiar = (doc: Document): Foto => {
-        const m: Foto = new Map([['__title', doc.title]]);
-        doc.querySelectorAll<HTMLElement>('[data-pv]').forEach((el) => {
-          m.set(el.dataset.pv ?? '', el.innerHTML);
-        });
-        return m;
-      };
-      const aplicar = (m: Foto) => {
-        document.querySelectorAll<HTMLElement>('[data-pv]').forEach((el) => {
-          const html = m.get(el.dataset.pv ?? '');
-          if (html !== undefined) el.innerHTML = html;
-        });
-        document.title = m.get('__title') ?? document.title;
-      };
+      /* Al llegar desde el atajo se vuelve a la altura en la que se estaba:
+         se siente como un cambio de textos, no como abrir otra página. */
+      try {
+        const y = sessionStorage.getItem(ALTURA);
+        sessionStorage.removeItem(ALTURA);
+        if (y !== null) scrollTo({ top: Number(y), behavior: 'instant' });
+      } catch {
+        /* sin almacenamiento de sesión: la página abre arriba */
+      }
 
-      let propia: Foto | null = null;
-      let otra: Foto | null = null;
-      let mostrandoOtra = false;
       let cargando = false;
-
-      const mostrar = async (quiereOtra: boolean) => {
-        if (quiereOtra === mostrandoOtra) return;
-        propia ??= fotografiar(document);
-        if (quiereOtra && !otra) {
-          cargando = true;
-          try {
-            const r = await fetch(otraRuta());
-            if (!r.ok) return;
-            otra = fotografiar(new DOMParser().parseFromString(await r.text(), 'text/html'));
-          } catch {
-            return;
-          } finally {
-            cargando = false;
-          }
-        }
-        mostrandoOtra = quiereOtra;
-        aplicar(quiereOtra && otra ? otra : propia);
-      };
-
       const alternar = async () => {
         if (cargando) return;
-        await mostrar(!mostrandoOtra);
-        guardar(mostrandoOtra ? otroPerfil : propioPerfil);
+        cargando = true;
+        const destino = otraRuta();
+        try {
+          /* Solo se salta si la página existe en el otro perfil. */
+          const r = await fetch(destino, { method: 'HEAD' });
+          if (!r.ok) return;
+          try {
+            sessionStorage.setItem(ALTURA, String(Math.round(scrollY)));
+          } catch {
+            /* sin almacenamiento de sesión: la otra página abre arriba */
+          }
+          /* `replace`: alternar no deja una entrada por cada cambio en el
+             historial, así que Atrás sigue llevando a la página anterior. */
+          location.replace(destino + location.search + location.hash);
+        } catch {
+          /* sin red: se queda donde está */
+        } finally {
+          cargando = false;
+        }
       };
-
-      /* Al cargar (y al volver con el botón Atrás, que restaura la página tal
-         como quedó) se muestra el perfil que eligió esta pestaña. */
-      const sincronizar = async () => {
-        const visto = leer();
-        await mostrar(visto !== null && visto !== propioPerfil);
-        document.documentElement.removeAttribute('data-pv-pendiente');
-      };
-      void sincronizar();
-      addEventListener('pageshow', (e) => {
-        if (e.persisted) void sincronizar();
-      });
 
       /* En captura: va antes que las teclas del panel, que también usan la P. */
       addEventListener(
