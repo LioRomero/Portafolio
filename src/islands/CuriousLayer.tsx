@@ -39,11 +39,24 @@ const GRAVEDAD = 260;
  * Los tres acentos del sistema, que es lo que el rastro va recorriendo:
  * violeta (pensamiento), cian (claridad) y coral (emoción).
  */
-const EMOCIONES: [number, number, number][] = [
+const EMOCIONES_OSCURO: [number, number, number][] = [
   [139, 123, 240], // --mind
   [34, 211, 238], // --clarity
   [240, 70, 107], // --feel
 ];
+
+/** Los mismos tres acentos en el tema claro de /ux/: los del oscuro casi no se ven sobre papel. */
+const EMOCIONES_CLARO: [number, number, number][] = [
+  [106, 79, 208], // --mind
+  [36, 73, 200], // --clarity
+  [180, 70, 12], // --feel
+];
+
+const temaClaro = (): boolean =>
+  typeof document !== 'undefined' && document.documentElement.dataset.theme === 'claro';
+
+/* El tema no cambia dentro de una página: se lee una vez, al cargar la isla. */
+const EMOCIONES = temaClaro() ? EMOCIONES_CLARO : EMOCIONES_OSCURO;
 
 /** Pasos de color pregenerados: interpolar en cada frame sería tirar CPU. */
 const PASOS_COLOR = 36;
@@ -411,7 +424,9 @@ export default function CuriousLayer({ lang, research }: Props) {
         latido = 0.34 + 1.5 * golpe(0.1) + 0.72 * golpe(0.28);
       }
 
-      cx.globalCompositeOperation = 'lighter';
+      /* Sobre fondo oscuro los trazos se suman como luz; sobre papel eso los
+         blanquearía, así que se superponen como tinta. */
+      cx.globalCompositeOperation = temaClaro() ? 'source-over' : 'lighter';
 
       for (const p of trazos.current) {
         const edad = (ahora - p.nace) / vidaMs;

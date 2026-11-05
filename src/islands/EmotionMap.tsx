@@ -4,7 +4,7 @@ import type { Lang } from '../content/ui';
 
 /**
  * Cinco señales que aparecen en casi todo proyecto. Mantener pulsada una revela
- * la cita original — el dato en bruto detrás de la traducción.
+ * la frase que la resume — construida, no una cita textual.
  *
  * Clases con prefijo `emap-`: los `<style>` de Preact no están encapsulados.
  */

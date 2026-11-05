@@ -24,11 +24,11 @@ export interface Job {
 export const JOBS: Job[] = [
   {
     id: 'qstrauss',
-    dates: 'Abr 2026 — Actualidad',
-    datesEn: 'Apr 2026 — Present',
-    org: 'QStrauss Consulting · Code and Theory Network (Stagwell)',
-    title: 'Technical Architect / Business Analyst',
-    titleEn: 'Technical Architect / Business Analyst',
+    dates: 'Abr 2026 — Nov 2026',
+    datesEn: 'Apr 2026 — Nov 2026',
+    org: 'QStrauss Consulting',
+    title: 'Technical Architect',
+    titleEn: 'Technical Architect',
     lede: 'Lidero la consultoría técnica sobre implementaciones de Adobe Workfront para clientes enterprise de retail, banca y consumo masivo.',
     ledeEn:
       'I lead the technical consulting on Adobe Workfront implementations for enterprise clients across retail, banking and consumer goods.',
@@ -38,7 +38,7 @@ export const JOBS: Job[] = [
       'Construyo la documentación técnica que le permite al equipo del cliente entender su propia instancia y depender menos de nosotros.',
       'Desarrollo Custom Canvas, la herramienta interna de documentación; lideré su auditoría UX/UI completa y el plan de refactorización por fases.',
       'Integro IA (Claude, Gemini, NotebookLM) en los flujos de documentación y análisis para producir entregables más rápido.',
-      'Entrego interfaces, decks de entrenamiento, propuestas comerciales y análisis de riesgo.',
+      'Entrego interfaces, decks de entrenamiento y análisis de riesgo.',
     ],
     bulletsEn: [
       'I diagnose configuration and adoption failures, then design the solution that fixes them — not just the report describing them.',
@@ -46,7 +46,7 @@ export const JOBS: Job[] = [
       'I build the technical documentation that lets client teams understand their own instance and depend less on us.',
       'I develop Custom Canvas, the internal documentation tool; I led its full UX/UI audit and phased refactoring plan.',
       'I integrate AI (Claude, Gemini, NotebookLM) into documentation and analysis workflows to ship deliverables faster.',
-      'I deliver interfaces, training decks, commercial proposals and risk analyses.',
+      'I deliver interfaces, training decks and risk analyses.',
     ],
     note: 'Los nombres de cliente están cubiertos por acuerdos de confidencialidad.',
     noteEn: 'Client names are covered by non-disclosure agreements.',
@@ -57,8 +57,8 @@ export const JOBS: Job[] = [
     datesEn: 'Jun 2025 — Apr 2026',
     org: 'Ropofy · SaaS B2B (CRM y automatización)',
     orgEn: 'Ropofy · B2B SaaS (CRM and automation)',
-    title: 'Consultor UX / Business Analyst',
-    titleEn: 'UX Consultant / Business Analyst',
+    title: 'Jr UX Consultant / UX Designer',
+    titleEn: 'Jr UX Consultant / UX Designer',
     lede: 'Dos frentes a la vez: la cartera de clientes y el sitio del producto.',
     ledeEn: 'Two fronts at once: the client portfolio and the product website.',
     bullets: [

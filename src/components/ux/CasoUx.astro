@@ -1,0 +1,1090 @@
+---
+/**
+ * Página de caso del perfil UX (/ux/casos/*) · diseño v3
+ * (design-reference/Caso Ropofy, Caso BID y Caso Enterprise .dc.html).
+ *
+ * Abre con el resultado (la ficha de 30 segundos) y después cuenta el caso en
+ * siete secciones, con un índice lateral fijo en pantallas anchas. Explorar
+ * añade la nota de diseño y la radiografía (tecla X) le quita el porqué.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CabeceraUx from './CabeceraUx.astro';
+import PieUx from './PieUx.astro';
+import Intro from '../../islands/Intro.tsx';
+import Tutorial from '../../islands/Tutorial.tsx';
+import CuriousLayer from '../../islands/CuriousLayer.tsx';
+import { CASES, CASES_UX, CASES_UX_UI, type CaseKey } from '../../content/cases';
+import { TONO_CASO } from '../../content/home';
+import { CONTACT_EMAIL } from '../../content/canvas';
+import type { Lang } from '../../content/ui';
+import { perfil, rutas } from '../../content/profiles';
+import { withBase, diagrama } from '../../lib/paths';
+
+interface Props {
+  lang: Lang;
+  caseKey: CaseKey;
+}
+
+const { lang, caseKey: key } = Astro.props;
+const d = CASES_UX[key][lang];
+const ui = CASES_UX_UI[lang];
+const tono = TONO_CASO[key];
+const P = perfil('ux', lang);
+const otroLang = lang === 'es' ? 'en' : 'es';
+const otroIdioma = `${rutas('ux', otroLang).cases}/${key}`;
+const siguiente = d.siguiente;
+const tonoSiguiente = TONO_CASO[siguiente.key];
+
+const title = `${CASES[key].tab} — ${lang === 'es' ? 'Caso' : 'Case'} · Emilio Romero`;
+const wa = `https://wa.me/573142543651?text=${encodeURIComponent(d.contacto.wa)}`;
+const correo = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(d.contacto.asunto)}`;
+
+/* Hallazgos, decisiones y aprendizajes son el porqué: la radiografía los quita. */
+const conPorque = new Set([2, 3, 6]);
+---
+
+<BaseLayout
+  title={title}
+  description={d.lede}
+  lang={lang}
+  page="cases"
+  altEs={`${rutas('ux', 'es').cases}/${key}`}
+  altEn={`${rutas('ux', 'en').cases}/${key}`}
+  profile="ux"
+  tema="claro"
+  indexable
+>
+  <CabeceraUx slot="cabecera" lang={lang} variante="caso" otroIdioma={otroIdioma} tono={tono.c} />
+
+  <Intro variant="casos" lang={lang} client:load />
+  <Tutorial lang={lang} delay={2600} perfil="ux" client:idle />
+  <CuriousLayer lang={lang} client:idle />
+
+  <div class="caso" style={`--c:${tono.c};--c-oscuro:${tono.oscuro};--c-tinte:${tono.tinte}`}>
+    {/* --- Portada ------------------------------------------------------ */}
+    <div class="portada">
+      <div class="portada-in">
+        <p class="portada-meta">
+          <span>{d.n}</span>
+          <span aria-hidden="true">·</span>
+          <span>{d.emocion}</span>
+          <span aria-hidden="true">·</span>
+          <span>{d.tag}</span>
+        </p>
+        <h1 class="portada-h1">{d.h1}</h1>
+        <p class="portada-lede">{d.lede}</p>
+      </div>
+    </div>
+
+    {/* --- El caso en 30 segundos -------------------------------------- */}
+    <section class="resumen" aria-label={ui.resumen}>
+      <div class="chips">
+        {d.chips.map((c) => <span class="chip">{c}</span>)}
+      </div>
+      <dl class="ficha">
+        <div class="ficha-celda">
+          <dt>{ui.ficha.rol}</dt>
+          <dd>{d.ficha.rol}</dd>
+        </div>
+        <div class="ficha-celda">
+          <dt>{ui.ficha.decidi}</dt>
+          <dd>{d.ficha.decidi}</dd>
+        </div>
+        <div class="ficha-celda ficha-celda--cambio">
+          <dt>{ui.ficha.cambio}</dt>
+          <dd>{d.ficha.cambio}</dd>
+        </div>
+      </dl>
+      <div class="aportes xray-oculta" aria-label={ui.aporte} role="group">
+        <div class="tarjeta">
+          <p class="etiqueta etiqueta--caso">{ui.masAlla}</p>
+          <p class="tarjeta-texto">{d.masAlla}</p>
+        </div>
+        <div class="tarjeta">
+          <p class="etiqueta etiqueta--caso">{ui.adopcion}</p>
+          <p class="tarjeta-texto">{d.adopcion}</p>
+        </div>
+      </div>
+      <p class="nota-diseno" data-playful><b>{ui.nota}</b> {d.nota}</p>
+      {/* Radiografía (tecla X): así queda el caso sin el porqué. */}
+      <p class="xray-note">{d.radiografia}</p>
+    </section>
+
+    <div class="cuerpo">
+      <nav class="riel" aria-label={ui.enPagina}>
+        <p class="etiqueta riel-titulo">{ui.enPagina}</p>
+        {
+          ui.rail.map((r, i) => (
+            <a href={`#s${i + 1}`} class={conPorque.has(i) ? 'riel-link xray-oculta' : 'riel-link'} data-riel={i + 1}>
+              <span class="riel-punto" aria-hidden="true" />
+              {r}
+            </a>
+          ))
+        }
+      </nav>
+
+      <article class="texto">
+        {/* 01 · El encargo */}
+        <section id="s1" class="bloque" aria-labelledby="s1-t">
+          <p class="kicker">{ui.kickers[0]}</p>
+          <h2 id="s1-t" class="h2">{d.s1.h2}</h2>
+          {d.s1.ps.map((p) => <p class="parrafo">{p}</p>)}
+          <div class="pidieron">
+            <blockquote class="cita-caja">
+              <p class="etiqueta">{ui.pidieron}</p>
+              <p class="cita-serif">{d.s1.pidieron}</p>
+            </blockquote>
+            <blockquote class="cita-caja cita-caja--real">
+              <p class="etiqueta">{ui.real}</p>
+              <p class="cita-serif">{d.s1.real}</p>
+            </blockquote>
+          </div>
+        </section>
+
+        {/* 02 · Investigación */}
+        <section id="s2" class="bloque" aria-labelledby="s2-t">
+          <p class="kicker">{ui.kickers[1]}</p>
+          <h2 id="s2-t" class="h2">{d.s2.h2}</h2>
+          <p class="parrafo">{d.s2.p}</p>
+          <dl class="cifras">
+            {
+              d.s2.stats.map(([n, l]) => (
+                <div class="cifra">
+                  <dt class="cifra-n">{n}</dt>
+                  <dd class="cifra-l">{l}</dd>
+                </div>
+              ))
+            }
+          </dl>
+          <div class="preguntas">
+            <p class="etiqueta etiqueta--caso">{ui.preguntas}</p>
+            <ul class="lista">
+              {d.s2.preguntas.map((q) => <li>{q}</li>)}
+            </ul>
+          </div>
+          <p class="aparte">{d.s2.nota}</p>
+        </section>
+
+        {/* 03 · Hallazgos */}
+        <section id="s3" class="bloque xray-oculta" aria-labelledby="s3-t">
+          <p class="kicker">{ui.kickers[2]}</p>
+          <h2 id="s3-t" class="h2">{d.s3.h2}</h2>
+          <div class="hallazgos">
+            {
+              d.s3.hallazgos.map((h) => (
+                <div class="hallazgo">
+                  <p class="etiqueta etiqueta--caso">{h.tag}</p>
+                  <h3 class="h3">{h.h3}</h3>
+                  <p class="hallazgo-p">{h.p}</p>
+                  {h.cita && <blockquote class="hallazgo-cita">{h.cita}</blockquote>}
+                  {h.aviso && <p class="aparte aparte--chico">{h.aviso}</p>}
+                </div>
+              ))
+            }
+          </div>
+        </section>
+
+        {/* 04 · Decisiones */}
+        <section id="s4" class="bloque xray-oculta" aria-labelledby="s4-t">
+          <p class="kicker">{ui.kickers[3]}</p>
+          <h2 id="s4-t" class="h2">{d.s4.h2}</h2>
+          <ol class="decisiones">
+            {
+              d.s4.decisiones.map(([titulo, texto], i) => (
+                <li class="decision">
+                  <span class="decision-n">{i + 1}</span>
+                  <div class="decision-cuerpo">
+                    <h3 class="decision-t">{titulo}</h3>
+                    <p class="decision-x">{texto}</p>
+                  </div>
+                </li>
+              ))
+            }
+            {
+              d.s4.descarte && (
+                <li class="decision decision--descarte">
+                  <span class="decision-n">×</span>
+                  <div class="decision-cuerpo">
+                    <h3 class="decision-t">{d.s4.descarte[0]}</h3>
+                    <p class="decision-x">{d.s4.descarte[1]}</p>
+                  </div>
+                </li>
+              )
+            }
+          </ol>
+        </section>
+
+        {/* 05 · La solución */}
+        <section id="s5" class="bloque" aria-labelledby="s5-t">
+          <p class="kicker">{ui.kickers[4]}</p>
+          <h2 id="s5-t" class="h2">{ui.comoQuedo}</h2>
+          {
+            d.s5.flujo && (
+              <div class="flujo-caja">
+                <p class="etiqueta etiqueta--caso">{d.s5.flujo.label}</p>
+                <ol class="flujo" aria-label={d.s5.flujo.aria}>
+                  {d.s5.flujo.pasos.map((p, i) => (
+                    <>
+                      {i > 0 && (
+                        <li class="flujo-flecha" aria-hidden="true">
+                          →
+                        </li>
+                      )}
+                      <li class={i === 1 ? 'flujo-paso flujo-paso--centro' : 'flujo-paso'}>{p}</li>
+                    </>
+                  ))}
+                </ol>
+              </div>
+            )
+          }
+          {
+            d.s5.compara && (
+              <div class="flujo-caja">
+                <p class="etiqueta etiqueta--caso">{d.s5.compara.label}</p>
+                <ul class="compara">
+                  {d.s5.compara.items.map(([b, x]) => (
+                    <li class="compara-item">
+                      <b>{b}</b>
+                      <span>{x}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
+          }
+          {
+            d.s5.figura && (
+              <figure class="figura">
+                <img
+                  src={diagrama(d.s5.figura.src, lang)}
+                  alt={d.s5.figura.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class={key === 'ropofy' ? 'figura-img figura-img--blanca' : 'figura-img'}
+                />
+                <figcaption>
+                  <b>{ui.enPalabras}</b> {d.s5.figura.cap}
+                </figcaption>
+              </figure>
+            )
+          }
+          {
+            d.s5.certificado && (
+              <div class="certificado">
+                <img
+                  src={withBase('/assets/casos/bid-certificado.jpg')}
+                  alt={d.s5.certificado.alt}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <p>{d.s5.certificado.cap}</p>
+              </div>
+            )
+          }
+          {d.s5.nda && <p class="aparte">{d.s5.nda}</p>}
+        </section>
+
+        {/* 06 · Resultado */}
+        <section id="s6" class="bloque" aria-labelledby="s6-t">
+          <p class="kicker">{ui.kickers[5]}</p>
+          <h2 id="s6-t" class="h2">{ui.loQueCambio}</h2>
+          <div class="resultado">
+            <p class="resultado-grande">{d.s6.grande}</p>
+            <p class="resultado-p">{d.s6.p}</p>
+          </div>
+          <p class="parrafo">{d.s6.extra}</p>
+        </section>
+
+        {/* 07 · Qué me dejó */}
+        <section id="s7" class="bloque xray-oculta" aria-labelledby="s7-t">
+          <p class="kicker">{ui.kickers[6]}</p>
+          <h2 id="s7-t" class="h2">{ui.meLlevo}</h2>
+          <div class="aprendizajes">
+            <div class="tarjeta">
+              <p class="etiqueta etiqueta--caso">{ui.aprendi}</p>
+              <p class="tarjeta-texto">{d.s7.aprendi}</p>
+            </div>
+            <div class="tarjeta">
+              <p class="etiqueta etiqueta--caso">{ui.distinto}</p>
+              <p class="tarjeta-texto">{d.s7.distinto}</p>
+            </div>
+          </div>
+        </section>
+      </article>
+    </div>
+  </div>
+
+  {/* --- Contacto y siguiente caso -------------------------------------- */}
+  <section id="contacto" class="cta" aria-labelledby="cta-t">
+    <div class="cta-in">
+      <div class="cta-col">
+        <h2 id="cta-t" class="cta-h2">{ui.cta.titulo}</h2>
+        <p class="cta-sub">{ui.cta.sub}</p>
+        <div class="cta-botones">
+          <a class="boton-claro" href={wa} target="_blank" rel="noopener">{ui.cta.wa}</a>
+          <a class="boton-borde" href={correo}>{ui.cta.correo}</a>
+        </div>
+      </div>
+      <a class="siguiente" href={withBase(`${P.rutas.cases}/${siguiente.key}`)} style={`background:${tonoSiguiente.c}`}>
+        <span class="siguiente-label">{siguiente.label}</span>
+        <span class="siguiente-titulo">{siguiente.titulo}</span>
+      </a>
+    </div>
+  </section>
+
+  <PieUx slot="pie" lang={lang} variante="pagina" otroIdioma={otroIdioma} />
+</BaseLayout>
+
+<script>
+  /* Índice lateral: marca la sección que se está leyendo y las ya leídas. */
+  const enlaces = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-riel]'));
+  const secciones = enlaces.map((a) => document.getElementById(`s${a.dataset.riel}`));
+  let pendiente = false;
+  const marcar = () => {
+    pendiente = false;
+    let actual = 0;
+    secciones.forEach((s, i) => {
+      if (s && s.offsetParent !== null && s.getBoundingClientRect().top < innerHeight * 0.35) actual = i;
+    });
+    enlaces.forEach((a, i) => {
+      a.toggleAttribute('data-leida', i < actual);
+      if (i === actual) a.setAttribute('aria-current', 'location');
+      else a.removeAttribute('aria-current');
+    });
+  };
+  addEventListener(
+    'scroll',
+    () => {
+      if (!pendiente) {
+        pendiente = true;
+        requestAnimationFrame(marcar);
+      }
+    },
+    { passive: true }
+  );
+  marcar();
+</script>
+
+<style>
+  .etiqueta {
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+  }
+
+  .etiqueta--caso {
+    color: var(--c-oscuro);
+  }
+
+  .lista {
+    padding-left: 20px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 16.5px;
+    line-height: 1.55;
+  }
+
+  /* --- Portada ------------------------------------------------------------ */
+  .portada {
+    background: var(--c);
+    color: #ffffff;
+  }
+
+  .portada-in {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(40px, 7vw, 88px) clamp(20px, 4vw, 40px) clamp(36px, 5vw, 64px);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .portada-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .portada-h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(40px, 6.4vw, 84px);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    max-width: 1000px;
+    text-wrap: balance;
+  }
+
+  .portada-lede {
+    font-size: clamp(17px, 1.7vw, 21px);
+    line-height: 1.55;
+    max-width: 760px;
+    text-wrap: pretty;
+  }
+
+  /* --- Resumen ------------------------------------------------------------ */
+  .resumen {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(28px, 4vw, 44px) clamp(20px, 4vw, 40px) 0;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+    font-size: 13.5px;
+    font-weight: 500;
+  }
+
+  .chip {
+    padding: 7px 12px;
+    border-radius: 10px;
+    background: #ffffff;
+    border: 1px solid var(--line);
+    line-height: 1.4;
+  }
+
+  /* Tres columnas o una: con auto-fit, entre 520 y 780 px quedaban dos y la
+     tercera sola debajo, con un hueco al lado. */
+  .ficha {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .ficha-celda {
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-right: 1px solid #e8e4da;
+  }
+
+  .ficha-celda dt {
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+  }
+
+  .ficha-celda dd {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .ficha-celda--cambio {
+    background: var(--c-tinte);
+    border-right: 0;
+  }
+
+  .ficha-celda--cambio dt {
+    color: var(--c-oscuro);
+  }
+
+  @media (max-width: 760px) {
+    .ficha {
+      grid-template-columns: 1fr;
+    }
+
+    .ficha-celda {
+      border-right: 0;
+      border-bottom: 1px solid #e8e4da;
+    }
+
+    .ficha-celda--cambio {
+      border-bottom: 0;
+    }
+  }
+
+  .aportes,
+  .aprendizajes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: 14px;
+  }
+
+  .aportes {
+    margin-top: 14px;
+  }
+
+  .tarjeta {
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .tarjeta-texto {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .nota-diseno {
+    margin-top: 14px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: var(--mind-deep);
+    color: var(--on-mind);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .nota-diseno b {
+    font-weight: 600;
+  }
+
+  .xray-note {
+    display: none;
+    margin-top: 14px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: var(--feel-deep);
+    color: var(--on-feel);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  :global(html[data-xray]) .xray-note {
+    display: block;
+  }
+
+  :global(html[data-xray]) .xray-oculta {
+    display: none;
+  }
+
+  /* --- Cuerpo con índice lateral ----------------------------------------- */
+  .cuerpo {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(24px, 4vw, 40px) clamp(20px, 4vw, 40px) 0;
+    display: flex;
+    gap: 56px;
+    align-items: flex-start;
+  }
+
+  .riel {
+    position: sticky;
+    top: 96px;
+    flex: 0 0 190px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-top: 44px;
+  }
+
+  .riel-titulo {
+    margin-bottom: 8px;
+  }
+
+  .riel-link {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    min-height: 36px;
+    font-size: 14px;
+    color: var(--dimmer);
+  }
+
+  .riel-link:hover {
+    color: var(--text);
+  }
+
+  .riel-punto {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--r-pill);
+    flex: none;
+    background: var(--line);
+  }
+
+  .riel-link[data-leida] .riel-punto {
+    background: #8f8a7d;
+  }
+
+  .riel-link[aria-current] {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .riel-link[aria-current] .riel-punto {
+    background: var(--c);
+  }
+
+  /* Por debajo de 960px el índice no cabe al lado del texto y no aporta
+     nada encima: la página se lee de corrido. */
+  @media (max-width: 959px) {
+    .riel {
+      display: none;
+    }
+  }
+
+  .texto {
+    flex: 1 1 560px;
+    min-width: 0;
+    max-width: 780px;
+  }
+
+  .bloque {
+    padding: clamp(40px, 6vw, 64px) 0;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .kicker {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+  }
+
+  .h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(30px, 3.6vw, 44px);
+    line-height: 1.08;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .h3 {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0;
+  }
+
+  .parrafo {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--dim);
+    text-wrap: pretty;
+  }
+
+  .aparte {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--dimmer);
+  }
+
+  .aparte--chico {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .pidieron {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: 14px;
+    margin-top: 6px;
+  }
+
+  .cita-caja {
+    margin: 0;
+    padding: 22px;
+    border-radius: 14px;
+    background: #ffffff;
+    border: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .cita-caja--real {
+    background: var(--c);
+    border-color: var(--c);
+    color: #ffffff;
+  }
+
+  .cita-caja--real .etiqueta {
+    color: #ffffff;
+  }
+
+  .cita-serif {
+    font-family: var(--serif);
+    font-size: 24px;
+    line-height: 1.25;
+  }
+
+  .cifras {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    gap: 20px;
+    border-top: 1.5px solid var(--text);
+    padding-top: 18px;
+  }
+
+  .cifra {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .cifra-n {
+    font-family: var(--serif);
+    font-size: clamp(36px, 4vw, 48px);
+    line-height: 1;
+    color: var(--c);
+  }
+
+  .cifra-l {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--dim);
+  }
+
+  .preguntas {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 6px;
+  }
+
+  .hallazgos {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .hallazgo {
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--c);
+    border-radius: 4px 14px 14px 4px;
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .hallazgo-p {
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--dim);
+  }
+
+  .hallazgo-cita {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: 24px;
+    line-height: 1.25;
+    padding-left: 14px;
+    border-left: 2px solid var(--line-strong);
+  }
+
+  .decisiones {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .decision {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 14px;
+    padding: 18px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .decision--descarte {
+    margin-top: 8px;
+    padding: 18px 16px;
+    border-top: 0;
+    border-radius: 12px;
+    background: var(--surface-2);
+  }
+
+  .decision-n {
+    font-family: var(--serif);
+    font-size: 32px;
+    line-height: 1;
+    color: var(--c);
+  }
+
+  .decision--descarte .decision-n {
+    color: var(--dimmer);
+  }
+
+  .decision-cuerpo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .decision-t {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: 0;
+  }
+
+  .decision-x {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--dim);
+  }
+
+  .flujo-caja {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .flujo {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .flujo-paso {
+    padding: 10px 14px;
+    border: 1.5px solid var(--line-strong);
+    border-radius: 10px;
+    background: #ffffff;
+  }
+
+  .flujo-paso--centro {
+    background: var(--c);
+    border-color: var(--c);
+    color: #ffffff;
+  }
+
+  .flujo-flecha {
+    color: var(--c);
+  }
+
+  .compara {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+    gap: 10px;
+  }
+
+  .compara-item {
+    padding: 16px 18px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--dim);
+  }
+
+  .compara-item b {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--c-oscuro);
+  }
+
+  .figura {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .figura-img {
+    width: 100%;
+    height: auto;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+  }
+
+  .figura-img--blanca {
+    background: #ffffff;
+  }
+
+  .figura figcaption {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--dim);
+  }
+
+  .figura b {
+    font-weight: 600;
+  }
+
+  .certificado {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .certificado img {
+    width: 120px;
+    height: auto;
+    flex: none;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+  }
+
+  .certificado p {
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--dimmer);
+  }
+
+  .resultado {
+    border-radius: 18px;
+    background: var(--c-tinte);
+    padding: clamp(24px, 4vw, 36px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .resultado-grande {
+    font-family: var(--serif);
+    font-size: clamp(44px, 6vw, 72px);
+    line-height: 1;
+    color: var(--c-oscuro);
+  }
+
+  .resultado-p {
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  /* --- Contacto y siguiente caso ----------------------------------------- */
+  .cta {
+    margin-top: clamp(40px, 6vw, 72px);
+    background: var(--tinta);
+    color: var(--sobre-tinta);
+  }
+
+  .cta :focus-visible {
+    outline-color: var(--sobre-tinta);
+  }
+
+  .cta-in {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(56px, 8vw, 96px) clamp(20px, 4vw, 40px);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+    gap: 36px 56px;
+    align-items: end;
+  }
+
+  .cta-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .cta-h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(34px, 4.6vw, 60px);
+    line-height: 1.04;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .cta-sub {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--sobre-tinta-dim);
+  }
+
+  .cta-botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 6px;
+  }
+
+  .boton-claro,
+  .boton-borde {
+    display: inline-flex;
+    align-items: center;
+    min-height: 52px;
+    padding: 0 22px;
+    border-radius: 12px;
+    font-size: 16px;
+  }
+
+  .boton-claro {
+    background: var(--sobre-tinta);
+    color: var(--tinta);
+    font-weight: 600;
+  }
+
+  .boton-claro:hover {
+    background: #ffffff;
+    color: var(--tinta);
+  }
+
+  .boton-borde {
+    border: 1.5px solid var(--sobre-tinta);
+    color: var(--sobre-tinta);
+    font-weight: 500;
+  }
+
+  .boton-borde:hover {
+    background: #2c2f37;
+    color: #ffffff;
+  }
+
+  .siguiente {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 26px;
+    border-radius: 18px;
+    color: #ffffff;
+    transition: transform var(--dur-hover) var(--ease-hover);
+  }
+
+  .siguiente:hover {
+    color: #ffffff;
+    transform: translateY(-2px);
+  }
+
+  .siguiente-label {
+    font-size: 13.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .siguiente-titulo {
+    font-family: var(--serif);
+    font-size: clamp(28px, 3vw, 38px);
+    line-height: 1.1;
+  }
+</style>

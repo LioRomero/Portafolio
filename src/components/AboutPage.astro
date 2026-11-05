@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ContactSection from './ContactSection.astro';
+import CabeceraUx from './ux/CabeceraUx.astro';
+import PieUx from './ux/PieUx.astro';
 import Intro from '../islands/Intro.tsx';
 import Tutorial from '../islands/Tutorial.tsx';
 import Puzzle from '../islands/Puzzle.tsx';
@@ -12,7 +14,7 @@ import cyberEntrada from '../images/cybernexo-entrada.png';
 import cyberNiveles from '../images/cybernexo-niveles.png';
 import { ABOUT, JOBS } from '../content/about';
 /* `perfil` ya es la foto; la función del perfil entra con otro nombre. */
-import { perfil as datosDePerfil, type Profile } from '../content/profiles';
+import { perfil as datosDePerfil, rutas, type Profile } from '../content/profiles';
 import type { Lang } from '../content/ui';
 
 interface Props {
@@ -26,11 +28,24 @@ const P = datosDePerfil(profile, lang);
 const es = lang === 'es';
 
 const title = es ? 'Sobre mí — Emilio Romero' : 'About — Emilio Romero';
+
+/* /ux/ no tiene diseño propio de Sobre mí: es esta misma página con la paleta,
+   la cabecera y el pie del diseño v3. */
+const claro = profile === 'ux';
+const otroIdioma = rutas(profile, es ? 'en' : 'es').about;
 ---
 
-<BaseLayout title={title} description={P.aboutDescription ?? P.aboutHook} lang={lang} page="about" profile={profile}>
+<BaseLayout
+  title={title}
+  description={P.aboutDescription ?? P.aboutHook}
+  lang={lang}
+  page="about"
+  profile={profile}
+  tema={claro ? 'claro' : 'oscuro'}
+>
+  {claro && <CabeceraUx slot="cabecera" lang={lang} variante="pagina" otroIdioma={otroIdioma} />}
   <Intro variant="sobre" lang={lang} client:load />
-  <Tutorial lang={lang} delay={2600} client:idle />
+  <Tutorial lang={lang} delay={2600} perfil={profile} client:idle />
   <CuriousLayer lang={lang} client:idle />
 
   {/* --- Encabezado ---------------------------------------------------- */}
@@ -90,28 +105,33 @@ const title = es ? 'Sobre mí — Emilio Romero' : 'About — Emilio Romero';
 
       <ol class="jobs">
         {
-          JOBS.map((j) => (
+          JOBS.map((j) => {
+            /* El perfil puede contar el puesto con sus propias palabras (las de su hoja de vida). */
+            const propio = P.jobDetails?.[j.id];
+            const lede = propio?.lede === undefined ? (es ? j.lede : j.ledeEn) : propio.lede;
+            return (
             <li class="job">
               <div class="job-when meta tabular">{es ? j.dates : j.datesEn}</div>
               <div class="job-body">
                 <h3 class="job-title">{P.jobTitles?.[j.id] ?? (es ? j.title : j.titleEn)}</h3>
-                <p class="job-org">{es ? j.org : (j.orgEn ?? j.org)}</p>
+                <p class="job-org">{propio?.org ?? (es ? j.org : (j.orgEn ?? j.org))}</p>
                 {j.metric && (
                   <p class="job-metric">
                     <span class="job-metric-n tabular">{j.metric.n}</span>
                     <span class="job-metric-l">{es ? j.metric.l : j.metric.lEn}</span>
                   </p>
                 )}
-                <p class="body job-lede">{es ? j.lede : j.ledeEn}</p>
+                {lede && <p class="body job-lede">{lede}</p>}
                 <ul class="bullets">
-                  {(es ? j.bullets : j.bulletsEn).map((b) => (
+                  {(propio?.bullets ?? (es ? j.bullets : j.bulletsEn)).map((b) => (
                     <li>{b}</li>
                   ))}
                 </ul>
                 {j.note && <p class="meta job-note">{es ? j.note : j.noteEn}</p>}
               </div>
             </li>
-          ))
+            );
+          })
         }
       </ol>
 
@@ -235,7 +255,8 @@ const title = es ? 'Sobre mí — Emilio Romero' : 'About — Emilio Romero';
     </div>
   </section>
 
-  <ContactSection lang={lang} title={t.ctaTitle} sub={t.ctaSub} profile={profile} />
+  <ContactSection lang={lang} title={t.ctaTitle} sub={P.contacto?.sobreMiSub ?? t.ctaSub} profile={profile} />
+  {claro && <PieUx slot="pie" lang={lang} variante="pagina" otroIdioma={otroIdioma} />}
 </BaseLayout>
 
 <style>
@@ -313,6 +334,23 @@ const title = es ? 'Sobre mí — Emilio Romero' : 'About — Emilio Romero';
 
   .section-h {
     margin-bottom: 20px;
+  }
+
+  /* Tema claro (/ux/): títulos con la serif del diseño v3. */
+  :global(html[data-theme='claro']) .name,
+  :global(html[data-theme='claro']) .section-h {
+    font-family: var(--serif);
+    font-weight: var(--fw-regular);
+    letter-spacing: 0;
+  }
+
+  :global(html[data-theme='claro']) .name {
+    font-size: clamp(40px, 6vw, 72px);
+    line-height: 1.02;
+  }
+
+  :global(html[data-theme='claro']) .section-h {
+    font-size: clamp(30px, 3.6vw, 44px);
   }
 
   .prose,

@@ -3,6 +3,9 @@ import '@fontsource/inter/latin-300.css';
 import '@fontsource/inter/latin-400.css';
 import '@fontsource/inter/latin-500.css';
 import '@fontsource/inter/latin-600.css';
+/* Solo la usa el tema claro de /ux/; una @font-face sin uso no se descarga. */
+import '@fontsource/instrument-serif/latin-400.css';
+import '@fontsource/instrument-serif/latin-400-italic.css';
 import '../styles/global.css';
 import TopBar from '../components/TopBar.astro';
 import { DEFAULTS, KEYS } from '../lib/prefs';
@@ -22,9 +25,17 @@ interface Props {
   altEn?: string;
   /** Perfil de la página: `ba` en la raíz, `ux` bajo /ux/. */
   profile?: Profile;
+  /**
+   * `claro` es el diseño v3 de /ux/: paleta de papel y cabecera propia, que la
+   * página pone en el slot `cabecera` (y su pie en `pie`). La raíz no lo usa.
+   */
+  tema?: 'oscuro' | 'claro';
+  /** Pide aparecer en buscadores aunque el perfil sea noindex (casos de /ux/). */
+  indexable?: boolean;
 }
 
-const { title, description, lang, page, altEs, altEn, profile = 'ba' } = Astro.props;
+const { title, description, lang, page, altEs, altEn, profile = 'ba', tema = 'oscuro', indexable = false } = Astro.props;
+const claro = tema === 'claro';
 
 /* `Astro.url.pathname` ya incluye el `base`. Se fuerza la barra final para que
    la canónica coincida con lo que sirve GitHub Pages y con el sitemap: si no,
@@ -41,12 +52,27 @@ const alternates = [
   { hreflang: 'x-default', href: new URL(withBase(rutaEs), Astro.site).href },
 ];
 const ogImage = new URL(withBase(PROFILES[profile].ogImage), Astro.site).href;
-const noindex = PROFILES[profile].noindex;
+/* Persona en datos estructurados (JSON-LD), solo en la home y en Sobre mí. Es
+   donde vive el cargo completo para buscadores sin aparecer en la página: en
+   la raíz, "UX Strategist & Business Analyst". */
+const persona =
+  page === 'home' || page === 'about'
+    ? JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: 'Emilio Romero',
+        jobTitle: PROFILES[profile].puesto,
+        url: new URL(withBase(rutas(profile, lang).home), Astro.site).href,
+        address: { '@type': 'PostalAddress', addressLocality: 'Bogotá', addressCountry: 'CO' },
+        sameAs: ['https://www.linkedin.com/in/emilio-romero-gutierrez'],
+      })
+    : null;
+const noindex = PROFILES[profile].noindex && !indexable;
 const favicon = withBase('/favicon.svg');
 ---
 
 <!doctype html>
-<html lang={lang} data-mode={DEFAULTS.mode}>
+<html lang={lang} data-mode={DEFAULTS.mode} data-theme={claro ? 'claro' : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -73,6 +99,7 @@ const favicon = withBase('/favicon.svg');
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    {persona && <script is:inline type="application/ld+json" set:html={persona} />}
 
     {/*
       Modo, idioma y movimiento se aplican antes del primer pintado. Sin esto,
@@ -93,18 +120,22 @@ const favicon = withBase('/favicon.svg');
   <body>
     <a class="skip-link" href="#main">{UI[lang].skipToContent}</a>
 
-    <div id="read-progress" aria-hidden="true"></div>
-
-    <TopBar
-      lang={lang}
-      page={page}
-      profile={profile}
-      otherHref={lang === 'es' ? rutaEn : rutaEs}
-    />
+    {
+      claro ? (
+        <slot name="cabecera" />
+      ) : (
+        <>
+          <div id="read-progress" aria-hidden="true" />
+          <TopBar lang={lang} page={page} profile={profile} otherHref={lang === 'es' ? rutaEn : rutaEs} />
+        </>
+      )
+    }
 
     <main id="main">
       <slot />
     </main>
+
+    <slot name="pie" />
 
     {/* Barra de progreso de lectura: 2px arriba, ancho proporcional al scroll. */}
     <script>

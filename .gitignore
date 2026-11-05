@@ -13,3 +13,6 @@ dist/
 # sí se versiona como respaldo de lo que dice cada caso; los recortes se
 # regeneran con sharp cuando hagan falta.
 assets/figma/_*
+
+# Referencia de diseño (Claude Design): solo para consulta local, no se publica.
+design-reference/

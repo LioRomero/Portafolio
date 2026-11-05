@@ -1,0 +1,82 @@
+/* ==========================================================================
+   Tema claro (/ux/) sobre las islas compartidas
+   Las islas pintan con tokens, así que casi todo cambia solo con la paleta de
+   tokens.css. Aquí va lo poco que traen fijado: colores en línea y tamaños
+   pensados para la barra oscura. Nada de esto aplica a la raíz.
+   ========================================================================== */
+
+/* --- Selector de modo, con las medidas de la Home v3 --------------------- */
+:root[data-theme='claro'] .ms-wrap {
+  gap: 0;
+  border-color: var(--line-strong);
+  background: transparent;
+}
+
+:root[data-theme='claro'] .ms-btn {
+  min-height: 38px;
+  padding: 0 14px;
+  font-size: 13px;
+  letter-spacing: 0;
+  color: var(--dimmer);
+}
+
+:root[data-theme='claro'] .ms-btn:hover {
+  color: var(--text);
+}
+
+:root[data-theme='claro'] .ms-btn--on[data-v='grano'] {
+  background: var(--text);
+  color: #ffffff;
+}
+
+:root[data-theme='claro'] .ms-btn--on[data-v='explorar'] {
+  background: var(--mind);
+  color: #ffffff;
+}
+
+@media (max-width: 900px) {
+  :root[data-theme='claro'] .ms-btn {
+    min-height: 36px;
+    padding: 0 11px;
+    font-size: 12.5px;
+  }
+}
+
+/* --- Intro: los tonos y la letra de la v3 -------------------------------- */
+/* El tono de cada variante y el de los tres verbos llegan en línea, pensados
+   para fondo oscuro; sobre papel el cian no llega al contraste mínimo. */
+:root[data-theme='claro'] .intro-veil {
+  --hue: var(--clarity) !important;
+}
+
+:root[data-theme='claro'] .intro-beat:nth-child(3n + 1) {
+  color: var(--clarity) !important;
+}
+
+:root[data-theme='claro'] .intro-beat:nth-child(3n + 2) {
+  color: var(--mind) !important;
+}
+
+:root[data-theme='claro'] .intro-beat:nth-child(3n) {
+  color: var(--feel) !important;
+}
+
+:root[data-theme='claro'] .intro-headline,
+:root[data-theme='claro'] .intro-short-title {
+  font-family: var(--serif);
+  font-weight: var(--fw-regular);
+  letter-spacing: -0.01em;
+}
+
+/* --- Puzzles: el acento de cada uno, en la paleta clara ------------------ */
+:root[data-theme='claro'] .pz-shell[data-modo='orden'] {
+  --accent: var(--mind) !important;
+}
+
+:root[data-theme='claro'] .pz-shell[data-modo='clasificar'] {
+  --accent: var(--clarity) !important;
+}
+
+:root[data-theme='claro'] .pz-shell[data-modo='emparejar'] {
+  --accent: var(--feel) !important;
+}

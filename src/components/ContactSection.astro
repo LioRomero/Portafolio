@@ -19,6 +19,7 @@ interface Props {
 const { lang, noteIndex, profile = 'ba' } = Astro.props;
 const CV_PDFS = PROFILES[profile].cv;
 const t = HOME[lang];
+const waBody = PROFILES[profile][lang].contacto?.whatsapp ?? t.waBody;
 const title = Astro.props.title ?? t.ctaTitle;
 const sub = Astro.props.sub ?? t.ctaSub;
 ---
@@ -33,7 +34,7 @@ const sub = Astro.props.sub ?? t.ctaSub;
       <a class="card card--wa" href={t.waHref} target="_blank" rel="noopener">
         <div class="label label--clarity">{t.waLabel}</div>
         <div class="channel-title">{t.waTitle}</div>
-        <p class="channel-body">{t.waBody}</p>
+        <p class="channel-body">{waBody}</p>
       </a>
 
       <a class="card" href={`mailto:${CONTACT_EMAIL}?subject=Proyecto%20UX`}>

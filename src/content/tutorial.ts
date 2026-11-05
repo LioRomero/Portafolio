@@ -127,3 +127,34 @@ export const TUTORIAL = {
     ] as TutorialStep[],
   },
 } as const;
+
+/**
+ * Lo que cambia en el tour de /ux/. Allí no hay índice de casos (el
+ * clasificador y el archivador viven junto a los casos de la home) ni modo
+ * investigador: la nota de diseño ya se ve en Explorar. Se reemplazan solo
+ * esos pasos, por posición; los demás se leen de TUTORIAL.
+ */
+export const TUTORIAL_UX: Record<'es' | 'en', Partial<Record<number, Partial<TutorialStep>>>> = {
+  es: {
+    2: {
+      body: 'Cada puzzle juega distinto porque enseña algo distinto: en la home ordenas mi proceso y, junto a los casos, separas lo que pidió el cliente del problema real; en Sobre mí unes cada trabajo con quién estaba del otro lado. Cada uno explica por qué está hecho así. Y junto a los casos hay un archivador de servicio en 3D que se abre capa por capa.',
+    },
+    3: {
+      body: 'En modo Explorar, cada caso muestra una nota de diseño: por qué está contado así. Y hay un botón honesto (tecla X) que apaga los insights y deja solo el “antes y después” — que es como se ve la mayoría de los portafolios.',
+    },
+    6: {
+      body: 'Abajo a la derecha está el Modo curioso (o pulsa ?). Ahí viven todos los interruptores de esta capa, tu progreso de notas, el botón de empezar de nuevo y el sonido de los juegos — que viene encendido y se apaga desde ahí. Atajos: F linterna, P playlist, M movimiento, ? el panel; y en los casos, X radiografía.',
+    },
+  },
+  en: {
+    2: {
+      body: "Each puzzle plays differently because it teaches something different: on the home page you order my process and, next to the cases, you separate what the client asked for from the real problem; on About you match each job with who was on the other side. Each one explains why it's built that way. And next to the cases there's a 3D service cabinet you open layer by layer.",
+    },
+    3: {
+      body: "In Explore mode, each case shows a design note: why it's told the way it is. And there's an honest button (press X) that switches the insights off and leaves only the “before and after” — which is how most portfolios look.",
+    },
+    6: {
+      body: 'Bottom right is Curious mode (or press ?). That’s where every switch in this layer lives, along with your note progress, the start-over button and the game sound — which comes on and turns off right there. Shortcuts: F flashlight, P playlist, M motion, ? the panel; and on the cases, X x-ray.',
+    },
+  },
+};

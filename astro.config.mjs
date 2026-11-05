@@ -28,8 +28,11 @@ export default defineConfig({
     preact({ compat: true }),
     sitemap({
       i18n: { defaultLocale: 'es', locales: { es: 'es-CO', en: 'en' } },
-      // /ux/ lleva noindex: no se anuncia en el sitemap.
-      filter: (page) => !page.includes('/404') && !page.includes('/ux/'),
+      // /ux/ lleva noindex salvo sus páginas de caso, que sí deben aparecer
+      // en Google: solo esas se anuncian.
+      filter: (page) =>
+        !page.includes('/404') &&
+        (!page.includes('/ux/') || /\/ux\/(casos|en\/cases)\/[^/]+\/?$/.test(page)),
     }),
   ],
   i18n: {

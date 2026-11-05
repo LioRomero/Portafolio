@@ -1,4 +1,5 @@
 @import './tokens.css';
+@import './claro.css';
 
 /* ==========================================================================
    Base
@@ -14,6 +15,22 @@ html {
   background: var(--bg);
   color-scheme: dark;
   scroll-behavior: smooth;
+}
+
+/* Tema claro de /ux/: cuerpo en 400, porque el 300 de Inter se adelgaza
+   demasiado sobre papel; la cabecera es fija arriba y el ancla deja su alto. */
+html[data-theme='claro'] {
+  color-scheme: light;
+  scroll-padding-top: 80px;
+}
+
+html[data-theme='claro'] body {
+  font-weight: var(--fw-regular);
+}
+
+html[data-theme='claro'] :focus-visible {
+  outline-width: 3px;
+  outline-offset: 3px;
 }
 
 /* La intro bloquea el scroll poniendo este atributo; debe liberarse siempre. */

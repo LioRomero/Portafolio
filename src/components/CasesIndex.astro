@@ -9,7 +9,7 @@ import CuriousLayer from '../islands/CuriousLayer.tsx';
 import Blueprint3D from '../islands/Blueprint3D.tsx';
 import { CASES, CASES_UI, CASE_ORDER, type CaseKey } from '../content/cases';
 import type { Lang } from '../content/ui';
-import { chipsConRol, perfil, type Profile } from '../content/profiles';
+import { perfil, type Profile } from '../content/profiles';
 import { withBase } from '../lib/paths';
 
 interface Props {
@@ -63,7 +63,7 @@ const frasesPuzzle = CASE_ORDER.flatMap((k) => [
                 <span class="idx-glare" aria-hidden="true"></span>
                 <div class="idx-card-body">
                   <div class="chips">
-                    {chipsConRol(d.chips, P.caseRoles?.[key]).map(([label, kind]) => (
+                    {d.chips.map(([label, kind]) => (
                       <span class={`chip chip--${kind}`}>{label}</span>
                     ))}
                   </div>

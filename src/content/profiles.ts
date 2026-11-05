@@ -2,14 +2,14 @@
  * Perfiles del portafolio.
  *
  * Un solo sitio y dos maneras de presentarlo: `ba` (UX Strategist & Business
- * Analyst) vive en la raíz y `ux` (UX Consultant) bajo /ux/. Aquí va SOLO lo
+ * Analyst) vive en la raíz y `ux` (UX Designer) bajo /ux/. Aquí va SOLO lo
  * que cambia entre perfiles —posicionamiento, énfasis y la hoja de vida que se
- * descarga—. Los casos, el diseño y todo texto compartido existen una sola vez,
- * en su archivo de siempre.
+ * descarga—. Lo compartido (Sobre mí, la trayectoria) existe una sola vez, en
+ * su archivo de siempre. La home y los casos de /ux/ tienen diseño y texto
+ * propios (HOME_UX en home.ts y CASES_UX en cases.ts).
  *
- * Los datos con estructura (títulos de la trayectoria, rol en los chips de un
- * caso, formación) no se copian: el perfil declara solo la diferencia y lo
- * demás se lee de about.ts y cases.ts.
+ * Los datos con estructura (títulos y viñetas de la trayectoria, formación) no
+ * se copian: el perfil declara solo la diferencia y lo demás se lee de about.ts.
  *
  * Cada perfil se genera como páginas estáticas propias, no se pinta con JS: las
  * vistas previas de LinkedIn o WhatsApp no ejecutan scripts, así que el título
@@ -17,7 +17,6 @@
  */
 import { HOME } from './home';
 import { ROUTES, type Lang, type PageKey } from './ui';
-import type { CaseKey } from './cases';
 import type { JobId } from './about';
 
 export type Profile = 'ba' | 'ux';
@@ -66,15 +65,24 @@ interface ProfileText {
   aboutSkills: readonly SkillGroup[];
   /** Títulos de la trayectoria que cambian respecto de about.ts. */
   jobTitles?: Partial<Record<JobId, string>>;
-  /** Título de la tarjeta de un caso en la home, si el perfil lo enfatiza distinto. */
-  caseTitles?: Partial<Record<CaseKey, string>>;
-  /** Rol del chip de un caso, si cambia respecto de cases.ts. */
-  caseRoles?: Partial<Record<CaseKey, string>>;
+  /**
+   * Empresa, entrada y viñetas de la trayectoria cuando el perfil las cuenta
+   * distinto (las de /ux/ salen de su propia hoja de vida). `lede: null`
+   * quita la entrada en vez de heredar la de about.ts.
+   */
+  jobDetails?: Partial<Record<JobId, { org?: string; lede?: string | null; bullets?: readonly string[] }>>;
   /** Formación, si cambia respecto de about.ts. */
   education?: readonly Education[];
+  /** Textos del contacto compartido que cambian en este perfil (el tiempo de respuesta). */
+  contacto?: { sobreMiSub: string; whatsapp: string };
 }
 
 interface ProfileDef {
+  /**
+   * Cargo para buscadores: va en los datos estructurados (JSON-LD), no en la
+   * página. En la raíz conserva "Business Analyst" sin mostrarlo.
+   */
+  puesto: string;
   /** Imagen de vista previa al compartir el enlace. */
   ogImage: string;
   /** `/ux/` no debe competir con la versión principal en buscadores. */
@@ -91,6 +99,7 @@ interface ProfileDef {
 export const PROFILES: Record<Profile, ProfileDef> = {
   /* ── UX Strategist & Business Analyst · raíz ── */
   ba: {
+    puesto: 'UX Strategist & Business Analyst',
     ogImage: '/og.jpg',
     noindex: false,
     cv: {
@@ -101,8 +110,9 @@ export const PROFILES: Record<Profile, ProfileDef> = {
       homeTitle: 'Emilio Romero — UX Strategist & Business Analyst en Bogotá',
       /* Encima del titular: quien llega desde LinkedIn tiene que saber qué eres
          antes de leer la frase. Va en el estilo discreto del kicker para no
-         competir con ella. */
-      heroKicker: 'UX Strategist & Business Analyst · Research aplicado a decisiones de negocio — Bogotá · Remoto global',
+         competir con ella. "Business Analyst" no se muestra: vive en el
+         <title> y en `puesto`, para buscadores. */
+      heroKicker: 'UX Strategist · Research aplicado a decisiones de negocio — Bogotá · Remoto global',
       homeDescription: HOME.es.heroSub,
       homeSkills: [
         'Análisis de negocio',
@@ -120,7 +130,7 @@ export const PROFILES: Record<Profile, ProfileDef> = {
         'Power BI',
         'Adobe Workfront',
       ],
-      aboutRole: 'UX Strategist & Business Analyst · Research aplicado a decisiones de negocio',
+      aboutRole: 'UX Strategist · Research aplicado a decisiones de negocio',
       aboutHook: 'Investigo para entender el negocio y a su gente, y diseño el sistema que resuelve lo que encuentro. No creo que una cosa se pueda hacer bien sin la otra.',
       aboutChips: ['Análisis de negocio', 'Levantamiento de requerimientos', 'Mapeo de procesos', 'Definición de KPIs', 'Gestión de stakeholders', 'UX Research', 'Bogotá · Remoto', 'Inglés C1'],
       aboutSkills: [
@@ -144,7 +154,7 @@ export const PROFILES: Record<Profile, ProfileDef> = {
     },
     en: {
       homeTitle: 'Emilio Romero — UX Strategist & Business Analyst in Bogotá',
-      heroKicker: 'UX Strategist & Business Analyst · Research applied to business decisions — Bogotá · Remote worldwide',
+      heroKicker: 'UX Strategist · Research applied to business decisions — Bogotá · Remote worldwide',
       homeDescription: HOME.en.heroSub,
       homeSkills: [
         'Business analysis',
@@ -162,7 +172,7 @@ export const PROFILES: Record<Profile, ProfileDef> = {
         'Power BI',
         'Adobe Workfront',
       ],
-      aboutRole: 'UX Strategist & Business Analyst · Research applied to business decisions',
+      aboutRole: 'UX Strategist · Research applied to business decisions',
       aboutHook: 'I research to understand the business and the people in it, and I design the system that solves what I find. I don’t think either half can be done well without the other.',
       aboutChips: ['Business analysis', 'Requirements gathering', 'Process mapping', 'KPI definition', 'Stakeholder management', 'UX research', 'Bogotá · Remote', 'English C1'],
       aboutSkills: [
@@ -186,8 +196,11 @@ export const PROFILES: Record<Profile, ProfileDef> = {
     },
   },
 
-  /* ── UX Consultant · /ux/ ── Textos de la hoja de vida de UX (HV/CV UX). */
+  /* ── UX Designer · /ux/ ── Textos de la hoja de vida de UX (noviembre 2026)
+     y de la Home v3. Su home y sus casos tienen diseño propio (HOME_UX y
+     CASES_UX); aquí queda lo que comparte con Sobre mí y los metadatos. */
   ux: {
+    puesto: 'UX Designer',
     ogImage: '/og-ux.jpg',
     noindex: true,
     cv: {
@@ -195,130 +208,181 @@ export const PROFILES: Record<Profile, ProfileDef> = {
       en: '/uploads/cv-emilio-romero-ux-en.pdf',
     },
     es: {
-      homeTitle: 'Emilio Romero — UX Consultant en Bogotá',
-      heroKicker:
-        'UX Consultant · Research y diseño de experiencia para plataformas y operaciones internas — Bogotá · Remoto global',
+      homeTitle: 'Emilio Romero — UX Designer en Bogotá',
+      heroKicker: 'UX Designer · Investigación, estrategia y consultoría · Bogotá, remoto',
       homeDescription:
-        'Consultor UX con formación en Diseño Interactivo y experiencia en plataformas internas, SaaS B2B y herramientas enterprise.',
+        'Soy Emilio. Investigo a las personas y los procesos, y lo convierto en requerimientos y decisiones de producto. Casi siempre ahí está el problema del negocio, y también la solución que la gente sí usa.',
       homeSkills: [
-        'UX research',
+        'UX/UI',
+        'Diseño de interacción',
         'Entrevistas y síntesis',
         'Pruebas de usabilidad',
         'Journey maps',
         'Service blueprints',
-        'Arquitectura de información',
-        'Diseño UX/UI',
-        'Prototipado',
-        'Design systems',
-        'Accesibilidad (WCAG)',
+        'Levantamiento de requerimientos',
         'Mapeo de procesos',
-        'Gestión de stakeholders',
         'Figma',
-        'Webflow',
-        'Power BI',
         'Adobe Workfront',
       ],
-      aboutRole: 'UX Consultant · Research y diseño de experiencia para plataformas y operaciones internas',
+      aboutRole: 'UX Designer · Investigación, estrategia y consultoría',
       aboutHook:
         'Consultor UX con formación en Diseño Interactivo y experiencia en plataformas internas, SaaS B2B y herramientas enterprise. Investigo antes de diseñar: entrevisto a los usuarios, reviso cómo trabajan de verdad y encuentro dónde se rompe la experiencia; después diseño los flujos, las interfaces y la documentación que lo resuelven. Para mí una emoción es un dato de negocio: cuando alguien se cansa, no entiende o prefiere llamar, ahí suele estar el problema, y también la oportunidad.',
       aboutDescription:
-        'Consultor UX con formación en Diseño Interactivo y experiencia en plataformas internas, SaaS B2B y herramientas enterprise.',
-      aboutChips: ['UX research', 'Entrevistas y síntesis', 'Pruebas de usabilidad', 'Journey maps', 'Service blueprints', 'Arquitectura de información', 'Bogotá · Remoto', 'Inglés C1'],
+        'UX Designer con formación en Diseño Interactivo y experiencia en plataformas internas, SaaS B2B y herramientas enterprise.',
+      aboutChips: ['UX/UI', 'Investigación', 'Pruebas de usabilidad', 'Journey maps', 'Service blueprints', 'Mapeo de procesos', 'Bogotá · Remoto', 'Inglés C1'],
+      /* Las cuatro líneas de "Habilidades e idiomas" de la hoja de vida. */
       aboutSkills: [
         {
-          label: 'Investigación',
-          items: ['UX research', 'Entrevistas y síntesis', 'Pruebas de usabilidad', 'Journey maps', 'Service blueprints', 'Arquitectura de información'],
-        },
-        {
           label: 'Diseño',
-          items: ['Diseño UX/UI', 'Wireframing y prototipado', 'Design systems', 'Accesibilidad (WCAG)', 'Gamificación', 'Storytelling'],
+          items: ['UX/UI', 'Diseño de interacción', 'Prototipado', 'Design systems', 'Arquitectura de información', 'Responsive', 'Accesibilidad (WCAG)'],
         },
         {
-          label: 'Consultoría',
-          items: ['Mapeo de procesos', 'Levantamiento de requerimientos', 'Gestión de stakeholders', 'Estrategia de adopción y capacitación'],
+          label: 'Investigación',
+          items: ['Entrevistas y síntesis', 'Pruebas de usabilidad', 'A/B testing', 'Journey maps', 'Service blueprints'],
+        },
+        {
+          label: 'Consultoría y estrategia',
+          items: ['Levantamiento de requerimientos', 'Mapeo de procesos', 'Gestión de stakeholders', 'Estrategia de adopción', 'QA de flujos', 'Metodologías ágiles'],
         },
         {
           label: 'Herramientas',
-          items: ['Figma', 'Webflow', 'Adobe Workfront', 'Power BI', 'HubSpot', 'HTML / CSS / JS', 'Adobe Creative Suite', 'Confluence / Jira', 'Google Workspace', 'Microsoft 365', 'Claude, Gemini, NotebookLM'],
+          items: ['Figma', 'Webflow', 'Adobe Creative Suite', 'Adobe Workfront y Fusion', 'HTML / CSS / JS', 'Power BI', 'HubSpot', 'Jira / Confluence', 'Google Workspace', 'Microsoft 365'],
         },
       ],
-      jobTitles: { qstrauss: 'Technical Architect', ropofy: 'Consultor UX / Diseñador UX', etb: 'Practicante UX/UI' },
-      /* Cada subtítulo nombra la jugada de UX del caso, con frases que ya están
-         en el propio caso; los casos no se reescriben. */
-      caseTitles: {
-        ropofy: 'Ropofy · Del rediseño a la estrategia: la investigación que cambió el proyecto',
-        qstrauss: 'QStrauss · El desorden se veía en los componentes, pero vivía en el sistema',
-        bid: 'BID · Primero el usuario: datos claros para quien decide',
+      jobTitles: { qstrauss: 'Technical Architect', ropofy: 'Jr UX Consultant / UX Designer', genia: 'UX/UI Designer', etb: 'Practicante UX/UI' },
+      jobDetails: {
+        qstrauss: {
+          org: 'QStrauss Consulting · Implementaciones enterprise de Adobe Workfront',
+          lede: null,
+          bullets: [
+            'Levanté requerimientos de negocio y funcionales con clientes enterprise de retail, banca y consumo masivo, y los traduje en flujos, configuración e interfaces de Adobe Workfront.',
+            'Diagnostiqué implementaciones que no funcionaban: mapeé el proceso real contra el configurado, entrevisté a equipos y stakeholders y prioricé las decisiones de proceso.',
+            'Diseñé una estrategia de adopción por rol, con documentación y capacitaciones, que se adoptó con un cliente en una implementación de unos 6 meses de punta a punta.',
+            'Probé las implementaciones de punta a punta con desarrollo, incluidas automatizaciones de Workfront Fusion, revisando bugs antes de llegar al cliente.',
+          ],
+        },
+        ropofy: {
+          org: 'Ropofy · SaaS B2B de CRM y automatización',
+          lede: null,
+          bullets: [
+            'Investigué por qué se perdían ventas (6 entrevistas a compradores y 3 meses de conversaciones revisadas por canal) y reencuadré el encargo: la caída estaba en el tiempo de respuesta, no en el checkout.',
+            'Rediseñé el sitio alrededor del contacto y diseñé la bandeja única para WhatsApp, web e Instagram; descarté un chatbot porque el problema era de organización, no de volumen.',
+            'Lideré la adopción de la plataforma en la cartera de clientes, con estrategias de uso de la herramienta y del funnel de ventas de punta a punta y capacitaciones en automatización y bots de IA.',
+            'Hice pruebas con usuarios y A/B testing de los flujos de automatización con IA junto a desarrollo, revisando los bugs de los flujos.',
+          ],
+        },
+        genia: {
+          org: 'genia · Agencia digital (freelance)',
+          lede: null,
+          bullets: ['Diseñé y construí sitios web accesibles en Webflow, y experiencias interactivas y videojuegos con gamificación y narrativa digital.'],
+        },
+        etb: {
+          org: 'ETB · Telecomunicaciones',
+          lede: null,
+          bullets: [
+            'Rediseñé plataformas digitales internas usadas por más de 500 usuarios al mes, con una mejora del 30% en la eficiencia de navegación.',
+            'Ejecuté pruebas de usabilidad y prioricé los hallazgos en las iteraciones de diseño, asegurando compatibilidad entre dispositivos.',
+          ],
+        },
       },
-      caseRoles: { ropofy: 'Consultor UX / Diseñador UX', qstrauss: 'Technical Architect' },
       education: [
         { what: 'Diseñador Interactivo, énfasis en UX/UI y Game Design', where: 'Universidad Jorge Tadeo Lozano · 2020 – 2024' },
-        { what: 'Concept artist y copywriter', where: 'Grupo de investigación NTS, UJTL · 2020 – 2023' },
-        { what: 'Bootcamp Front End UX', where: 'Cymetria · 2024' },
+        { what: 'Bootcamp UX Front-End', where: 'Cymetria · 2024' },
+        { what: 'McKinsey.org Forward', where: 'Programa en curso · 2026' },
         { what: 'Bachillerato', where: 'Gimnasio Moderno · Bogotá' },
       ],
+      contacto: {
+        sobreMiSub: 'Esa es exactamente la parte que me gusta. Elige el canal que te quede más cómodo — respondo en máximo 24 horas hábiles.',
+        whatsapp: 'Escríbeme directo. Respondo en máximo 24 horas hábiles — después de Ropofy no puedo permitirme lo contrario.',
+      },
     },
     en: {
-      homeTitle: 'Emilio Romero — UX Consultant in Bogotá',
-      heroKicker:
-        'UX Consultant · Research and experience design for platforms and internal operations — Bogotá · Remote worldwide',
+      homeTitle: 'Emilio Romero — UX Designer in Bogotá',
+      heroKicker: 'UX Designer · Research, strategy and consulting · Bogotá, remote',
       homeDescription:
-        'UX consultant with a background in Interactive Design and experience across internal platforms, B2B SaaS and enterprise tools.',
+        "I'm Emilio. I research people and processes, and turn what I find into requirements and product decisions. That's almost always where the business problem is, and also the solution people actually use.",
       homeSkills: [
-        'UX research',
-        'Interviews & synthesis',
+        'UX/UI',
+        'Interaction design',
+        'Interviews and synthesis',
         'Usability testing',
         'Journey maps',
         'Service blueprints',
-        'Information architecture',
-        'UX/UI design',
-        'Prototyping',
-        'Design systems',
-        'Accessibility (WCAG)',
+        'Requirements gathering',
         'Process mapping',
-        'Stakeholder management',
         'Figma',
-        'Webflow',
-        'Power BI',
         'Adobe Workfront',
       ],
-      aboutRole: 'UX Consultant · Research and experience design for platforms and internal operations',
+      aboutRole: 'UX Designer · Research, strategy and consulting',
       aboutHook:
         "UX consultant with a background in Interactive Design and experience across internal platforms, B2B SaaS and enterprise tools. I research before I design: I interview users, look at how they actually work and find where the experience breaks; then I design the workflows, interfaces and documentation that fix it. To me an emotion is a business signal: when someone gets tired, doesn't understand, or would rather call, that's usually where the problem is, and the opportunity too.",
       aboutDescription:
-        'UX consultant with a background in Interactive Design and experience across internal platforms, B2B SaaS and enterprise tools.',
-      aboutChips: ['UX research', 'Interviews & synthesis', 'Usability testing', 'Journey maps', 'Service blueprints', 'Information architecture', 'Bogotá · Remote', 'English C1'],
+        'UX Designer with a background in Interactive Design and experience across internal platforms, B2B SaaS and enterprise tools.',
+      aboutChips: ['UX/UI', 'Research', 'Usability testing', 'Journey maps', 'Service blueprints', 'Process mapping', 'Bogotá · Remote', 'English C1'],
       aboutSkills: [
         {
-          label: 'Research',
-          items: ['UX research', 'Interviews and synthesis', 'Usability testing', 'Journey maps', 'Service blueprints', 'Information architecture'],
-        },
-        {
           label: 'Design',
-          items: ['UX/UI design', 'Wireframing and prototyping', 'Design systems', 'Accessibility (WCAG)', 'Gamification', 'Storytelling'],
+          items: ['UX/UI', 'Interaction design', 'Prototyping', 'Design systems', 'Information architecture', 'Responsive', 'Accessibility (WCAG)'],
         },
         {
-          label: 'Consulting',
-          items: ['Process mapping', 'Requirements gathering', 'Stakeholder management', 'Adoption and training strategy'],
+          label: 'Research',
+          items: ['Interviews and synthesis', 'Usability testing', 'A/B testing', 'Journey maps', 'Service blueprints'],
+        },
+        {
+          label: 'Consulting & strategy',
+          items: ['Requirements gathering', 'Process mapping', 'Stakeholder management', 'Adoption strategy', 'Flow QA', 'Agile'],
         },
         {
           label: 'Tools',
-          items: ['Figma', 'Webflow', 'Adobe Workfront', 'Power BI', 'HubSpot', 'HTML / CSS / JS', 'Adobe Creative Suite', 'Confluence / Jira', 'Google Workspace', 'Microsoft 365', 'Claude, Gemini, NotebookLM'],
+          items: ['Figma', 'Webflow', 'Adobe Creative Suite', 'Adobe Workfront & Fusion', 'HTML / CSS / JS', 'Power BI', 'HubSpot', 'Jira / Confluence', 'Google Workspace', 'Microsoft 365'],
         },
       ],
-      jobTitles: { qstrauss: 'Technical Architect', ropofy: 'UX Consultant / UX Designer', etb: 'UX/UI Design Intern' },
-      caseTitles: {
-        ropofy: 'Ropofy · From redesign to strategy: the research that changed the project',
-        qstrauss: 'QStrauss · The disorder showed in the components, but lived in the system',
-        bid: 'IDB · User first: clear data for decision-makers',
+      jobTitles: { qstrauss: 'Technical Architect', ropofy: 'Jr UX Consultant / UX Designer', genia: 'UX/UI Designer', etb: 'UX/UI Intern' },
+      jobDetails: {
+        qstrauss: {
+          org: 'QStrauss Consulting · Enterprise Adobe Workfront implementations',
+          lede: null,
+          bullets: [
+            'Gathered business and functional requirements with enterprise clients in retail, banking and consumer goods, and translated them into Adobe Workfront workflows, configuration and interfaces.',
+            "Diagnosed implementations that weren't working: mapped the real process against the configured one, interviewed teams and stakeholders, and prioritized process decisions.",
+            'Designed a role-based adoption strategy, with documentation and training, adopted by one client in an end-to-end implementation of about 6 months.',
+            'Tested implementations end to end with development, including Workfront Fusion automations, reviewing bugs before they reached the client.',
+          ],
+        },
+        ropofy: {
+          org: 'Ropofy · B2B SaaS, CRM and automation',
+          lede: null,
+          bullets: [
+            'Researched why sales were being lost (6 interviews with recent buyers and 3 months of conversations reviewed by channel) and reframed the brief: the drop-off was in response time, not at checkout.',
+            'Redesigned the site around contact and designed a single inbox for WhatsApp, web and Instagram; discarded a chatbot because the problem was organizational, not volume.',
+            'Led platform adoption across the client portfolio, with strategies for using the tool and for the end-to-end sales funnel, plus training on automation and AI bots.',
+            'Ran user tests and A/B tests on the AI automation flows with development, reviewing bugs in the flows.',
+          ],
+        },
+        genia: {
+          org: 'genia · Digital agency (freelance)',
+          lede: null,
+          bullets: ['Designed and built accessible websites in Webflow, plus interactive experiences and games using gamification and digital storytelling.'],
+        },
+        etb: {
+          org: 'ETB · Telecommunications',
+          lede: null,
+          bullets: [
+            'Redesigned internal digital platforms used by 500+ monthly users, improving navigation efficiency by 30%.',
+            'Ran usability tests and prioritized findings into design iterations, ensuring cross-device compatibility.',
+          ],
+        },
       },
-      caseRoles: { ropofy: 'UX Consultant / UX Designer', qstrauss: 'Technical Architect' },
       education: [
-        { what: 'Interactive Designer, UX/UI and Game Design emphasis', where: 'Universidad Jorge Tadeo Lozano · 2020 – 2024' },
-        { what: 'Concept artist and copywriter', where: 'NTS research group, UJTL · 2020 – 2023' },
-        { what: 'Front End UX Bootcamp', where: 'Cymetria · 2024' },
+        { what: 'BA Interactive Design, UX/UI and Game Design', where: 'Universidad Jorge Tadeo Lozano · 2020 – 2024' },
+        { what: 'UX Front-End Bootcamp', where: 'Cymetria · 2024' },
+        { what: 'McKinsey.org Forward', where: 'In progress · 2026' },
         { what: 'High School Diploma', where: 'Gimnasio Moderno · Bogotá' },
       ],
+      contacto: {
+        sobreMiSub: "That's exactly the part I enjoy. Pick whichever channel suits you — I reply within 24 business hours.",
+        whatsapp: "Message me directly. I reply within 24 business hours — after Ropofy I can't afford to do otherwise.",
+      },
     },
   },
 };
@@ -331,11 +395,3 @@ export const perfil = (profile: Profile, lang: Lang) => ({
   cv: PROFILES[profile].cv,
   rutas: rutas(profile, lang),
 });
-
-/** Los chips de un caso con el rol del perfil en su lugar (el segundo chip). */
-export function chipsConRol(
-  chips: ReadonlyArray<readonly [string, string]>,
-  rol?: string
-): ReadonlyArray<readonly [string, string]> {
-  return rol ? chips.map((c, i) => (i === 1 ? ([rol, c[1]] as const) : c)) : chips;
-}

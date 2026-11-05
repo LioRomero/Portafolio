@@ -1,0 +1,66 @@
+---
+/** Pie del diseño v3 (/ux/). */
+import { HOME_UX } from '../../content/home';
+import type { Lang } from '../../content/ui';
+import { rutas } from '../../content/profiles';
+import { withBase } from '../../lib/paths';
+
+interface Props {
+  lang: Lang;
+  /** En la home el tercer enlace cambia de idioma; en un caso, vuelve al inicio. */
+  variante: 'home' | 'pagina';
+  /** Esta misma página en el otro idioma, sin el prefijo de despliegue. */
+  otroIdioma: string;
+}
+
+const { lang, variante, otroIdioma } = Astro.props;
+const t = HOME_UX[lang].pie;
+const otro = lang === 'es' ? 'en' : 'es';
+---
+
+<footer class="pie">
+  <div class="pie-fila">
+    <span>{t.linea}</span>
+    <a href="#main">{t.arriba}</a>
+    {
+      variante === 'home' ? (
+        <a href={withBase(otroIdioma)} lang={otro} hreflang={otro}>
+          {t.otroIdioma}
+        </a>
+      ) : (
+        <a href={withBase(rutas('ux', lang).home)}>{t.inicio}</a>
+      )
+    }
+  </div>
+</footer>
+
+<style>
+  .pie {
+    background: var(--tinta);
+    border-top: 1px solid #3a3d45;
+  }
+
+  .pie-fila {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px clamp(20px, 4vw, 40px);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: var(--sobre-tinta-meta);
+  }
+
+  .pie-fila a {
+    color: var(--sobre-tinta-dim);
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .pie-fila a:hover {
+    color: #ffffff;
+  }
+</style>

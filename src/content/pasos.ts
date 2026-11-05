@@ -41,7 +41,7 @@ export const PASOS: Record<string, { es: Pasos; en: Pasos }> = {
           pasos: [
             { t: 'Una bandeja', d: 'Los tres canales caen en el mismo sitio.' },
             { t: 'Dueño y estado', d: 'Cada consulta tiene responsable y se ve si ya se atendió.' },
-            { t: 'Primera respuesta medida', d: 'La métrica se acordó antes de rediseñar nada.' },
+            { t: 'Primera respuesta medida', d: 'Propuse la métrica antes de rediseñar nada.' },
           ],
         },
       ],
@@ -65,7 +65,7 @@ export const PASOS: Record<string, { es: Pasos; en: Pasos }> = {
           pasos: [
             { t: 'One inbox', d: 'All three channels land in the same place.' },
             { t: 'Owner and status', d: 'Every enquiry has someone responsible and a visible state.' },
-            { t: 'First response measured', d: 'The metric was agreed before redesigning anything.' },
+            { t: 'First response measured', d: 'I proposed the metric before redesigning anything.' },
           ],
         },
       ],

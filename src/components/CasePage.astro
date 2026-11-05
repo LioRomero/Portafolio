@@ -10,7 +10,7 @@ import { PASOS } from '../content/pasos';
 import CaseRail from '../islands/CaseRail.tsx';
 import { CASES, CASES_UI, CASE_ORDER, type CaseKey } from '../content/cases';
 import type { Lang } from '../content/ui';
-import { chipsConRol, perfil, rutas, type Profile } from '../content/profiles';
+import { perfil, rutas, type Profile } from '../content/profiles';
 import { withBase, diagrama } from '../lib/paths';
 
 interface Props {
@@ -92,7 +92,7 @@ const laminasDe = (d: FuenteLaminas): Lamina[] => {
           <section class="section">
             <div class="wrap wrap--cases">
               <div class="chips">
-                {chipsConRol(d.chips, P.caseRoles?.[key]).map(([label, kind]) => (
+                {d.chips.map(([label, kind]) => (
                   <span class={`chip chip--${kind}`}>{label}</span>
                 ))}
               </div>

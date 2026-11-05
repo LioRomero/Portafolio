@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import type { ComponentChildren } from 'preact';
-import { PUZZLE, PUZZLE_UI, shuffle, seedFor, type PuzzleVariant } from '../content/puzzle';
+import { PUZZLE, PUZZLE_UI, shuffle, seedFor, type PuzzleVariant, type VarianteOrden } from '../content/puzzle';
 import { sonar, leerSonido, activarSonido } from '../lib/sonido';
 import { leerAvance, guardarAvance } from '../lib/prefs';
 import type { Lang } from '../content/ui';
@@ -176,7 +176,7 @@ function destinoBajo(raiz: HTMLElement | null, attr: string, x: number, y: numbe
 /* ── 1 · Ordenar: el método es una secuencia ──────────────────────────────── */
 
 function PuzzleOrden({ variant, lang }: Props) {
-  const c = PUZZLE.proceso[lang];
+  const c = PUZZLE[variant as VarianteOrden][lang];
   const ui = PUZZLE_UI[lang].orden;
   const n = c.steps.length;
 

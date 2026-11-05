@@ -27,6 +27,7 @@ export default function ModeSwitch({ lang }: { lang: Lang }) {
       <button
         type="button"
         class={mode === 'grano' ? 'ms-btn ms-btn--on' : 'ms-btn'}
+        data-v="grano"
         aria-pressed={mode === 'grano'}
         onClick={() => pick('grano')}
       >
@@ -35,6 +36,7 @@ export default function ModeSwitch({ lang }: { lang: Lang }) {
       <button
         type="button"
         class={mode === 'explorar' ? 'ms-btn ms-btn--on' : 'ms-btn'}
+        data-v="explorar"
         aria-pressed={mode === 'explorar'}
         onClick={() => pick('explorar')}
       >

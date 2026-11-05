@@ -139,6 +139,52 @@
   --z-intro: 120;
 }
 
+/* --- Tema claro · perfil UX (/ux/) --------------------------------------
+   Paleta de la Home v3. Los acentos conservan su significado y cambian de
+   tono para leerse sobre papel: violeta (pensar, notas, Explorar), azul
+   (enlaces, claridad, método) y óxido (sentir, errores). Los tintes 12–22%
+   se recalculan solos porque se derivan de estas mismas variables. */
+:root[data-theme='claro'] {
+  --bg: #f7f5f0;
+  --bg-2: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #efece4;
+
+  --text: #16181d;
+  --dim: #33363f;
+  --dimmer: #4a4f5c;
+  --line: #dedad0;
+  --line-strong: #cfcabd;
+  --disabled: #8f8a7d;
+
+  --mind: #6a4fd0;
+  --clarity: #2449c8;
+  --feel: #b4460c;
+
+  --mind-deep: #ece8fb;
+  --clarity-deep: #eef1fb;
+  --feel-deep: #fbf1ea;
+
+  --on-mind: #3d2a8f;
+  --on-clarity: #183a9e;
+  --on-feel: #9a3a08;
+  --on-clarity-solid: #ffffff;
+
+  --link: var(--clarity);
+  --link-hover: var(--on-clarity);
+
+  /* Fondo oscuro de las secciones de método y contacto. */
+  --tinta: #16181d;
+  --tinta-2: #22252c;
+  --sobre-tinta: #f7f5f0;
+  --sobre-tinta-dim: #d6d3cb;
+  --sobre-tinta-meta: #b9b6ad;
+
+  --serif: 'Instrument Serif', Georgia, serif;
+
+  --shadow-modal: 0 24px 60px rgba(22, 24, 29, 0.18);
+}
+
 /* El movimiento se apaga desde una sola variable: el toggle manual pone
    data-motion="off" en <html>, y prefers-reduced-motion hace lo mismo.
    Las reglas que animan multiplican sus duraciones por --motion. */

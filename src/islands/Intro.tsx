@@ -280,8 +280,8 @@ export default function Intro({ variant, lang }: Props) {
           inset: 0;
           background: linear-gradient(
             100deg,
-            color-mix(in srgb, var(--hue) 18%, #080b16) 0%,
-            #080b16 62%
+            color-mix(in srgb, var(--hue) 18%, var(--bg)) 0%,
+            var(--bg) 62%
           );
           animation: introWipe var(--dur) var(--ease-sweep) both;
         }

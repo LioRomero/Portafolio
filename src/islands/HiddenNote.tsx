@@ -16,10 +16,17 @@ import type { Lang } from '../content/ui';
  * observa justamente ese hijo de la isla: al medir 0×0 nunca "entra en
  * pantalla" y el punto se queda dibujado pero muerto, sin abrir ni contar.
  */
-export default function HiddenNote({ index, lang }: { index: number; lang: Lang }) {
+interface Props {
+  index: number;
+  lang: Lang;
+  /** Etiqueta y texto propios, cuando la página cuenta esa nota distinto. */
+  texto?: readonly [string, string];
+}
+
+export default function HiddenNote({ index, lang, texto }: Props) {
   const t = HOME[lang];
   const [open, setOpen] = useState(false);
-  const [tag, text] = t.finds[index] ?? ['', ''];
+  const [tag, text] = texto ?? t.finds[index] ?? ['', ''];
 
   useEffect(() => {
     setOpen(getFinds().includes(index));

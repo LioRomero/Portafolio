@@ -183,7 +183,7 @@ const DICC = {
   'Bandeja única · dueño y estado por consulta': 'Single inbox · owner and status per enquiry',
   'Deja de importar por dónde entró la consulta: importa si ya se respondió.': 'It stops mattering where the enquiry came in: it matters whether it was answered.',
   'Métrica del equipo: tiempo real de primera respuesta': 'Team metric: actual time to first response',
-  'Acordada antes de rediseñar nada.': 'Agreed before redesigning anything.',
+  'Propuesta antes de rediseñar nada.': 'Proposed before redesigning anything.',
 
   /* --- Ropofy · la espera ---------------------------------------------- */
   'El hallazgo · la espera': 'The finding · the wait',
@@ -253,13 +253,18 @@ for (const archivo of fs.readdirSync(raiz).filter((f) => f.endsWith('.svg'))) {
     return `aria-label="${r}"`;
   });
 
-  // nodos de texto
+  // nodos de texto. El bloque <metadata> (credenciales de contenido C2PA) no
+  // es texto visible: se aparta y se devuelve intacto.
+  const metadatos = [];
+  svg = svg.replace(/<metadata>[\s\S]*?<\/metadata>/g, (m) => `<!--metadata-${metadatos.push(m) - 1}-->`);
   svg = svg.replace(/>([^<>]+)</g, (m, v) => {
     if (!v.trim()) return m;
     const r = traducir(v);
     if (r === undefined) { sinTraducir.push(`${archivo} · ${v.trim()}`); return m; }
     return `>${r}<`;
   });
+
+  svg = svg.replace(/<!--metadata-(\d+)-->/g, (m, i) => metadatos[Number(i)]);
 
   fs.writeFileSync(path.join(destino, archivo), svg);
   escritos++;

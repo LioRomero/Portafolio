@@ -11,7 +11,9 @@
  * `Blueprint3D.tsx`.
  */
 
-export type PuzzleVariant = 'proceso' | 'casos' | 'sobre';
+export type PuzzleVariant = 'proceso' | 'proceso5' | 'casos' | 'sobre';
+/** Las variantes que se juegan ordenando: la de siete pasos y la de cinco de /ux/. */
+export type VarianteOrden = 'proceso' | 'proceso5';
 export type PuzzleMode = 'orden' | 'clasificar' | 'emparejar';
 
 interface PuzzleText {
@@ -84,6 +86,35 @@ export const PUZZLE = {
       why: "It's an ordering puzzle because my method is an order. And a mistake sends you back to the start on purpose: in a project, designing before stating the problem sends you back too, only it costs more.",
     } satisfies Orden,
   },
+  /* El mismo puzzle sobre el proceso de cinco pasos de la Home v3 (/ux/). */
+  proceso5: {
+    accent: '#6A4FD0',
+    mode: 'orden' as const,
+    es: {
+      badge: 'Puzzle 1 de 3',
+      kind: 'Ordenar · 20 segundos',
+      restart: 'Empezar de nuevo',
+      title: 'Ordena mi proceso en 5 pasos',
+      rule: 'Toca los cinco pasos en el orden en que trabajo, del negocio a la métrica. Si te equivocas, se reinicia y vuelves a intentarlo.',
+      steps: ['Entender el negocio', 'Escuchar de verdad', 'Traducir a decisiones', 'Diseñar el sistema', 'Validar y medir'],
+      solvedLabel: 'Ese es el orden',
+      solved:
+        'El tercer paso es el que casi nadie hace: traducir lo que escuché en un problema bien enunciado antes de dibujar nada. Y el cuarto es el que separa a quien investiga de quien además diseña el sistema que resuelve lo encontrado.',
+      why: 'Es un puzzle de ordenar porque mi método es un orden. Y un error te devuelve al principio a propósito: en un proyecto, diseñar antes de enunciar el problema también te devuelve al principio, solo que sale más caro.',
+    } satisfies Orden,
+    en: {
+      badge: 'Puzzle 1 of 3',
+      kind: 'Ordering · 20 seconds',
+      restart: 'Start over',
+      title: 'Put my process in order, in 5 steps',
+      rule: 'Tap the five steps in the order I work, from business to metric. Get one wrong and it resets so you can try again.',
+      steps: ['Understand the business', 'Really listen', 'Translate into decisions', 'Design the system', 'Validate and measure'],
+      solvedLabel: "That's the order",
+      solved:
+        'The third is the one almost nobody does: translating what I heard into a well-stated problem before drawing anything. And the fourth is what separates someone who researches from someone who also designs the system that fixes what they found.',
+      why: "It's an ordering puzzle because my method is an order. And a mistake sends you back to the start on purpose: in a project, designing before stating the problem sends you back too, only it costs more.",
+    } satisfies Orden,
+  },
   casos: {
     accent: '#22D3EE',
     mode: 'clasificar' as const,
@@ -123,7 +154,7 @@ export const PUZZLE = {
         { job: 'ETB · 2024', person: 'Más de 500 personas al mes usando plataformas internas' },
         { job: 'genia · 2024–2025', person: 'Quien entraba a un sitio y terminaba jugando' },
         { job: 'Ropofy · 2025–2026', person: 'El cliente que escribía por tres canales y esperaba respuesta' },
-        { job: 'QStrauss · 2026–hoy', person: 'El equipo del cliente que se queda con la plataforma' },
+        { job: 'QStrauss · 2026', person: 'El equipo del cliente que se queda con la plataforma' },
       ],
       solvedLabel: 'Ese es el camino',
       solved:
@@ -140,7 +171,7 @@ export const PUZZLE = {
         { job: 'ETB · 2024', person: '500+ people a month using internal platforms' },
         { job: 'genia · 2024–2025', person: 'Whoever landed on a site and ended up playing' },
         { job: 'Ropofy · 2025–2026', person: 'The customer writing on three channels, waiting for a reply' },
-        { job: 'QStrauss · 2026–now', person: "The client's team that keeps the platform" },
+        { job: 'QStrauss · 2026', person: "The client's team that keeps the platform" },
       ],
       solvedLabel: "That's the path",
       solved:

@@ -1,0 +1,1154 @@
+---
+/**
+ * Home del perfil UX (/ux/) · diseño v3 (design-reference/Home v3.dc.html).
+ *
+ * Al grano es la página tal como la entrega el diseño. Explorar le suma la
+ * capa lúdica que ya tenía el sitio: intro, notas, letra chica, los dos
+ * puzzles de casos y de proceso, el archivador, la canción y el canvas. Nada
+ * de esa capa guarda información que no esté también en Al grano.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CabeceraUx from './CabeceraUx.astro';
+import PieUx from './PieUx.astro';
+import HeroUx from '../../islands/HeroUx.tsx';
+import EmocionesUx from '../../islands/EmocionesUx.tsx';
+import ContactoUx from '../../islands/ContactoUx.tsx';
+import HiddenNote from '../../islands/HiddenNote.tsx';
+import Intro from '../../islands/Intro.tsx';
+import Tutorial from '../../islands/Tutorial.tsx';
+import CuriousLayer from '../../islands/CuriousLayer.tsx';
+import Puzzle from '../../islands/Puzzle.tsx';
+import Blueprint3D from '../../islands/Blueprint3D.tsx';
+import SongBlock from '../../islands/SongBlock.tsx';
+import EmotionCanvas from '../../islands/EmotionCanvas.tsx';
+import { HOME, HOME_UX, HOME_CASES, FIGMA_PROTOTIPO, TONO_CASO, TONO_EMOCION } from '../../content/home';
+import { CASES_UX, CASES_UX_UI, ORDEN_UX } from '../../content/cases';
+import { CONTACT_EMAIL } from '../../content/canvas';
+import { UI, type Lang } from '../../content/ui';
+import { perfil, rutas } from '../../content/profiles';
+import { withBase, diagrama } from '../../lib/paths';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = HOME_UX[lang];
+const h = HOME[lang];
+const u = UI[lang];
+const P = perfil('ux', lang);
+const otroLang = lang === 'es' ? 'en' : 'es';
+const otroIdioma = rutas('ux', otroLang).home;
+const cv = withBase(P.cv[lang] ?? '');
+const cvOtro = withBase(P.cv[otroLang] ?? '');
+const caso = (k: string) => withBase(`${P.rutas.cases}/${k}`);
+
+/* Las notas 5, 6 y 7 son una por caso, las mismas de la raíz. La de QStrauss
+   se cuenta distinto: aquí ese caso no lleva esquemas, solo texto. */
+const notaDeCaso = Object.fromEntries(HOME_CASES.map((c) => [c.key, c.findIdx])) as Record<string, number>;
+const notaQstrauss = {
+  es: ['QStrauss: cómo enseño algo con NDA', 'Los clientes están bajo acuerdo, así que aquí no hay capturas ni esquemas: todo se cuenta en texto. Muestro la estructura del problema, no los datos de nadie.'],
+  en: ['QStrauss: how I show something under NDA', 'Clients are under agreement, so there are no screenshots or diagrams here: everything is told in text. I show the shape of the problem, not anyone’s data.'],
+} as const;
+
+/* El clasificador usa las frases de cada caso tal como están en sus páginas. */
+const frasesPuzzle = ORDEN_UX.flatMap((k) => [
+  { texto: CASES_UX[k][lang].s1.pidieron, bin: 0 as const, fuente: k },
+  { texto: CASES_UX[k][lang].s1.real, bin: 1 as const, fuente: k },
+]);
+const ui = CASES_UX_UI[lang];
+---
+
+<BaseLayout title={P.homeTitle} description={P.homeDescription} lang={lang} page="home" profile="ux" tema="claro">
+  <CabeceraUx slot="cabecera" lang={lang} variante="home" otroIdioma={otroIdioma} />
+
+  <Intro variant="home" lang={lang} client:load />
+  <Tutorial lang={lang} delay={6000} perfil="ux" client:idle />
+  <CuriousLayer lang={lang} client:idle />
+
+  {/* --- Hero ---------------------------------------------------------- */}
+  <section id="top" class="hero" aria-labelledby="hero-t" data-tono="#16181d">
+    <p class="kicker">{t.kicker}</p>
+    <HeroUx lang={lang} cv={cv} cvOtro={cvOtro} client:idle />
+
+    <dl class="pruebas" aria-label={t.pruebasLabel}>
+      {
+        t.pruebas.map((p) => (
+          <div class="prueba">
+            <dt class="prueba-n">{p.n}</dt>
+            <dd class="prueba-l">{p.l}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  {/* --- Casos --------------------------------------------------------- */}
+  <section id="casos" aria-labelledby="casos-t">
+    <div class="casos-cab">
+      <h2 id="casos-t" class="serif-h2">{t.casosTitulo}</h2>
+      <p class="casos-sub">{t.casosSub}</p>
+    </div>
+
+    {
+      t.casos.map((c) => {
+        const tono = TONO_CASO[c.key];
+        const radiografia = CASES_UX[c.key][lang].radiografia;
+        return (
+          <article
+            id={c.key}
+            class="caso"
+            aria-labelledby={`${c.key}-t`}
+            data-tono={tono.c}
+            style={`--c:${tono.c};--c-oscuro:${tono.oscuro};--c-tinte:${tono.tinte}`}
+          >
+            <div class="caso-banda">
+              <div class="caso-banda-in">
+                <p class="caso-meta">
+                  <span>{c.n}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{c.emocion}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{c.tag}</span>
+                </p>
+                <h3 id={`${c.key}-t`} class="caso-titulo">
+                  {c.titulo}
+                </h3>
+                <p class="caso-lede">{c.lede}</p>
+              </div>
+            </div>
+
+            <div class="caso-cuerpo">
+              <div class="caso-col">
+                <dl class="ficha">
+                  <div class="ficha-fila xray-oculta">
+                    <dt>{t.ficha.problema}</dt>
+                    <dd>{c.problema}</dd>
+                  </div>
+                  <div class="ficha-fila">
+                    <dt>{t.ficha.rol}</dt>
+                    <dd>{c.rol}</dd>
+                  </div>
+                  <div class="ficha-fila xray-oculta">
+                    <dt>{t.ficha.metodo}</dt>
+                    <dd>{c.metodo}</dd>
+                  </div>
+                  <div class="ficha-fila ficha-fila--resultado">
+                    <dt>{t.ficha.resultado}</dt>
+                    <dd>{c.resultado}</dd>
+                  </div>
+                  <div class="ficha-fila">
+                    <dt>{t.ficha.duracion}</dt>
+                    <dd>{c.duracion}</dd>
+                  </div>
+                </dl>
+
+                {/* Radiografía (tecla X): sin el porqué, el caso se queda en esto. */}
+                <p class="xray-note">{radiografia}</p>
+
+                {'equipo' in c && (
+                  <div class="aportes xray-oculta">
+                    <div class="aporte">
+                      <p class="etiqueta etiqueta--caso">{t.hiceYo}</p>
+                      <ul class="lista">
+                        {c.hice.map((x) => (
+                          <li>{x}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="aporte">
+                      <p class="etiqueta">{t.hizoEquipo}</p>
+                      <p class="aporte-texto">{c.equipo}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {'figura' in c ? (
+                <figure class="caso-fig">
+                  <img
+                    src={diagrama(c.figura.src, lang)}
+                    alt={c.figura.alt}
+                    loading="lazy"
+                    decoding="async"
+                    class={c.key === 'ropofy' ? 'caso-img caso-img--blanca' : 'caso-img'}
+                  />
+                  <figcaption>
+                    <b>{t.enPalabras}</b> {c.figura.cap}
+                  </figcaption>
+                  {'certificado' in c && (
+                    <div class="certificado">
+                      <img src={withBase('/assets/casos/bid-certificado.jpg')} alt={c.certificado.alt} loading="lazy" decoding="async" />
+                      <p>{c.certificado.texto}</p>
+                    </div>
+                  )}
+                </figure>
+              ) : (
+                <div class="caso-col caso-col--anchas">
+                  {'pregunta' in c && (
+                    <blockquote class="pregunta xray-oculta">
+                      <p class="etiqueta etiqueta--caso">{c.pregunta.label}</p>
+                      <p class="pregunta-texto">{c.pregunta.texto}</p>
+                    </blockquote>
+                  )}
+                  <div class="aporte xray-oculta">
+                    <p class="etiqueta etiqueta--caso">{t.hiceYo}</p>
+                    <ul class="lista">
+                      {c.hice.map((x) => (
+                        <li>{x}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  {'nda' in c && <p class="nda">{c.nda}</p>}
+                </div>
+              )}
+            </div>
+
+            <div class="caso-pie">
+              <a class="caso-leer" href={caso(c.key)}>
+                {c.leer}
+              </a>
+              <a class="caso-siguiente" href={`#${c.siguiente.ancla}`}>
+                {c.siguiente.texto}
+              </a>
+              <HiddenNote
+                index={notaDeCaso[c.key]!}
+                lang={lang}
+                texto={c.key === 'qstrauss' ? notaQstrauss[lang] : undefined}
+                client:idle
+              />
+            </div>
+          </article>
+        );
+      })
+    }
+
+    {/* Explorar: las dos piezas que vivían en el índice de casos. */}
+    <div class="explorar-casos" data-playful>
+      <Blueprint3D lang={lang} client:visible />
+      <Puzzle variant="casos" lang={lang} frases={frasesPuzzle} columnas={[ui.pidieron, ui.real]} client:visible />
+    </div>
+  </section>
+
+  {/* --- Método -------------------------------------------------------- */}
+  <section id="metodo" class="tinta" aria-labelledby="metodo-t" data-tono="#16181d">
+    <div class="tinta-in">
+      <div class="metodo-cab">
+        <h2 id="metodo-t" class="serif-h2">{t.metodo.titulo}</h2>
+        <div class="fila-nota">
+          <p class="metodo-sub">{t.metodo.sub}</p>
+          {/* Nota 1: por qué este bloque es interactivo. */}
+          <HiddenNote index={1} lang={lang} client:idle />
+        </div>
+      </div>
+
+      <EmocionesUx lang={lang} client:idle />
+      <p class="aviso">{t.metodo.aviso}</p>
+
+      <div class="fila-nota proceso-cab">
+        <h3 class="proceso-titulo">{t.metodo.procesoTitulo}</h3>
+        {/* Nota 2: por qué cinco pasos y no siete. */}
+        <HiddenNote index={2} lang={lang} client:idle />
+      </div>
+      <ol class="pasos">
+        {
+          t.metodo.pasos.map(([titulo, texto], i) => (
+            <li class="paso">
+              <span class="paso-n" style={`color:${TONO_EMOCION[i]}`}>
+                {i + 1}
+              </span>
+              <span class="paso-t">{titulo}</span>
+              <span class="paso-x">{texto}</span>
+            </li>
+          ))
+        }
+      </ol>
+
+      {/* Letra chica: casi invisible; se lee con la linterna o, sin cursor, entera. */}
+      <aside class="ghost" data-ghost="metodo" data-playful>
+        <span class="ghost-label label">{u.finePrintLabel}</span>
+        <p>{h.ghost3}</p>
+      </aside>
+
+      <div class="puzzle-slot" data-playful>
+        <Puzzle variant="proceso5" lang={lang} client:visible />
+      </div>
+    </div>
+  </section>
+
+  {/* --- Otros proyectos ----------------------------------------------- */}
+  <section id="otros" class="otros" aria-labelledby="otros-t">
+    <div class="otros-cab">
+      <h2 id="otros-t" class="serif-h3">{t.otros.titulo}</h2>
+      <p class="otros-sub">{t.otros.sub}</p>
+    </div>
+    <ul class="otros-lista">
+      {
+        t.otros.items.map((o) => (
+          <li>
+            <a class="otro" href={FIGMA_PROTOTIPO} target="_blank" rel="noopener">
+              <img src={withBase(o.img)} alt="" width="800" height="500" loading="lazy" decoding="async" />
+              <span class="otro-txt">
+                <span class="otro-t">{o.titulo}</span>
+                <span class="otro-x">{o.texto}</span>
+                <span class="sr-only">{t.otros.nuevaPestana}</span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  {/* --- Sobre mí corto y pymes ---------------------------------------- */}
+  <section class="sobre" aria-labelledby="sobre-t">
+    <div class="sobre-col">
+      <h2 id="sobre-t" class="serif-h3">
+        {t.sobre.a} <em>{t.sobre.em}</em>
+      </h2>
+      <div class="fila-nota">
+        <p class="sobre-texto">{t.sobre.texto}</p>
+        {/* Nota 3: la verdad sobre la curiosidad. */}
+        <HiddenNote index={3} lang={lang} client:idle />
+      </div>
+      <a class="sobre-mas" href={withBase(P.rutas.about)}>{t.sobre.mas}</a>
+      <aside class="ghost" data-ghost="sobre" data-playful>
+        <span class="ghost-label label">{u.finePrintLabel}</span>
+        <p>{h.ghost1}</p>
+      </aside>
+    </div>
+    <div class="pymes">
+      <p class="etiqueta">{t.pymes.label}</p>
+      <p class="pymes-lead">{t.pymes.lead}</p>
+      <ol class="pymes-lista">
+        {
+          t.pymes.pasos.map(([b, x]) => (
+            <li>
+              <b>{b}</b> {x}
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  {/* --- Explorar: canción y canvas ------------------------------------ */}
+  <section class="explorar-final" data-playful>
+    <SongBlock lang={lang} client:idle />
+    <EmotionCanvas lang={lang} client:visible />
+  </section>
+
+  {/* --- Contacto ------------------------------------------------------ */}
+  <section id="contacto" class="tinta" aria-labelledby="contacto-t" data-tono="#16181d">
+    <div class="tinta-in tinta-in--contacto">
+      <h2 id="contacto-t" class="contacto-titulo">{t.contacto.titulo}</h2>
+      <div class="fila-nota">
+        <p class="contacto-sub">{t.contacto.sub}</p>
+        {/* Nota 4: por qué no hay formulario. */}
+        <HiddenNote index={4} lang={lang} client:idle />
+      </div>
+
+      <ContactoUx lang={lang} client:idle />
+
+      <div class="datos">
+        <span>{t.contacto.datos.whatsapp} <span class="dato tabular">+57 314 254 3651</span></span>
+        <span>{t.contacto.datos.correo} <a class="dato" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></span>
+        <a class="datos-link" href="https://www.linkedin.com/in/emilio-romero-gutierrez" target="_blank" rel="noopener">{t.contacto.datos.linkedin}</a>
+      </div>
+
+      <div class="cierre">
+        <p class="cierre-texto">{t.contacto.cierre}</p>
+        <div class="cierre-botones">
+          <a class="boton-claro" href={cv} download>{t.contacto.cvBoton}</a>
+          <a class="boton-borde" href={cvOtro} download lang={otroLang} hreflang={otroLang}>{t.contacto.cvOtro}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <PieUx slot="pie" lang={lang} variante="home" otroIdioma={otroIdioma} />
+</BaseLayout>
+
+<style>
+  /* --- Bases del diseño v3 ------------------------------------------------ */
+  .serif-h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(34px, 4.4vw, 56px);
+    line-height: 1.05;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .serif-h3 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(28px, 3vw, 38px);
+    line-height: 1.12;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .etiqueta {
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+  }
+
+  .etiqueta--caso {
+    color: var(--c-oscuro, var(--dimmer));
+  }
+
+  .fila-nota {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0 14px;
+  }
+
+  .fila-nota > p,
+  .fila-nota > h3 {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .lista {
+    padding-left: 18px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  /* --- Hero ------------------------------------------------------------- */
+  .hero {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(40px, 8vw, 104px) clamp(20px, 4vw, 40px) clamp(32px, 5vw, 56px);
+  }
+
+  .kicker {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    line-height: 1.6;
+  }
+
+  .pruebas {
+    margin: clamp(36px, 5vw, 56px) 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    border-top: 1.5px solid var(--text);
+  }
+
+  .prueba {
+    padding: 20px 20px 4px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .prueba-n {
+    font-family: var(--serif);
+    font-size: clamp(38px, 4vw, 52px);
+    line-height: 1;
+  }
+
+  .prueba-l {
+    margin: 0;
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--dim);
+  }
+
+  /* --- Casos ------------------------------------------------------------ */
+  .casos-cab {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(32px, 5vw, 56px) clamp(20px, 4vw, 40px) 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 32px;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .casos-sub {
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--dimmer);
+    max-width: 520px;
+  }
+
+  .caso-banda {
+    background: var(--c);
+    color: #ffffff;
+  }
+
+  .caso-banda-in {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(32px, 5vw, 56px) clamp(20px, 4vw, 40px);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .caso-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    font-size: 13.5px;
+    font-weight: 500;
+  }
+
+  .caso-titulo {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(36px, 5.4vw, 72px);
+    line-height: 1.02;
+    letter-spacing: 0;
+    max-width: 960px;
+    text-wrap: balance;
+  }
+
+  .caso-lede {
+    font-size: clamp(17px, 1.6vw, 20px);
+    line-height: 1.55;
+    max-width: 720px;
+    text-wrap: pretty;
+  }
+
+  .caso-cuerpo {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(28px, 4vw, 48px) clamp(20px, 4vw, 40px) clamp(40px, 6vw, 72px);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    gap: 32px;
+    align-items: start;
+  }
+
+  .caso-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+  }
+
+  .caso-col--anchas {
+    gap: 20px;
+  }
+
+  .ficha {
+    margin: 0;
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .ficha-fila {
+    display: grid;
+    grid-template-columns: minmax(88px, 112px) 1fr;
+    gap: 14px;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e8e4da;
+  }
+
+  .ficha-fila:last-child {
+    border-bottom: 0;
+  }
+
+  .ficha-fila dt {
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    padding-top: 2px;
+  }
+
+  .ficha-fila dd {
+    margin: 0;
+    font-size: 15.5px;
+    line-height: 1.6;
+    min-width: 0;
+  }
+
+  /* En un teléfono la etiqueta va encima: a dos columnas el texto quedaba en
+     una tira de tres palabras por línea. */
+  @media (max-width: 480px) {
+    .ficha-fila {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+  }
+
+  .ficha-fila--resultado {
+    background: var(--c-tinte);
+  }
+
+  .ficha-fila--resultado dt {
+    color: var(--c-oscuro);
+  }
+
+  .aportes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    gap: 16px 24px;
+    padding: 4px 4px 0;
+  }
+
+  .aporte {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .aporte-texto {
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--dim);
+  }
+
+  .caso-fig {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .caso-img {
+    width: 100%;
+    height: auto;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+  }
+
+  .caso-img--blanca {
+    background: #ffffff;
+  }
+
+  .caso-fig figcaption {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--dim);
+  }
+
+  .caso-fig b {
+    font-weight: 600;
+  }
+
+  .certificado {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .certificado img {
+    width: 88px;
+    height: auto;
+    flex: none;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+  }
+
+  .certificado p {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--dimmer);
+  }
+
+  .pregunta {
+    margin: 0;
+    padding: 24px 26px;
+    border-radius: 14px;
+    background: var(--c-tinte);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .pregunta-texto {
+    font-family: var(--serif);
+    font-size: clamp(24px, 2.4vw, 30px);
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+
+  .nda {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--dimmer);
+  }
+
+  .caso-pie {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 40px) clamp(40px, 6vw, 64px);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 28px;
+    align-items: center;
+  }
+
+  .caso-leer {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .caso-siguiente {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 14.5px;
+    color: var(--dimmer);
+  }
+
+  .caso-siguiente:hover {
+    color: var(--text);
+  }
+
+  /* Radiografía: solo existe con la tecla X (panel curioso). */
+  .xray-note {
+    display: none;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: var(--feel-deep);
+    color: var(--on-feel);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  :global(html[data-xray]) .xray-note {
+    display: block;
+  }
+
+  :global(html[data-xray]) .xray-oculta {
+    display: none;
+  }
+
+  .explorar-casos {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 40px) clamp(48px, 7vw, 80px);
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+  }
+
+  /* --- Secciones oscuras (método y contacto) ----------------------------- */
+  /* Dentro, los tokens vuelven a la paleta de fondo oscuro: así las islas
+     compartidas (puzzle, notas) se leen sin tocarlas. */
+  .tinta {
+    --text: var(--sobre-tinta);
+    --dim: var(--sobre-tinta-dim);
+    --dimmer: var(--sobre-tinta-meta);
+    --bg-2: var(--tinta-2);
+    --surface: var(--tinta-2);
+    --surface-2: #2c2f37;
+    --line: #3a3d45;
+    --line-strong: #75787f;
+    --mind: #b8a6ff;
+    --clarity: #a9bcff;
+    --feel: #ff9e6b;
+    --mind-deep: #2a2352;
+    --clarity-deep: #1d2a52;
+    --feel-deep: #4a2a1c;
+    --on-mind: #d9d1f5;
+    --on-clarity: #d6defc;
+    --on-feel: #ffc9ab;
+    --on-clarity-solid: var(--tinta);
+    --mind-12: color-mix(in srgb, var(--mind) 12%, transparent);
+    --mind-16: color-mix(in srgb, var(--mind) 16%, transparent);
+    --mind-22: color-mix(in srgb, var(--mind) 22%, transparent);
+    --clarity-12: color-mix(in srgb, var(--clarity) 12%, transparent);
+    --clarity-16: color-mix(in srgb, var(--clarity) 16%, transparent);
+    --feel-12: color-mix(in srgb, var(--feel) 12%, transparent);
+    --feel-16: color-mix(in srgb, var(--feel) 16%, transparent);
+    --link: #a9bcff;
+    --link-hover: #ffffff;
+    background: var(--tinta);
+    color: var(--sobre-tinta);
+  }
+
+  .tinta :focus-visible {
+    outline-color: var(--sobre-tinta);
+  }
+
+  .tinta-in {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(56px, 8vw, 96px) clamp(20px, 4vw, 40px);
+  }
+
+  .tinta-in--contacto {
+    padding-block: clamp(56px, 8vw, 104px);
+  }
+
+  .metodo-cab {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+    gap: 20px 56px;
+    align-items: end;
+  }
+
+  .metodo-sub {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--sobre-tinta-dim);
+    text-wrap: pretty;
+  }
+
+  .aviso {
+    margin-top: 12px;
+    font-size: 13.5px;
+    color: var(--sobre-tinta-meta);
+  }
+
+  .proceso-cab {
+    margin-top: 56px;
+  }
+
+  .proceso-titulo {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sobre-tinta-meta);
+  }
+
+  .pasos {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+    gap: 24px;
+  }
+
+  .paso {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-top: 1.5px solid #4a4d55;
+    padding-top: 16px;
+  }
+
+  .paso-n {
+    font-family: var(--serif);
+    font-size: 32px;
+    line-height: 1;
+  }
+
+  .paso-t {
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  .paso-x {
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--sobre-tinta-dim);
+  }
+
+  .puzzle-slot {
+    margin-top: 44px;
+  }
+
+  /* Letra chica: se intuye, no se lee, hasta que pasa la linterna. */
+  .ghost {
+    margin: 26px 0 0;
+    max-width: 760px;
+    border-left: 2px solid transparent;
+    padding-left: 16px;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--dim);
+    opacity: calc(0.05 + 0.95 * var(--reveal, 0));
+    transition: opacity var(--dur-hover) var(--ease-hover);
+  }
+
+  :global(html[data-foco]) .ghost {
+    position: relative;
+    z-index: 81;
+    border-left-color: var(--mind);
+  }
+
+  .ghost-label {
+    display: none;
+    color: var(--on-mind);
+    margin-bottom: 6px;
+  }
+
+  @media (pointer: coarse), (hover: none) {
+    .ghost {
+      opacity: 1;
+      border-left-color: var(--mind);
+    }
+
+    .ghost-label {
+      display: block;
+    }
+  }
+
+  /* --- Otros proyectos -------------------------------------------------- */
+  .otros {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(48px, 7vw, 80px) clamp(20px, 4vw, 40px) 0;
+  }
+
+  .otros-cab {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .otros-sub {
+    font-size: 14.5px;
+    color: var(--dimmer);
+  }
+
+  .otros-lista {
+    list-style: none;
+    padding: 0;
+    margin: 24px 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    gap: 20px;
+  }
+
+  .otro {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: var(--text);
+  }
+
+  .otro:hover {
+    color: var(--clarity);
+  }
+
+  .otro img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+  }
+
+  .otro-txt {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .otro-t {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .otro-x {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--dimmer);
+  }
+
+  /* --- Sobre mí corto y pymes ------------------------------------------- */
+  .sobre {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(48px, 7vw, 80px) clamp(20px, 4vw, 40px);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+    gap: 28px 56px;
+  }
+
+  .sobre-col {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .sobre-col em {
+    color: var(--dimmer);
+  }
+
+  .sobre-texto {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--dim);
+  }
+
+  .sobre-mas {
+    align-self: flex-start;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .pymes {
+    align-self: start;
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: clamp(22px, 3vw, 32px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .pymes-lead {
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .pymes-lista {
+    padding-left: 20px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--dim);
+  }
+
+  .pymes-lista b {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .explorar-final {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 40px) clamp(48px, 7vw, 80px);
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+  }
+
+  /* --- Contacto --------------------------------------------------------- */
+  .contacto-titulo {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(38px, 5.4vw, 72px);
+    line-height: 1.02;
+    letter-spacing: 0;
+    max-width: 900px;
+    text-wrap: balance;
+  }
+
+  .contacto-sub {
+    margin-top: 14px;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--sobre-tinta-dim);
+    max-width: 640px;
+  }
+
+  .datos {
+    margin-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 28px;
+    align-items: center;
+    font-size: 15px;
+    color: var(--sobre-tinta-dim);
+  }
+
+  .dato {
+    color: #ffffff;
+  }
+
+  a.dato:hover,
+  .datos-link:hover {
+    color: #ffffff;
+    text-decoration: underline;
+  }
+
+  .datos-link {
+    color: #a9bcff;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .cierre {
+    margin-top: 56px;
+    padding-top: 28px;
+    border-top: 1px solid #3a3d45;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+    gap: 20px 48px;
+    align-items: center;
+  }
+
+  .cierre-texto {
+    font-family: var(--serif);
+    font-size: clamp(26px, 2.8vw, 34px);
+    line-height: 1.2;
+    color: #ffffff;
+    text-wrap: balance;
+  }
+
+  .cierre-botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .boton-claro,
+  .boton-borde {
+    display: inline-flex;
+    align-items: center;
+    min-height: 52px;
+    padding: 0 22px;
+    border-radius: 12px;
+    font-size: 16px;
+  }
+
+  .boton-claro {
+    background: var(--sobre-tinta);
+    color: var(--tinta);
+    font-weight: 600;
+  }
+
+  .boton-claro:hover {
+    background: #ffffff;
+    color: var(--tinta);
+  }
+
+  .boton-borde {
+    border: 1.5px solid var(--sobre-tinta);
+    color: var(--sobre-tinta);
+    font-weight: 500;
+  }
+
+  .boton-borde:hover {
+    background: #2c2f37;
+    color: #ffffff;
+  }
+</style>

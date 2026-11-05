@@ -1,0 +1,265 @@
+---
+/**
+ * Cabecera del diseño v3 (/ux/). Sustituye a TopBar en las páginas de tema
+ * claro: va en el flujo (sticky), con la barra de progreso debajo y la franja
+ * del modo Explorar, que solo existe en ese modo.
+ */
+import ModeSwitch from '../../islands/ModeSwitch.tsx';
+import { HOME_UX } from '../../content/home';
+import { CASES_UX_UI } from '../../content/cases';
+import { UI, type Lang } from '../../content/ui';
+import { rutas } from '../../content/profiles';
+import { TOTAL_FINDS } from '../../lib/finds';
+import { withBase } from '../../lib/paths';
+
+interface Props {
+  lang: Lang;
+  /** `home` enlaza a sus propias secciones; `caso` muestra la vuelta a los casos. */
+  variante: 'home' | 'caso' | 'pagina';
+  /** Esta misma página en el otro idioma, sin el prefijo de despliegue. */
+  otroIdioma: string;
+  /** Color fijo de la barra de progreso (en un caso, el del caso). En la home cambia por sección. */
+  tono?: string;
+}
+
+const { lang, variante, otroIdioma, tono } = Astro.props;
+const t = HOME_UX[lang];
+const u = UI[lang];
+const inicio = withBase(rutas('ux', lang).home);
+const otro = lang === 'es' ? 'en' : 'es';
+/* En la home las anclas son locales; desde otra página llevan a la home. */
+const ancla = (id: string) => (variante === 'home' ? `#${id}` : `${inicio}#${id}`);
+---
+
+<header class="cab" data-tono-fijo={tono}>
+  <div class="cab-fila">
+    <a class="cab-nombre" href={variante === 'home' ? '#top' : inicio}>Emilio Romero</a>
+
+    {
+      variante === 'caso' ? (
+        <a class="cab-volver" href={ancla('casos')}>
+          {CASES_UX_UI[lang].volver}
+        </a>
+      ) : (
+        <nav class="cab-nav" aria-label={t.nav.label}>
+          <a href={ancla('casos')}>{t.nav.casos}</a>
+          <a href={ancla('metodo')}>{t.nav.metodo}</a>
+          <a href={ancla('contacto')}>{t.nav.contacto}</a>
+        </nav>
+      )
+    }
+
+    <ModeSwitch lang={lang} client:idle />
+
+    <a class="cab-idioma" href={withBase(otroIdioma)} lang={otro} hreflang={otro} title={u.langTitle}>{u.langBtn}</a>
+
+    <button class="cab-ayuda" type="button" aria-label={u.tutorialTitle} title={u.tutorialTitle} data-abrir-tutorial>
+      ?
+    </button>
+  </div>
+
+  <div class="cab-progreso" aria-hidden="true"><div class="cab-progreso-barra" data-progreso></div></div>
+
+  <div class="cab-explorar" data-playful>
+    <div class="cab-fila cab-fila--explorar">
+      <span class="cab-explorar-titulo"><span class="cab-explorar-punto" aria-hidden="true"></span>{t.explorar.titulo}</span>
+      <span>{t.explorar.texto}</span>
+      <span class="cab-explorar-notas tabular">
+        {t.explorar.notas} <span data-notas>0</span>/{TOTAL_FINDS}
+      </span>
+    </div>
+  </div>
+</header>
+
+<script>
+  import { getFinds, onFindsChange } from '../../lib/finds';
+
+  /* El tutorial se abre por evento: el botón vive aquí y la isla en la página. */
+  document.querySelectorAll('[data-abrir-tutorial]').forEach((boton) => {
+    boton.addEventListener('click', () => window.dispatchEvent(new Event('em-open-tutorial')));
+  });
+
+  /* Contador de notas de la franja Explorar: el mismo que lleva el panel curioso. */
+  const notas = document.querySelector<HTMLElement>('[data-notas]');
+  if (notas) {
+    notas.textContent = String(getFinds().length);
+    onFindsChange((encontradas) => (notas.textContent = String(encontradas.length)));
+  }
+
+  /* Progreso de lectura. En la home toma el color de la sección que se está
+     leyendo (cada una lo declara en `data-tono`); en un caso, el del caso. */
+  const cabecera = document.querySelector<HTMLElement>('.cab');
+  const barra = document.querySelector<HTMLElement>('[data-progreso]');
+  if (cabecera && barra) {
+    const fijo = cabecera.dataset.tonoFijo;
+    const secciones = Array.from(document.querySelectorAll<HTMLElement>('[data-tono]'));
+    let pendiente = false;
+    const pintar = () => {
+      pendiente = false;
+      const d = document.documentElement;
+      const max = Math.max(1, d.scrollHeight - d.clientHeight);
+      barra.style.width = ((d.scrollTop / max) * 100).toFixed(1) + '%';
+      if (fijo) {
+        barra.style.background = fijo;
+        return;
+      }
+      let tono = '';
+      for (const s of secciones) {
+        if (s.getBoundingClientRect().top < innerHeight * 0.4) tono = s.dataset.tono ?? '';
+      }
+      barra.style.background = tono || 'var(--text)';
+    };
+    addEventListener(
+      'scroll',
+      () => {
+        if (!pendiente) {
+          pendiente = true;
+          requestAnimationFrame(pintar);
+        }
+      },
+      { passive: true }
+    );
+    pintar();
+  }
+</script>
+
+<style>
+  .cab {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-bar);
+    background: rgba(247, 245, 240, 0.94);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .cab-fila {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px clamp(16px, 4vw, 40px);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .cab-nombre {
+    margin-right: auto;
+    color: var(--text);
+    font-weight: var(--fw-semibold);
+    font-size: 15px;
+  }
+
+  .cab-nombre:hover {
+    color: var(--clarity);
+  }
+
+  .cab-volver {
+    margin-right: auto;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 14.5px;
+    color: var(--dimmer);
+  }
+
+  /* Con "volver" al lado del nombre, es "volver" quien empuja a la derecha. */
+  .cab-nombre:has(+ .cab-volver) {
+    margin-right: 0;
+  }
+
+  .cab-volver:hover {
+    color: var(--text);
+  }
+
+  .cab-nav {
+    display: flex;
+    gap: 4px;
+    font-size: 14.5px;
+  }
+
+  .cab-nav a {
+    padding: 12px 10px;
+    color: var(--dimmer);
+  }
+
+  .cab-nav a:hover {
+    color: var(--text);
+  }
+
+  .cab-idioma,
+  .cab-ayuda {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-pill);
+    background: transparent;
+    color: var(--dimmer);
+    font-size: 13px;
+    font-weight: var(--fw-medium);
+  }
+
+  .cab-idioma:hover,
+  .cab-ayuda:hover {
+    color: var(--text);
+    border-color: var(--text);
+  }
+
+  .cab-progreso {
+    height: 3px;
+  }
+
+  .cab-progreso-barra {
+    height: 3px;
+    width: 0;
+    background: var(--text);
+    transition: width 0.1s linear, background-color 0.3s;
+  }
+
+  .cab-explorar {
+    background: var(--mind-deep);
+    border-top: 1px solid #d9d1f5;
+  }
+
+  .cab-fila--explorar {
+    padding-block: 9px;
+    gap: 8px 16px;
+    font-size: 13.5px;
+    color: var(--on-mind);
+  }
+
+  .cab-explorar-titulo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: var(--fw-medium);
+  }
+
+  .cab-explorar-punto {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--r-pill);
+    background: var(--mind);
+  }
+
+  .cab-explorar-notas {
+    margin-left: auto;
+    font-weight: var(--fw-medium);
+  }
+
+  /* En un teléfono no caben la navegación ni la ayuda: el menú vive en las
+     anclas de la propia página y el tour, en el panel curioso. */
+  @media (max-width: 760px) {
+    .cab-fila {
+      gap: 10px;
+    }
+
+    .cab-nav,
+    .cab-ayuda {
+      display: none;
+    }
+  }
+</style>

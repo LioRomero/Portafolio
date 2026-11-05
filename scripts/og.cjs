@@ -1,6 +1,7 @@
 /**
- * Genera `public/og.jpg`, la tarjeta que se ve al compartir el enlace en
- * LinkedIn, WhatsApp o Slack.
+ * Genera `public/og.jpg`, la tarjeta que se ve al compartir el enlace de la
+ * raíz en LinkedIn, WhatsApp o Slack. "Business Analyst" no va pintado: ese
+ * cargo queda en el <title> y en los datos estructurados, para buscadores.
  *
  * El posicionamiento va pintado dentro de la imagen, así que este archivo hay
  * que volver a correrlo cada vez que cambie: `node scripts/og.cjs`.
@@ -51,8 +52,8 @@ const texto = Buffer.from(
      <circle cx="86" cy="152" r="8" fill="#22D3EE"/>
      <text x="110" y="160" font-family="${tipo}" font-size="22" fill="#22D3EE" letter-spacing="3.2">BOGOTÁ · REMOTO GLOBAL</text>
      <text x="82" y="296" font-family="${tipo}" font-size="82" font-weight="600" fill="#E9EBF4" letter-spacing="-2.2">Emilio Romero</text>
-     <text x="82" y="352" font-family="${tipo}" font-size="31" fill="#A2A8C2">Service Designer · UX Research</text>
-     <text x="82" y="394" font-family="${tipo}" font-size="31" fill="#A2A8C2">&amp; Diseño de Negocio</text>
+     <text x="82" y="352" font-family="${tipo}" font-size="31" fill="#A2A8C2">UX Strategist</text>
+     <text x="82" y="394" font-family="${tipo}" font-size="31" fill="#A2A8C2">Research aplicado a decisiones de negocio</text>
      <rect x="82" y="446" width="110" height="2" fill="#3A4468"/>
      <text x="82" y="504" font-family="${tipo}" font-size="25" fill="#767C99">Antes de la pantalla, hay alguien pensando.</text>
    </svg>`,

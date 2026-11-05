@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { TUTORIAL } from '../content/tutorial';
+import { TUTORIAL, TUTORIAL_UX } from '../content/tutorial';
 import { isTutorialSeen, markTutorialSeen } from '../lib/prefs';
 import type { Lang } from '../content/ui';
 
@@ -7,11 +7,15 @@ interface Props {
   lang: Lang;
   /** 6s en la home, 2.6s en las otras páginas. */
   delay: number;
+  /** En /ux/ algunos pasos se cuentan distinto: ver TUTORIAL_UX. */
+  perfil?: 'ba' | 'ux';
 }
 
 /** Clases con prefijo `tu-`: los `<style>` de Preact no están encapsulados. */
-export default function Tutorial({ lang, delay }: Props) {
-  const t = TUTORIAL[lang];
+export default function Tutorial({ lang, delay, perfil = 'ba' }: Props) {
+  const base = TUTORIAL[lang];
+  const cambios = perfil === 'ux' ? TUTORIAL_UX[lang] : {};
+  const t = { ...base, steps: base.steps.map((paso, k) => ({ ...paso, ...cambios[k] })) };
   const [open, setOpen] = useState(false);
   const [i, setI] = useState(0);
   const dialog = useRef<HTMLDivElement | null>(null);

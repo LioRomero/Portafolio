@@ -59,7 +59,7 @@ export const CASES = {
     tab: 'Ropofy',
     accent: '#22D3EE',
     es: {
-      chips: [['SaaS · CRM', 'clarity'], ['Consultor UX / Business Analyst', 'line'], ['Jun 2025 – Abr 2026', 'line']],
+      chips: [['SaaS · CRM', 'clarity'], ['Jr UX Consultant / UX Designer', 'line'], ['Jun 2025 – Abr 2026', 'line']],
       title: 'Me contrataron para rediseñar una web. El problema estaba en el silencio.',
       sub: 'Ropofy vendía bien y perdía clientes sin saber dónde. El sitio no era el cuello de botella: lo era el tiempo que tardaban en responder.',
       cols: [
@@ -95,7 +95,7 @@ export const CASES = {
         items: [
           ['La web se organiza alrededor del contacto', 'Contacto visible en cada pantalla, con el canal que el cliente ya prefiere y una expectativa clara de cuándo le responden.'],
           ['Un solo lugar donde caen todas las consultas', 'Los tres canales confluyen en una bandeja con dueño y con estado. Deja de importar por dónde entró: importa si ya se respondió.'],
-          ['El tiempo de respuesta se vuelve la métrica del equipo', 'Lo que no se mide no se defiende. Acordamos medirlo antes de tocar nada, para poder comparar después.'],
+          ['El tiempo de respuesta se vuelve la métrica del equipo', 'Lo que no se mide no se defiende. Propuse medirlo antes de tocar nada, para poder comparar después.'],
           ['Lo que descarté: un chatbot', 'Era la solución que todos esperaban. La descarté: la empresa no tenía el volumen para justificarlo y habría añadido una espera más, con una respuesta menos útil. El problema era organizativo, no tecnológico.', true],
         ],
       },
@@ -118,7 +118,7 @@ export const CASES = {
       ],
     },
     en: {
-      chips: [['SaaS · CRM', 'clarity'], ['UX Consultant / Business Analyst', 'line'], ['Jun 2025 – Apr 2026', 'line']],
+      chips: [['SaaS · CRM', 'clarity'], ['Jr UX Consultant / UX Designer', 'line'], ['Jun 2025 – Apr 2026', 'line']],
       title: 'They hired me to redesign a website. The problem was the silence.',
       sub: "Ropofy was selling well and losing customers without knowing where. The site wasn't the bottleneck — how long they took to reply was.",
       cols: [
@@ -154,7 +154,7 @@ export const CASES = {
         items: [
           ['The site is organised around getting in touch', "Contact visible on every screen, through the channel the customer already prefers, with a clear expectation of when they'll hear back."],
           ['One place where every enquiry lands', "All three channels converge in a single inbox with an owner and a status. Where it came from stops mattering: whether it's been answered starts to."],
-          ["Response time becomes the team's metric", "What isn't measured can't be defended. We agreed to measure it before touching anything, so we could compare afterwards."],
+          ["Response time becomes the team's metric", "What isn't measured can't be defended. I proposed measuring it before touching anything, so we could compare afterwards."],
           ['What I ruled out: a chatbot', "It was the solution everyone expected. I ruled it out: the company didn't have the volume to justify it and it would have added one more wait, with a less useful answer. The problem was organisational, not technological.", true],
         ],
       },
@@ -182,7 +182,7 @@ export const CASES = {
     tab: 'QStrauss',
     accent: '#8B7BF0',
     es: {
-      chips: [['Consultoría · Enterprise', 'mind'], ['Technical Architect / Business Analyst', 'line'], ['Abr 2026 – Actualidad', 'line']],
+      chips: [['Consultoría · Enterprise', 'mind'], ['Technical Architect', 'line'], ['Abr 2026 – Nov 2026', 'line']],
       title: 'Entregábamos la plataforma configurada. El conocimiento se quedaba con nosotros.',
       sub: 'Las implementaciones salían bien. Meses después, el cliente seguía llamando para preguntar cómo funcionaba lo que ya tenía.',
       cols: [
@@ -241,7 +241,7 @@ export const CASES = {
       ],
     },
     en: {
-      chips: [['Consulting · Enterprise', 'mind'], ['Technical Architect / Business Analyst', 'line'], ['Apr 2026 – Present', 'line']],
+      chips: [['Consulting · Enterprise', 'mind'], ['Technical Architect', 'line'], ['Apr 2026 – Nov 2026', 'line']],
       title: 'We delivered the platform configured. The knowledge stayed with us.',
       sub: 'The implementations went well. Months later the client was still calling to ask how the thing they already owned worked.',
       cols: [
@@ -425,3 +425,674 @@ export const CASES = {
     },
   },
 } as const;
+
+/* ==========================================================================
+   Perfil UX (/ux/) · páginas de caso del diseño v3
+   Texto copiado de design-reference/Caso Ropofy, Caso BID y Caso Enterprise
+   (.dc.html); el inglés es traducción del mismo texto. La raíz sigue leyendo
+   CASES: esto solo lo lee /ux/. Las claves son las mismas, así que las URLs
+   (/ux/casos/ropofy, /bid, /qstrauss) no cambian.
+   ========================================================================== */
+
+/** Orden de lectura en /ux/: el de la Home v3. */
+export const ORDEN_UX = ['ropofy', 'bid', 'qstrauss'] as const satisfies readonly CaseKey[];
+
+interface HallazgoUx {
+  tag: string;
+  h3: string;
+  p: string;
+  /** Frase de entrevista, siempre con su aviso de que es reconstruida. */
+  cita?: string;
+  aviso?: string;
+}
+
+export interface CasoUx {
+  n: string;
+  emocion: string;
+  tag: string;
+  h1: string;
+  lede: string;
+  chips: readonly string[];
+  ficha: { rol: string; decidi: string; cambio: string };
+  masAlla: string;
+  adopcion: string;
+  /** Visible solo en modo Explorar: comentario sobre cómo está contado el caso. */
+  nota: string;
+  /** Lo que queda si se le quita el porqué (radiografía, tecla X). */
+  radiografia: string;
+  s1: { h2: string; ps: readonly string[]; pidieron: string; real: string };
+  s2: { h2: string; p: string; stats: readonly (readonly [string, string])[]; preguntas: readonly string[]; nota: string };
+  s3: { h2: string; hallazgos: readonly HallazgoUx[] };
+  s4: { h2: string; decisiones: readonly (readonly [string, string])[]; descarte?: readonly [string, string] };
+  s5: {
+    flujo?: { label: string; aria: string; pasos: readonly string[] };
+    compara?: { label: string; items: readonly (readonly [string, string])[] };
+    figura?: { src: string; alt: string; cap: string };
+    certificado?: { alt: string; cap: string };
+    nda?: string;
+  };
+  s6: { grande: string; p: string; extra: string };
+  s7: { aprendi: string; distinto: string };
+  contacto: { wa: string; asunto: string };
+  siguiente: { label: string; titulo: string; key: CaseKey };
+}
+
+export const CASES_UX_UI = {
+  es: {
+    volver: '← Todos los casos',
+    enPagina: 'En esta página',
+    resumen: 'El caso en 30 segundos',
+    ficha: { rol: 'Mi rol', decidi: 'Qué decidí y por qué', cambio: 'Qué cambió' },
+    aporte: 'Aporte y adopción',
+    masAlla: 'Más allá del encargo',
+    adopcion: '¿Lo adoptaron?',
+    nota: 'Nota de diseño:',
+    kickers: ['01 · El encargo', '02 · Investigación', '03 · Hallazgos', '04 · Decisiones', '05 · La solución', '06 · Resultado', '07 · Qué me dejó'],
+    rail: ['El encargo', 'Investigación', 'Hallazgos', 'Decisiones', 'La solución', 'Resultado', 'Qué me dejó'],
+    pidieron: 'Lo que pidieron',
+    real: 'El problema real',
+    preguntas: 'Las preguntas que hice',
+    comoQuedo: 'Cómo quedó',
+    loQueCambio: 'Lo que cambió',
+    meLlevo: 'Qué me llevo',
+    aprendi: 'Lo que aprendí',
+    distinto: 'Qué haría distinto',
+    enPalabras: 'En palabras:',
+    cta: {
+      titulo: '¿Te suena el problema? Hablemos del tuyo.',
+      sub: 'Si estás en el punto en que nadie sabe todavía cómo enunciarlo, ahí es justo donde me gusta empezar. Respondo en máximo 24 horas hábiles.',
+      wa: 'Escribir por WhatsApp',
+      correo: 'Escribir por correo',
+    },
+  },
+  en: {
+    volver: '← All cases',
+    enPagina: 'On this page',
+    resumen: 'The case in 30 seconds',
+    ficha: { rol: 'My role', decidi: 'What I decided and why', cambio: 'What changed' },
+    aporte: 'Contribution and adoption',
+    masAlla: 'Beyond the brief',
+    adopcion: 'Did they adopt it?',
+    nota: 'Design note:',
+    kickers: ['01 · The brief', '02 · Research', '03 · Findings', '04 · Decisions', '05 · The solution', '06 · Outcome', '07 · What it left me'],
+    rail: ['The brief', 'Research', 'Findings', 'Decisions', 'The solution', 'Outcome', 'What it left me'],
+    pidieron: 'What they asked for',
+    real: 'The real problem',
+    preguntas: 'The questions I asked',
+    comoQuedo: 'How it turned out',
+    loQueCambio: 'What changed',
+    meLlevo: 'What I take away',
+    aprendi: 'What I learned',
+    distinto: 'What I’d do differently',
+    enPalabras: 'In words:',
+    cta: {
+      titulo: 'Does the problem sound familiar? Let’s talk about yours.',
+      sub: 'If you’re at the point where nobody can quite name it yet, that’s exactly where I like to start. I reply within 24 business hours.',
+      wa: 'Message on WhatsApp',
+      correo: 'Write by email',
+    },
+  },
+} as const;
+
+export const CASES_UX: Record<CaseKey, { es: CasoUx; en: CasoUx }> = {
+  ropofy: {
+    es: {
+      n: 'Caso 1 de 3',
+      emocion: 'Emoción: espera',
+      tag: 'SaaS B2B · CRM y automatización',
+      h1: 'Me contrataron para rediseñar una web. El problema estaba en el silencio.',
+      lede: 'Ropofy vendía bien y perdía clientes sin saber dónde. El sitio no era el cuello de botella: lo era el tiempo que tardaban en responder.',
+      chips: ['Jr UX Consultant / UX Designer', '10 meses · jun 2025 – abr 2026'],
+      ficha: {
+        rol: 'Investigación y rediseño del sitio con el equipo creativo, diseño de la bandeja única y acompañamiento de implementaciones para mipymes de Latinoamérica, España y EE. UU.',
+        decidi: 'Diseñar el sitio alrededor del contacto, no del catálogo, y ordenar los canales de entrada.',
+        cambio: 'Web rediseñada alrededor del contacto y bandeja única implementada. El tráfico y los leads crecieron durante la estabilización de la empresa.',
+      },
+      masAlla: 'Me pidieron una web nueva. Por mi cuenta investigué dónde se perdían las ventas, reencuadré el encargo hacia el tiempo de respuesta y descarté el chatbot que todos esperaban.',
+      adopcion: 'Sí. Los clientes adoptaron la plataforma: lideré distintas estrategias de uso de la herramienta y del funnel de ventas de punta a punta, con capacitaciones en automatización y bots de IA.',
+      nota: 'El caso abre con el resultado, no con el proceso. Quien decide contratarme casi nunca llega al final de la página, pero si el resultado le engancha, sí lee el método.',
+      radiografia: 'Sin el insight, este caso es “hicimos una web nueva”. La decisión no se puede defender y el resultado parece suerte.',
+      s1: {
+        h2: 'La pregunta que no estaba en el encargo',
+        ps: [
+          'Ropofy es una empresa pequeña que vende por varios canales a la vez. El encargo llegó como un problema de imagen: la web se veía vieja y no reflejaba lo que la empresa era. Había que rediseñarla.',
+          'Antes de abrir Figma pregunté otra cosa: ¿de dónde vienen las ventas que sí se cierran, y dónde se caen las que no? Nadie tenía la respuesta completa. Ese vacío fue el verdadero punto de partida.',
+        ],
+        pidieron: '“Necesitamos una web nueva, más moderna.”',
+        real: '“Nos escriben por tres canales y no sabemos a quién dejamos esperando.”',
+      },
+      s2: {
+        h2: 'Poco presupuesto, así que fui a lo que ya existía',
+        p: 'No había dinero para un estudio grande ni tiempo para esperarlo. Usé dos fuentes que la empresa ya tenía y que nadie había mirado como datos: las conversaciones entrantes y la memoria de los clientes recientes. Después, con la bandeja ya en marcha, hice pruebas con usuarios y A/B testing de los flujos de automatización con IA, junto a desarrollo.',
+        stats: [
+          ['6', 'entrevistas a clientes que compraron en los últimos tres meses'],
+          ['3 meses', 'de conversaciones entrantes revisadas canal por canal'],
+          ['3', 'canales de entrada sin dueño: WhatsApp, web e Instagram'],
+        ],
+        preguntas: [
+          '¿Cómo nos encontraste y por dónde escribiste primero?',
+          '¿Cuánto esperaste y qué pensaste mientras esperabas?',
+          '¿Miraste otras opciones en ese rato? ¿Qué te hizo volver, o no volver?',
+        ],
+        nota: 'Ninguna pregunta fue sobre el diseño de la web. Si el problema hubiera estado ahí, habría salido solo.',
+      },
+      s3: {
+        h2: 'El abandono no pasaba en el checkout. Pasaba en la espera.',
+        hallazgos: [
+          {
+            tag: 'Hallazgo 1 · Espera',
+            h3: 'El silencio se lee como desinterés',
+            p: 'La compra no se rompía por precio ni por producto: se rompía en las horas que pasaban sin respuesta. Para el cliente, no contestar significa “no me quieren vender”.',
+            cita: '“Escribí el viernes y me contestaron el martes. Ya había comprado en otro lado.”',
+            aviso: 'Frase reconstruida de mis notas de entrevista; no es una transcripción literal.',
+          },
+          {
+            tag: 'Hallazgo 2 · Dispersión',
+            h3: 'Tres canales, ningún dueño',
+            p: 'La misma consulta podía entrar por WhatsApp, por el formulario de la web y por Instagram. Nadie sabía cuál era la fuente de verdad: algunas se respondían dos veces y otras ninguna. El equipo no era negligente; no tenía forma de ver el total.',
+            aviso: 'No conservo el conteo exacto de duplicados. Lo que movió la decisión fue el patrón, no la cifra.',
+          },
+          {
+            tag: 'Hallazgo 3 · Catálogo',
+            h3: 'La web tenía que abrir conversaciones, no cerrar ventas',
+            p: 'Casi nadie compraba sin hablar antes con alguien. Un sitio pensado como vitrina de catálogo estaba resolviendo un paso que en este negocio no existía.',
+          },
+        ],
+      },
+      s4: {
+        h2: 'Ordenar la entrada, no maquillar la vitrina',
+        decisiones: [
+          ['La web se organiza alrededor del contacto', 'Contacto visible en cada pantalla, por el canal que el cliente ya prefiere y con una expectativa clara de cuándo le responden.'],
+          ['Un solo lugar donde caen todas las consultas', 'Los tres canales llegan a una bandeja con dueño y con estado. Deja de importar por dónde entró la consulta; importa si ya se respondió.'],
+          ['El tiempo de respuesta se vuelve la métrica del equipo', 'Lo que no se mide no se defiende. Propuse medirlo antes de tocar nada, para poder comparar después.'],
+        ],
+        descarte: ['Lo que descarté: un chatbot', 'Era la solución que todos esperaban. La empresa no tenía el volumen para justificarlo y habría añadido otra espera, con una respuesta menos útil. El problema era de organización, no de tecnología.'],
+      },
+      s5: {
+        flujo: {
+          label: 'El flujo de consultas, en palabras',
+          aria: 'Flujo de consultas',
+          pasos: ['WhatsApp · web · Instagram', 'Bandeja única, con dueño y estado', 'Respuesta con tiempo medido'],
+        },
+        figura: {
+          src: '/assets/diag/ropofy-despues-claro.svg',
+          alt: 'Esquema del sitio después del rediseño: la home con acceso fijo a Escríbenos, y las secciones Qué hacemos, Casos y Productos, cada una con su contacto visible.',
+          cap: 'antes, el catálogo iba al frente y el contacto al final. Después, cada sección tiene un acceso visible para escribir, con el canal y el tiempo de respuesta a la vista.',
+        },
+      },
+      s6: {
+        grande: 'Tráfico y leads',
+        p: 'crecieron durante la etapa de estabilización de la empresa, y el rediseño acompañó ese crecimiento. No puedo aislar cuánto aportó cada parte, así que prefiero decirlo así antes que atribuirme un porcentaje.',
+        extra: 'Lo que no estaba en el encargo: el rediseño terminó siendo la parte pequeña. Mi lectura es que lo que más pesó fue dejar de perder conversaciones, aunque no lo puedo demostrar con cifras.',
+      },
+      s7: {
+        aprendi: 'Un encargo mal formulado no es un obstáculo: es el primer hallazgo. Y negociar el alcance a mitad del proyecto es parte del trabajo, no un fracaso de la propuesta.',
+        distinto: 'Medir el tiempo de respuesta desde la primera semana, no desde que tuve la sospecha. Habría podido mostrar el costo del silencio con números propios y no solo con citas.',
+      },
+      contacto: { wa: 'Hola Emilio, leí tu caso de Ropofy y creo que tenemos un problema parecido. ¿Hablamos?', asunto: 'Sobre tu caso ropofy' },
+      siguiente: { label: 'Siguiente · Caso 2 · BID', titulo: 'Verificar licitaciones públicas sin leerlas a mano →', key: 'bid' },
+    },
+    en: {
+      n: 'Case 1 of 3',
+      emocion: 'Emotion: waiting',
+      tag: 'B2B SaaS · CRM and automation',
+      h1: 'I was hired to redesign a website. The problem was in the silence.',
+      lede: 'Ropofy was selling well and losing customers without knowing where. The site wasn’t the bottleneck: the time it took them to reply was.',
+      chips: ['Jr UX Consultant / UX Designer', '10 months · Jun 2025 – Apr 2026'],
+      ficha: {
+        rol: 'Research and redesign of the site with the creative team, design of the single inbox and support for implementations for small businesses in Latin America, Spain and the U.S.',
+        decidi: 'Design the site around contact, not the catalogue, and bring order to the inbound channels.',
+        cambio: 'Website redesigned around contact and a single inbox in place. Traffic and leads grew during the company’s stabilization.',
+      },
+      masAlla: 'They asked me for a new website. On my own initiative I researched where sales were being lost, reframed the brief around response time and ruled out the chatbot everyone was expecting.',
+      adopcion: 'Yes. Customers adopted the platform: I led several strategies for using the tool and the sales funnel end to end, with training on automation and AI bots.',
+      nota: 'The case opens with the outcome, not the process. Whoever decides to hire me rarely reaches the bottom of the page, but if the outcome hooks them, they do read the method.',
+      radiografia: 'Without the insight, this case reads as “we built a new website”. The decision can’t be defended and the outcome looks like luck.',
+      s1: {
+        h2: 'The question that wasn’t in the brief',
+        ps: [
+          'Ropofy is a small company that sells through several channels at once. The brief arrived as an image problem: the website looked old and didn’t reflect what the company was. It needed a redesign.',
+          'Before opening Figma I asked something else: where do the sales that do close come from, and where do the ones that don’t fall through? Nobody had the full answer. That gap was the real starting point.',
+        ],
+        pidieron: '“We need a new, more modern website.”',
+        real: '“People write to us on three channels and we don’t know who we’re leaving waiting.”',
+      },
+      s2: {
+        h2: 'Little budget, so I went to what already existed',
+        p: 'There was no money for a big study and no time to wait for one. I used two sources the company already had and nobody had looked at as data: inbound conversations and the memory of recent customers. Later, with the inbox up and running, I ran user testing and A/B testing of the AI automation flows, together with development.',
+        stats: [
+          ['6', 'interviews with customers who bought in the last three months'],
+          ['3 months', 'of inbound conversations reviewed channel by channel'],
+          ['3', 'inbound channels with no owner: WhatsApp, web and Instagram'],
+        ],
+        preguntas: [
+          'How did you find us, and where did you write first?',
+          'How long did you wait, and what did you think while you waited?',
+          'Did you look at other options in the meantime? What made you come back, or not?',
+        ],
+        nota: 'None of the questions was about the website’s design. If the problem had been there, it would have come up on its own.',
+      },
+      s3: {
+        h2: 'The drop-off wasn’t happening at checkout. It was happening in the wait.',
+        hallazgos: [
+          {
+            tag: 'Finding 1 · Waiting',
+            h3: 'Silence reads as lack of interest',
+            p: 'The purchase wasn’t breaking on price or product: it broke in the hours that went by without a reply. To the customer, no answer means “they don’t want to sell to me”.',
+            cita: '“I wrote on Friday and they replied on Tuesday. I’d already bought elsewhere.”',
+            aviso: 'Line reconstructed from my interview notes; it isn’t a verbatim transcript.',
+          },
+          {
+            tag: 'Finding 2 · Scatter',
+            h3: 'Three channels, no owner',
+            p: 'The same enquiry could come in through WhatsApp, the website form and Instagram. Nobody knew which was the source of truth: some were answered twice and others not at all. The team wasn’t negligent; it had no way of seeing the whole.',
+            aviso: 'I don’t have the exact count of duplicates. What moved the decision was the pattern, not the figure.',
+          },
+          {
+            tag: 'Finding 3 · Catalogue',
+            h3: 'The website had to open conversations, not close sales',
+            p: 'Almost nobody bought without talking to someone first. A site built as a catalogue showcase was solving a step that didn’t exist in this business.',
+          },
+        ],
+      },
+      s4: {
+        h2: 'Sort out the entrance, don’t dress up the shop window',
+        decisiones: [
+          ['The website is organized around contact', 'Contact visible on every screen, through the channel the customer already prefers, with a clear expectation of when they’ll get a reply.'],
+          ['A single place where every enquiry lands', 'The three channels feed one inbox with an owner and a status. It stops mattering where the enquiry came in; what matters is whether it’s been answered.'],
+          ['Response time becomes the team’s metric', 'What isn’t measured can’t be defended. I proposed measuring it before touching anything, so we could compare afterwards.'],
+        ],
+        descarte: ['What I ruled out: a chatbot', 'It was the solution everyone expected. The company didn’t have the volume to justify it, and it would have added another wait, with a less useful answer. The problem was organization, not technology.'],
+      },
+      s5: {
+        flujo: {
+          label: 'The enquiry flow, in words',
+          aria: 'Enquiry flow',
+          pasos: ['WhatsApp · web · Instagram', 'Single inbox, with owner and status', 'Reply with measured time'],
+        },
+        figura: {
+          src: '/assets/diag/ropofy-despues-claro.svg',
+          alt: 'Diagram of the site after the redesign: the home page with a fixed “Message us” entry, and the What we do, Cases and Products sections, each with its contact in view.',
+          cap: 'before, the catalogue came first and contact came last. After, every section has a visible way to write in, with the channel and the response time in view.',
+        },
+      },
+      s6: {
+        grande: 'Traffic and leads',
+        p: 'grew during the company’s stabilization stage, and the redesign went along with that growth. I can’t isolate how much each part contributed, so I’d rather say it this way than claim a percentage.',
+        extra: 'What wasn’t in the brief: the redesign ended up being the small part. My reading is that what weighed most was no longer losing conversations, though I can’t prove it with figures.',
+      },
+      s7: {
+        aprendi: 'A badly framed brief isn’t an obstacle: it’s the first finding. And negotiating scope mid-project is part of the job, not a failure of the proposal.',
+        distinto: 'Measure response time from the first week, not from when I had the hunch. I could have shown the cost of silence with my own numbers and not just with quotes.',
+      },
+      contacto: { wa: 'Hi Emilio, I read your Ropofy case and I think we have a similar problem. Shall we talk?', asunto: 'About your Ropofy case' },
+      siguiente: { label: 'Next · Case 2 · IDB', titulo: 'Verifying public tenders without reading them by hand →', key: 'bid' },
+    },
+  },
+  bid: {
+    es: {
+      n: 'Caso 2 de 3',
+      emocion: 'Emoción: confusión',
+      tag: 'Transparencia pública · República Dominicana',
+      h1: 'Los documentos estaban publicados. Verificarlos seguía siendo trabajo manual.',
+      lede: 'El BID convocó un TechSprint con cuatro problemas para dar más transparencia a los procesos de gobierno. Con el equipo Trust elegimos la verificación de licitaciones: el funcionario tiene que encontrar a mano cualquier diferencia entre lo que se pidió y lo que se ofertó.',
+      chips: ['UX/UI Designer, equipo Trust', 'Mes y medio · TechSprint, ago 2024'],
+      ficha: {
+        rol: 'Investigación de enfoques, análisis del proceso de verificación, definición del usuario objetivo y diseño de la interfaz.',
+        decidi: 'Digitalizar los documentos de la licitación y automatizar la comparación, para que la herramienta señale la inconsistencia en vez de que una persona la busque.',
+        cambio: '311 de 622 contratos con inconsistencias detectadas. Ganadores de la categoría Distinción en Democratización de Datos y 2.º lugar general.',
+      },
+      masAlla: 'Antes de proponer la herramienta, definí quién la iba a usar: el funcionario que revisa cada propuesta. Esa definición guió el diseño del tablero.',
+      adopcion: 'Fue un prototipo de competencia y no llegó a uso real en una entidad; prefiero decirlo. Lo validaron las pruebas con usuarios sobre el prototipo y el jurado del Demo Day.',
+      nota: 'Este caso se cuenta en el mismo orden que los otros a propósito. Un formato repetido hace que quien lee compare decisiones, no estéticas.',
+      radiografia: 'Sin el insight, este caso es “hicimos otro portal de licitaciones”. Los documentos ya estaban publicados: sin la pregunta detrás, la pantalla no cambia nada.',
+      s1: {
+        h2: 'Transparencia no es publicar. Es poder verificar.',
+        ps: [
+          'El TechSprint lo convocaron el BID, la Alliance for Innovative Regulation y la oficina de Asuntos Internacionales de Narcóticos y Aplicación de la Ley del Departamento de Estado de EE. UU. Presentaron cuatro problemas y cada equipo elegía uno.',
+          'Elegimos la verificación de propuestas en licitaciones. La pregunta abierta era: si toda la documentación está disponible, ¿por qué sigue siendo tan difícil saber si cuadra?',
+        ],
+        pidieron: '“Brindar una mayor transparencia en los procesos gubernamentales.”',
+        real: '“Verificar una licitación sigue siendo leer documentos, uno por uno, buscando lo que no encaja.”',
+      },
+      s2: {
+        h2: 'Entender el problema antes de proponer',
+        p: 'Con los lineamientos de la competencia sobre la mesa, empezamos por investigar cómo abordar el problema: analizamos soluciones posibles y definimos quién era el usuario objetivo, centrados en sus necesidades y frustraciones.',
+        stats: [
+          ['1', 'usuario objetivo: el funcionario público que revisa cada propuesta'],
+          ['3', 'tipos de inconsistencia: precio, dato faltante o incorrecto y producto que no corresponde'],
+          ['622', 'contratos del catálogo público analizados'],
+        ],
+        preguntas: [
+          '¿Qué tiene que verificar el funcionario en cada propuesta?',
+          '¿Dónde se esconde una inconsistencia: en el precio, en un dato faltante, en el producto?',
+          '¿Qué haría que la revisión fuera verificable y no solo más rápida?',
+        ],
+        nota: 'Esta etapa fue de escritorio y de definición de usuario; por eso tomé los hallazgos como hipótesis. Las sesiones con personas llegaron después, en las pruebas del prototipo.',
+      },
+      s3: {
+        h2: 'La inconsistencia no está en un solo lugar',
+        hallazgos: [
+          {
+            tag: 'Hallazgo 1 · Dispersión',
+            h3: 'Lo que no cuadra puede estar en cualquier campo',
+            p: 'Un precio que no corresponde, un dato faltante o mal diligenciado, un producto que no es el que se pidió. Son tres revisiones distintas sobre el mismo documento, y ninguna se puede saltar.',
+          },
+          {
+            tag: 'Hallazgo 2 · Escala',
+            h3: 'No es un caso raro: es la mitad del catálogo',
+            p: 'Sobre el catálogo de contratos del Gobierno de la República Dominicana, la herramienta encontró 311 de 622 contratos con información faltante y otros 311 con inconsistencias en sus documentos. Revisar eso a mano no es lento: es inviable.',
+          },
+          {
+            tag: 'Hallazgo 3 · Miedo a equivocarse',
+            h3: 'Cuando la decisión es auditable, la duda paraliza',
+            p: 'Revisar mal en compras públicas tiene consecuencias personales. Sin un respaldo para el criterio, la gente se protege revisando de más, y aun así no queda tranquila.',
+          },
+          {
+            tag: 'Hallazgo 4 · Ciudadanía',
+            h3: 'El ciudadano tampoco puede leer eso',
+            p: 'Si el funcionario experto no logra verificar con comodidad, la vigilancia ciudadana es teórica. La legibilidad no es una comodidad: es la condición de la transparencia.',
+          },
+        ],
+      },
+      s4: {
+        h2: 'Que la herramienta encuentre la inconsistencia, no la persona',
+        decisiones: [
+          ['Digitalizar los documentos de la licitación', 'Una aplicación web sobre Power BI, con inteligencia artificial para leer los documentos y convertirlos en datos comparables.'],
+          ['Comparar de forma automática', 'La herramienta contrasta lo que pedía la licitación con lo ofertado y señala el tipo de inconsistencia: precio, dato faltante o incorrecto, o producto que no corresponde.'],
+          ['Abierta y adaptable', 'Se pensó como código abierto, para que otra entidad pudiera adoptarla y ajustarla a su propio proceso.'],
+        ],
+        descarte: ['Lo que no hicimos: decidir por el funcionario', 'La herramienta señala dónde mirar. Adjudicar sigue siendo una decisión humana, y por eso auditable: quien firma tiene que poder explicar por qué eligió.'],
+      },
+      s5: {
+        compara: {
+          label: 'Qué compara la herramienta, en palabras',
+          items: [
+            ['Precio', 'El ofertado contra el estimado en la licitación.'],
+            ['Datos', 'Campos faltantes o mal diligenciados.'],
+            ['Producto', 'Lo ofertado contra lo que se pidió.'],
+          ],
+        },
+        figura: {
+          src: '/assets/casos/bid-mapainversiones.png',
+          alt: 'Tablero MapaInversiones en Power BI: 311 contratos con información faltante y 311 con inconsistencias en documentos, sobre 622, con gráficos por tipo y por región.',
+          cap: 'el tablero muestra en una sola vista cuántos contratos tienen datos faltantes (311) y cuántos tienen documentos que no coinciden (311), y permite filtrar por estado, tipo y región.',
+        },
+        certificado: {
+          alt: 'Certificado del Demo Day del BID 2024: el equipo Trust gana la categoría Distinción en Democratización de Datos.',
+          cap: 'Certificado del Demo Day, 28 de agosto de 2024, Washington D.C.',
+        },
+      },
+      s6: {
+        grande: '311 de 622',
+        p: 'contratos públicos con inconsistencias detectadas. En el Demo Day del 28 de agosto de 2024, en Washington D.C., ganamos la categoría Distinción en Democratización de Datos y quedamos segundos en la general.',
+        extra: 'El reconocimiento llegó justo por la parte que nos importaba: no publicar más datos, sino volverlos verificables para alguien que no es analista.',
+      },
+      s7: {
+        aprendi: 'Definir bien al usuario antes de proponer la solución es la parte que más valor genera y la que menos se ve en un entregable. Hay que aprender a contarla.',
+        distinto: 'Llegamos a las pruebas con usuarios con el MVP ya armado. Me habría gustado validar el flujo de verificación antes, cuando cambiarlo costaba menos.',
+      },
+      contacto: { wa: 'Hola Emilio, leí tu caso de BID y creo que tenemos un problema parecido. ¿Hablamos?', asunto: 'Sobre tu caso bid' },
+      siguiente: { label: 'Siguiente · Caso 3 · Enterprise', titulo: 'QStrauss Consulting · Implementaciones enterprise de Adobe Workfront →', key: 'qstrauss' },
+    },
+    en: {
+      n: 'Case 2 of 3',
+      emocion: 'Emotion: confusion',
+      tag: 'Public transparency · Dominican Republic',
+      h1: 'The documents were published. Verifying them was still manual work.',
+      lede: 'The IDB called a TechSprint with four problems to bring more transparency to government processes. With team Trust we chose tender verification: the officer has to find, by hand, any difference between what was requested and what was offered.',
+      chips: ['UX/UI Designer, team Trust', 'A month and a half · TechSprint, Aug 2024'],
+      ficha: {
+        rol: 'Research into approaches, analysis of the verification process, definition of the target user and interface design.',
+        decidi: 'Digitize the tender documents and automate the comparison, so the tool flags the inconsistency instead of a person hunting for it.',
+        cambio: '311 of 622 contracts with inconsistencies detected. Winners of the Distinction in Data Democratization category and 2nd place overall.',
+      },
+      masAlla: 'Before proposing the tool, I defined who was going to use it: the officer who reviews each bid. That definition guided the dashboard design.',
+      adopcion: 'It was a competition prototype and never reached real use in an institution; I’d rather say so. It was validated by user testing on the prototype and by the Demo Day jury.',
+      nota: 'This case is told in the same order as the others on purpose. A repeated format makes the reader compare decisions, not aesthetics.',
+      radiografia: 'Without the insight, this case reads as “we built another procurement portal”. The documents were already published: without the question behind it, the screen changes nothing.',
+      s1: {
+        h2: 'Transparency isn’t publishing. It’s being able to verify.',
+        ps: [
+          'The TechSprint was called by the IDB, the Alliance for Innovative Regulation and the Bureau of International Narcotics and Law Enforcement Affairs of the U.S. Department of State. They set out four problems and each team chose one.',
+          'We chose the verification of bids in public tenders. The open question was: if all the documentation is available, why is it still so hard to know whether it adds up?',
+        ],
+        pidieron: '“Bring greater transparency to government processes.”',
+        real: '“Verifying a tender still means reading documents, one by one, looking for what doesn’t fit.”',
+      },
+      s2: {
+        h2: 'Understand the problem before proposing',
+        p: 'With the competition guidelines on the table, we started by researching how to approach the problem: we analyzed possible solutions and defined who the target user was, focusing on their needs and frustrations.',
+        stats: [
+          ['1', 'target user: the public officer who reviews each bid'],
+          ['3', 'types of inconsistency: price, missing or incorrect data, and a product that doesn’t match'],
+          ['622', 'contracts from the public catalogue analyzed'],
+        ],
+        preguntas: [
+          'What does the officer have to verify in each bid?',
+          'Where does an inconsistency hide: in the price, in a missing field, in the product?',
+          'What would make the review verifiable, and not just faster?',
+        ],
+        nota: 'This stage was desk research and user definition, so I treated the findings as hypotheses. Sessions with people came later, in the prototype testing.',
+      },
+      s3: {
+        h2: 'The inconsistency isn’t in just one place',
+        hallazgos: [
+          {
+            tag: 'Finding 1 · Scatter',
+            h3: 'What doesn’t add up could be in any field',
+            p: 'A price that doesn’t match, a missing or badly filled-in field, a product that isn’t the one requested. Three different checks on the same document, and none can be skipped.',
+          },
+          {
+            tag: 'Finding 2 · Scale',
+            h3: 'Not a rare case: half the catalogue',
+            p: 'On the Dominican Republic government’s contract catalogue, the tool found 311 of 622 contracts with missing information and another 311 with inconsistencies in their documents. Reviewing that by hand isn’t slow: it’s unfeasible.',
+          },
+          {
+            tag: 'Finding 3 · Fear of getting it wrong',
+            h3: 'When the decision is auditable, doubt paralyzes',
+            p: 'A bad review in public procurement has personal consequences. Without backing for their judgement, people protect themselves by over-checking, and still don’t feel at ease.',
+          },
+          {
+            tag: 'Finding 4 · Citizens',
+            h3: 'Citizens can’t read that either',
+            p: 'If the expert officer can’t verify comfortably, citizen oversight is theoretical. Legibility isn’t a convenience: it’s the condition for transparency.',
+          },
+        ],
+      },
+      s4: {
+        h2: 'Let the tool find the inconsistency, not the person',
+        decisiones: [
+          ['Digitize the tender documents', 'A web application on Power BI, using artificial intelligence to read the documents and turn them into comparable data.'],
+          ['Compare automatically', 'The tool checks what the tender asked for against what was offered and flags the type of inconsistency: price, missing or incorrect data, or a product that doesn’t match.'],
+          ['Open and adaptable', 'It was conceived as open source, so another institution could adopt it and adjust it to its own process.'],
+        ],
+        descarte: ['What we didn’t do: decide for the officer', 'The tool points to where to look. Awarding remains a human decision, and therefore auditable: whoever signs has to be able to explain why they chose.'],
+      },
+      s5: {
+        compara: {
+          label: 'What the tool compares, in words',
+          items: [
+            ['Price', 'The offered price against the tender estimate.'],
+            ['Data', 'Missing or badly filled-in fields.'],
+            ['Product', 'What was offered against what was requested.'],
+          ],
+        },
+        figura: {
+          src: '/assets/casos/bid-mapainversiones.png',
+          alt: 'MapaInversiones dashboard in Power BI: 311 contracts with missing information and 311 with document inconsistencies, out of 622, with charts by type and by region.',
+          cap: 'the dashboard shows in a single view how many contracts have missing data (311) and how many have documents that don’t match (311), and lets you filter by status, type and region.',
+        },
+        certificado: {
+          alt: 'IDB 2024 Demo Day certificate: team Trust wins the Distinction in Data Democratization category.',
+          cap: 'Demo Day certificate, 28 August 2024, Washington D.C.',
+        },
+      },
+      s6: {
+        grande: '311 of 622',
+        p: 'public contracts with inconsistencies detected. At the Demo Day on 28 August 2024, in Washington D.C., we won the Distinction in Data Democratization category and came second overall.',
+        extra: 'The recognition came for exactly the part we cared about: not publishing more data, but making it verifiable for someone who isn’t an analyst.',
+      },
+      s7: {
+        aprendi: 'Defining the user well before proposing the solution is the part that creates the most value and the least visible one in a deliverable. You have to learn to tell it.',
+        distinto: 'We reached user testing with the MVP already built. I’d have liked to validate the verification flow earlier, when changing it cost less.',
+      },
+      contacto: { wa: 'Hi Emilio, I read your IDB case and I think we have a similar problem. Shall we talk?', asunto: 'About your IDB case' },
+      siguiente: { label: 'Next · Case 3 · Enterprise', titulo: 'QStrauss Consulting · Enterprise Adobe Workfront implementations →', key: 'qstrauss' },
+    },
+  },
+  qstrauss: {
+    es: {
+      n: 'Caso 3 de 3',
+      emocion: 'Emoción: incertidumbre',
+      tag: 'QStrauss Consulting · Adobe Workfront · retail, banca y consumo masivo · clientes bajo NDA',
+      h1: 'La plataforma quedaba configurada. El conocimiento no llegaba a los equipos.',
+      lede: 'Las implementaciones salían bien. Meses después, el cliente seguía llamando para preguntar cómo funcionaba lo que ya tenía.',
+      chips: ['Technical Architect · QStrauss Consulting', '8 meses · abr 2026 – nov 2026'],
+      ficha: {
+        rol: 'Levantamiento de requerimientos de negocio y funcionales, diagnóstico de la configuración contra el proceso real, y diseño de la documentación como producto.',
+        decidi: 'Tratar la documentación como un sistema reutilizable, organizado por rol, y no como un anexo que se escribe al final de cada proyecto.',
+        cambio: 'Decisiones de proceso priorizadas, flujos con menos fricción y una estrategia de adopción por rol. Lo que buscaba: menos tiempo en capacitaciones y aclaraciones.',
+      },
+      masAlla: 'Además de configurar, propuse tratar la documentación como un producto organizado por rol, para que los equipos pudieran operar sin depender del consultor.',
+      adopcion: 'La estrategia de adopción por rol sí se adoptó con un cliente, en una implementación de unos 6 meses de punta a punta. La herramienta de documentación que propuse no: necesitaba un desarrollo que la empresa no tenía disponible en ese momento.',
+      nota: 'Es el caso más reciente y el que menos puedo mostrar. Por el NDA no hay capturas, esquemas ni nombres de clientes: todo se cuenta en texto.',
+      radiografia: 'Sin el insight, este caso es “escribimos más documentación”. Nada explica por qué el cliente seguía preguntando lo mismo, ni por qué esta vez iba a dejar de hacerlo.',
+      s1: {
+        h2: 'La misma duda, el mismo cliente, meses después',
+        ps: [
+          'Trabajo en consultoría de implementación de una plataforma de work management para clientes enterprise. Proyecto tras proyecto, el encargo llegaba igual: resolver dudas puntuales de configuración y ajustar lo que no estaba funcionando.',
+          'Pero las dudas se repetían, y no entre clientes distintos: dentro del mismo cliente, con los mismos equipos, meses después de la entrega. Eso no es un problema de configuración. Es un problema de transferencia de conocimiento.',
+        ],
+        pidieron: '“Necesitamos ajustar unos flujos que no están funcionando.”',
+        real: '“No sabemos cómo quedó configurado lo nuestro ni a quién preguntarle.”',
+      },
+      s2: {
+        h2: 'No hice un estudio: revisé lo que ya estaba pasando',
+        p: 'No había presupuesto ni margen para una investigación formal. Usé lo que la operación ya generaba y nadie miraba como dato: las capacitaciones que se repetían y las preguntas que volvían por correo. Lo crucé con entrevistas a los equipos y con el mapeo del proceso real contra el configurado.',
+        stats: [['3 a 6+', 'meses que dura una implementación típica, con ajustes y revisiones']],
+        preguntas: [
+          '¿Qué pregunta el cliente después de la entrega, y cuántas veces?',
+          '¿Dónde vive hoy la respuesta: en un documento o en la cabeza de alguien?',
+          '¿Cuánto de cada capacitación es nuevo y cuánto es lo mismo de la vez pasada?',
+        ],
+        nota: 'Ninguna pregunta fue sobre la configuración en sí. Si el problema hubiera estado ahí, habría aparecido en los tickets.',
+      },
+      s3: {
+        h2: 'El cuello de botella no era la implementación. Era lo que pasaba después.',
+        hallazgos: [
+          {
+            tag: 'Hallazgo 1 · Dependencia',
+            h3: 'El conocimiento nunca salía de la reunión',
+            p: 'Todo lo que el cliente necesitaba saber se explicaba en sesiones en vivo. Cuando la persona capacitada cambiaba de rol o salía de la empresa, el conocimiento se iba con ella y el ciclo empezaba otra vez.',
+          },
+          {
+            tag: 'Hallazgo 2 · Reproceso',
+            h3: 'Cada entregable se armaba desde cero',
+            p: 'Los materiales de capacitación no se reutilizaban entre proyectos, aunque buena parte del contenido fuera equivalente. El costo no era el diseño: era volver a tomar decisiones ya tomadas.',
+          },
+        ],
+      },
+      s4: {
+        h2: 'Escribir una vez lo que explicábamos cada vez',
+        decisiones: [
+          ['La documentación se trata como producto, no como anexo', 'Se diseña con criterio de usuario: quién la va a leer, en qué momento y con qué pregunta en la cabeza.'],
+          ['El contenido se organiza en bloques reutilizables', 'En vez de un material por cliente, bloques que se producen una vez y se adaptan. Entre clientes cambia la configuración, no la estructura.'],
+        ],
+      },
+      s5: {
+        nda: 'Sin capturas ni esquemas: los clientes están bajo NDA y prefiero no mostrar nada que se pueda reconocer.',
+      },
+      s6: {
+        grande: 'Menos sesiones repetidas',
+        p: 'en implementaciones que duran de 3 a más de 6 meses. Mi lectura es que los entregables de documentación redujeron el tiempo en capacitaciones, reuniones y aclaraciones dentro de ese ciclo, pero no tengo una cifra que pueda publicar.',
+        extra: 'Lo que no estaba en el encargo: el trabajo dejó de medirse en sesiones dictadas y pasó a medirse en cuánto podía avanzar el cliente sin nosotros.',
+      },
+      s7: {
+        aprendi: 'La parte más frágil de una implementación no es la configuración: es lo que el cliente entiende de ella. En consultoría, la documentación no es el cierre del proyecto; es parte del producto.',
+        distinto: 'Medir desde el primer día cuántas horas se van en capacitaciones y aclaraciones por implementación. Tenía el problema clarísimo y nada con qué demostrarlo.',
+      },
+      contacto: {
+        wa: 'Hola Emilio, leí tu caso de implementaciones enterprise y creo que tenemos un problema parecido. ¿Hablamos?',
+        asunto: 'Sobre tu caso enterprise',
+      },
+      siguiente: { label: 'Siguiente · Volver al caso 1 · Ropofy', titulo: 'El research que cambió el encargo →', key: 'ropofy' },
+    },
+    en: {
+      n: 'Case 3 of 3',
+      emocion: 'Emotion: uncertainty',
+      tag: 'QStrauss Consulting · Adobe Workfront · retail, banking and consumer goods · clients under NDA',
+      h1: 'The platform ended up configured. The knowledge never reached the teams.',
+      lede: 'The implementations went well. Months later, the client was still calling to ask how what they already had worked.',
+      chips: ['Technical Architect · QStrauss Consulting', '8 months · Apr 2026 – Nov 2026'],
+      ficha: {
+        rol: 'Gathering business and functional requirements, diagnosing the configuration against the real process, and designing documentation as a product.',
+        decidi: 'Treat documentation as a reusable system, organized by role, and not as an appendix written at the end of each project.',
+        cambio: 'Prioritized process decisions, workflows with less friction and a role-based adoption strategy. What I was after: less time spent on training and clarifications.',
+      },
+      masAlla: 'Beyond configuring, I proposed treating documentation as a product organized by role, so teams could operate without depending on the consultant.',
+      adopcion: 'The role-based adoption strategy was adopted by one client, in an end-to-end implementation of about 6 months. The documentation tool I proposed was not: it needed development the company didn’t have available at the time.',
+      nota: 'It’s the most recent case and the one I can show least of. Because of the NDA there are no screenshots, diagrams or client names: everything is told in text.',
+      radiografia: 'Without the insight, this case reads as “we wrote more documentation”. Nothing explains why the client kept asking the same questions, or why this time they would stop.',
+      s1: {
+        h2: 'The same question, the same client, months later',
+        ps: [
+          'I work in implementation consulting for a work management platform for enterprise clients. Project after project, the brief came in the same way: answer specific configuration questions and adjust whatever wasn’t working.',
+          'But the questions kept repeating, and not across different clients: within the same client, with the same teams, months after delivery. That isn’t a configuration problem. It’s a knowledge transfer problem.',
+        ],
+        pidieron: '“We need to adjust a few workflows that aren’t working.”',
+        real: '“We don’t know how ours ended up configured, or who to ask.”',
+      },
+      s2: {
+        h2: 'I didn’t run a study: I looked at what was already happening',
+        p: 'There was no budget or room for formal research. I used what the operation was already generating and nobody looked at as data: the training sessions that kept repeating and the questions that kept coming back by email. I cross-checked it with interviews with the teams and with mapping the real process against the configured one.',
+        stats: [['3 to 6+', 'months a typical implementation lasts, with adjustments and reviews']],
+        preguntas: [
+          'What does the client ask after delivery, and how many times?',
+          'Where does the answer live today: in a document or in someone’s head?',
+          'How much of each training session is new, and how much is the same as last time?',
+        ],
+        nota: 'None of the questions was about the configuration itself. If the problem had been there, it would have shown up in the tickets.',
+      },
+      s3: {
+        h2: 'The bottleneck wasn’t the implementation. It was what happened afterwards.',
+        hallazgos: [
+          {
+            tag: 'Finding 1 · Dependency',
+            h3: 'The knowledge never left the meeting',
+            p: 'Everything the client needed to know was explained in live sessions. When the trained person changed roles or left the company, the knowledge left with them and the cycle started again.',
+          },
+          {
+            tag: 'Finding 2 · Rework',
+            h3: 'Every deliverable was built from scratch',
+            p: 'Training materials weren’t reused across projects, even though much of the content was equivalent. The cost wasn’t the design: it was making decisions that had already been made, all over again.',
+          },
+        ],
+      },
+      s4: {
+        h2: 'Write once what we used to explain every time',
+        decisiones: [
+          ['Documentation is treated as a product, not an appendix', 'It’s designed with user criteria: who will read it, at what moment and with what question in mind.'],
+          ['Content is organized in reusable blocks', 'Instead of one set of materials per client, blocks produced once and adapted. Between clients the configuration changes, not the structure.'],
+        ],
+      },
+      s5: {
+        nda: 'No screenshots or diagrams: the clients are under NDA and I’d rather not show anything recognizable.',
+      },
+      s6: {
+        grande: 'Fewer repeated sessions',
+        p: 'in implementations that last from 3 to more than 6 months. My reading is that the documentation deliverables cut the time spent on training, meetings and clarifications within that cycle, but I don’t have a figure I can publish.',
+        extra: 'What wasn’t in the brief: the work stopped being measured in sessions delivered and started being measured in how far the client could get without us.',
+      },
+      s7: {
+        aprendi: 'The most fragile part of an implementation isn’t the configuration: it’s what the client understands of it. In consulting, documentation isn’t the close of the project; it’s part of the product.',
+        distinto: 'Measure from day one how many hours go into training and clarifications per implementation. I had the problem crystal clear and nothing to prove it with.',
+      },
+      contacto: {
+        wa: 'Hi Emilio, I read your enterprise implementations case and I think we have a similar problem. Shall we talk?',
+        asunto: 'About your enterprise case',
+      },
+      siguiente: { label: 'Next · Back to case 1 · Ropofy', titulo: 'The research that changed the brief →', key: 'ropofy' },
+    },
+  },
+};
