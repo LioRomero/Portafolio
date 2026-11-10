@@ -10,6 +10,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CabeceraUx from './CabeceraUx.astro';
 import PieUx from './PieUx.astro';
+import ArchivoUx from './ArchivoUx.astro';
 import HeroUx from '../../islands/HeroUx.tsx';
 import EmocionesUx from '../../islands/EmocionesUx.tsx';
 import ContactoUx from '../../islands/ContactoUx.tsx';
@@ -21,7 +22,7 @@ import Puzzle from '../../islands/Puzzle.tsx';
 import Blueprint3D from '../../islands/Blueprint3D.tsx';
 import SongBlock from '../../islands/SongBlock.tsx';
 import EmotionCanvas from '../../islands/EmotionCanvas.tsx';
-import { HOME, HOME_UX, HOME_CASES, FIGMA_PROTOTIPO, TONO_CASO, TONO_EMOCION } from '../../content/home';
+import { HOME, HOME_UX, HOME_CASES, TONO_CASO, TONO_EMOCION } from '../../content/home';
 import { CASES_UX, CASES_UX_UI, ORDEN_UX } from '../../content/cases';
 import { CONTACT_EMAIL } from '../../content/canvas';
 import { UI, type Lang } from '../../content/ui';
@@ -276,29 +277,8 @@ const ui = CASES_UX_UI[lang];
     </div>
   </section>
 
-  {/* --- Otros proyectos ----------------------------------------------- */}
-  <section id="otros" class="otros" aria-labelledby="otros-t">
-    <div class="otros-cab">
-      <h2 id="otros-t" class="serif-h3">{t.otros.titulo}</h2>
-      <p class="otros-sub">{t.otros.sub}</p>
-    </div>
-    <ul class="otros-lista">
-      {
-        t.otros.items.map((o) => (
-          <li>
-            <a class="otro" href={FIGMA_PROTOTIPO} target="_blank" rel="noopener">
-              <img src={withBase(o.img)} alt="" width="800" height="500" loading="lazy" decoding="async" />
-              <span class="otro-txt">
-                <span class="otro-t">{o.titulo}</span>
-                <span class="otro-x">{o.texto}</span>
-                <span class="sr-only">{t.otros.nuevaPestana}</span>
-              </span>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
+  {/* --- Antes de esto: proyectos del portafolio anterior ---------- */}
+  <ArchivoUx lang={lang} />
 
   {/* --- Sobre mí corto y pymes ---------------------------------------- */}
   <section class="sobre" aria-labelledby="sobre-t">

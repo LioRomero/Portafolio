@@ -1,12 +1,12 @@
 ---
-import CasePage from '../../../components/CasePage.astro';
-import { CASE_ORDER } from '../../../content/cases';
+import Redireccion from '../../../components/Redireccion.astro';
+import { ORDEN_UX } from '../../../content/cases';
 
 export function getStaticPaths() {
-  return CASE_ORDER.map((c) => ({ params: { case: c } }));
+  return ORDEN_UX.map((c) => ({ params: { case: c } }));
 }
 
-const caseKey = Astro.params.case as (typeof CASE_ORDER)[number];
+const c = Astro.params.case;
 ---
 
-<CasePage lang="en" caseKey={caseKey} />
+<Redireccion lang="en" to={`/ux/en/cases/${c}`} />

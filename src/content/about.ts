@@ -24,8 +24,8 @@ export interface Job {
 export const JOBS: Job[] = [
   {
     id: 'qstrauss',
-    dates: 'Abr 2026 — Nov 2026',
-    datesEn: 'Apr 2026 — Nov 2026',
+    dates: 'Abr 2026 — Actualidad',
+    datesEn: 'Apr 2026 — Present',
     org: 'QStrauss Consulting',
     title: 'Technical Architect',
     titleEn: 'Technical Architect',
