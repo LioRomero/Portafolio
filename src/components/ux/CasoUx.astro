@@ -13,6 +13,9 @@ import PieUx from './PieUx.astro';
 import Intro from '../../islands/Intro.tsx';
 import Tutorial from '../../islands/Tutorial.tsx';
 import CuriousLayer from '../../islands/CuriousLayer.tsx';
+import PostitsRopofy from '../../islands/PostitsRopofy.tsx';
+import AntesDespuesBid from '../../islands/AntesDespuesBid.tsx';
+import RecorridoQs from '../../islands/RecorridoQs.tsx';
 import { CASES, CASES_UX, CASES_UX_UI, type CaseKey } from '../../content/cases';
 import { TONO_CASO } from '../../content/home';
 import { CONTACT_EMAIL } from '../../content/canvas';
@@ -182,6 +185,7 @@ const conPorque = new Set([2, 3, 6]);
               ))
             }
           </div>
+          {key === 'ropofy' && <PostitsRopofy lang={lang} client:visible />}
         </section>
 
         {/* 04 · Decisiones */}
@@ -218,6 +222,8 @@ const conPorque = new Set([2, 3, 6]);
         <section id="s5" class="bloque" aria-labelledby="s5-t">
           <p class="kicker">{ui.kickers[4]}</p>
           <h2 id="s5-t" class="h2">{ui.comoQuedo}</h2>
+          {key === 'bid' && <AntesDespuesBid lang={lang} client:visible />}
+          {key === 'qstrauss' && <RecorridoQs lang={lang} client:visible />}
           {
             d.s5.flujo && (
               <div class="flujo-caja">
@@ -281,6 +287,35 @@ const conPorque = new Set([2, 3, 6]);
               </div>
             )
           }
+          {
+            d.s5.proceso && (
+              <div class="proceso">
+                <p class="etiqueta etiqueta--caso">{d.s5.proceso.label}</p>
+                <h3 class="proceso-h3">{d.s5.proceso.h3}</h3>
+                <ol class="proceso-pasos">
+                  {d.s5.proceso.pasos.map((paso, n) => (
+                    <li>
+                      <span class="proceso-n" aria-hidden="true">{n + 1}</span>
+                      <div>
+                        <p class="proceso-f">{paso.f}</p>
+                        <p class="proceso-t">{paso.t}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+                <p class="proceso-extra">{d.s5.proceso.extra}</p>
+                {d.s5.proceso.imgs && (
+                  <ul class="proceso-galeria" aria-label={d.s5.proceso.galeria}>
+                    {d.s5.proceso.imgs.map((im) => (
+                      <li>
+                        <img src={withBase(im.src)} alt={im.alt} loading="lazy" decoding="async" />
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )
+          }
           {d.s5.nda && <p class="aparte">{d.s5.nda}</p>}
         </section>
 
@@ -293,6 +328,14 @@ const conPorque = new Set([2, 3, 6]);
             <p class="resultado-p">{d.s6.p}</p>
           </div>
           <p class="parrafo">{d.s6.extra}</p>
+          {
+            d.s6.exito && (
+              <div class="tarjeta exito">
+                <p class="etiqueta etiqueta--caso">{ui.exito}</p>
+                <p class="tarjeta-texto">{d.s6.exito}</p>
+              </div>
+            )
+          }
         </section>
 
         {/* 07 · Qué me dejó */}
@@ -1086,5 +1129,100 @@ const conPorque = new Set([2, 3, 6]);
     font-family: var(--serif);
     font-size: clamp(28px, 3vw, 38px);
     line-height: 1.1;
+  }
+
+  .exito {
+    margin-top: 24px;
+    border-left: 4px solid var(--c);
+  }
+
+  /* Proceso de diseño paso a paso (Ropofy): mismo lenguaje que los mini casos. */
+  .proceso {
+    margin-top: 36px;
+  }
+
+  .proceso-h3 {
+    margin-top: 6px;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(22px, 2.4vw, 28px);
+    line-height: 1.2;
+  }
+
+  .proceso-pasos {
+    list-style: none;
+    margin: 18px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 14px 24px;
+  }
+
+  .proceso-pasos li {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 12px;
+    padding: 16px 18px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: #fff;
+  }
+
+  .proceso-n {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--c);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .proceso-f {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .proceso-t {
+    margin-top: 4px;
+    font-size: 15.5px;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  .proceso-extra {
+    margin-top: 16px;
+    padding: 14px 18px;
+    border-left: 4px solid var(--c);
+    background: #fff;
+    border-radius: 0 12px 12px 0;
+    font-size: 15.5px;
+    line-height: 1.6;
+  }
+
+  .proceso-galeria {
+    list-style: none;
+    margin: 20px 0 0;
+    padding: 0 0 8px;
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+
+  .proceso-galeria li {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  .proceso-galeria img {
+    height: clamp(200px, 28vw, 320px);
+    width: auto;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: #f4f4f2;
   }
 </style>

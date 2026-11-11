@@ -202,7 +202,7 @@ export const PROFILES: Record<Profile, ProfileDef> = {
   ux: {
     puesto: 'UX Designer',
     ogImage: '/og-ux.jpg',
-    noindex: true,
+    noindex: false,
     cv: {
       es: '/uploads/cv-emilio-romero-ux-es.pdf',
       en: '/uploads/cv-emilio-romero-ux-en.pdf',

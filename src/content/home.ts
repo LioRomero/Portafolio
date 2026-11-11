@@ -653,7 +653,7 @@ export const HOME_UX = {
         rol: 'Technical Architect · QStrauss Consulting',
         metodo: 'Levantamiento de requerimientos con stakeholders, entrevistas a los equipos y mapeo del proceso real contra el configurado',
         resultado: 'Decisiones de proceso priorizadas, flujos rediseñados para reducir fricción y una estrategia de adopción por rol, con su documentación y capacitación.',
-        duracion: '8 meses · abr 2026 – nov 2026',
+        duracion: 'Desde abr 2026 · actualidad',
         hice: [
           'Levanté requerimientos de negocio y funcionales.',
           'Mapeé el proceso real y lo comparé con el configurado.',
@@ -890,7 +890,7 @@ export const HOME_UX = {
         rol: 'Technical Architect · QStrauss Consulting',
         metodo: 'Requirements gathering with stakeholders, interviews with the teams and mapping the real process against the configured one',
         resultado: 'Prioritized process decisions, workflows redesigned to reduce friction and a role-based adoption strategy, with its documentation and training.',
-        duracion: '8 months · Apr 2026 – Nov 2026',
+        duracion: 'Since Apr 2026 · present',
         hice: [
           'I gathered business and functional requirements.',
           'I mapped the real process and compared it with the configured one.',

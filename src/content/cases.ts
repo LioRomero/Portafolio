@@ -469,9 +469,19 @@ export interface CasoUx {
     compara?: { label: string; items: readonly (readonly [string, string])[] };
     figura?: { src: string; alt: string; cap: string };
     certificado?: { alt: string; cap: string };
+    /** Cómo se diseñó, paso a paso (sacado del archivo de trabajo en Figma). */
+    proceso?: {
+      label: string;
+      h3: string;
+      pasos: readonly { f: string; t: string }[];
+      extra: string;
+      galeria?: string;
+      imgs?: readonly { src: string; alt: string }[];
+    };
     nda?: string;
   };
-  s6: { grande: string; p: string; extra: string };
+  /** Cómo se mide el éxito: el indicador elegido y por qué, con lo que sí hay. */
+  s6: { grande: string; p: string; extra: string; exito?: string };
   s7: { aprendi: string; distinto: string };
   contacto: { wa: string; asunto: string };
   siguiente: { label: string; titulo: string; key: CaseKey };
@@ -485,6 +495,7 @@ export const CASES_UX_UI = {
     ficha: { rol: 'Mi rol', decidi: 'Qué decidí y por qué', cambio: 'Qué cambió' },
     aporte: 'Aporte y adopción',
     masAlla: 'Más allá del encargo',
+    exito: 'Cómo se mide el éxito',
     adopcion: '¿Lo adoptaron?',
     nota: 'Nota de diseño:',
     kickers: ['01 · El encargo', '02 · Investigación', '03 · Hallazgos', '04 · Decisiones', '05 · La solución', '06 · Resultado', '07 · Qué me dejó'],
@@ -512,6 +523,7 @@ export const CASES_UX_UI = {
     ficha: { rol: 'My role', decidi: 'What I decided and why', cambio: 'What changed' },
     aporte: 'Contribution and adoption',
     masAlla: 'Beyond the brief',
+    exito: 'How success is measured',
     adopcion: 'Did they adopt it?',
     nota: 'Design note:',
     kickers: ['01 · The brief', '02 · Research', '03 · Findings', '04 · Decisions', '05 · The solution', '06 · Outcome', '07 · What it left me'],
@@ -619,11 +631,33 @@ export const CASES_UX: Record<CaseKey, { es: CasoUx; en: CasoUx }> = {
           alt: 'Esquema del sitio después del rediseño: la home con acceso fijo a Escríbenos, y las secciones Qué hacemos, Casos y Productos, cada una con su contacto visible.',
           cap: 'antes, el catálogo iba al frente y el contacto al final. Después, cada sección tiene un acceso visible para escribir, con el canal y el tiempo de respuesta a la vista.',
         },
+        proceso: {
+          label: "Cómo diseñé el sitio",
+          h3: "Del moodboard a la home, en seis pasos",
+          pasos: [
+            { f: "Moodboard", t: "Paleta de color y referencias visuales de sitios fuera del sector del software, para no partir del mismo look de todos los CRM." },
+            { f: "Referencias por sección", t: "Armé un banco de referencias para cada parte de la página (sección inicial, IA, funcionalidades, testimonios y casos de éxito, intereses, menú) y otro aparte para las páginas de funcionalidades, la general y la específica." },
+            { f: "Ganadores", t: "De cada grupo elegí las referencias que se quedaban y anoté por qué. Por ejemplo: que cada funcionalidad funcione como una lista de deseos, para que al oprimir el botón el formulario ya llegue con esa información." },
+            { f: "Estructura", t: "Definí la página sección por sección, con la jerarquía de títulos y qué contenido iba en cada una: el menú con funcionalidades, CTA e inicio de sesión, un menú desplegado por categorías, testimonios con nombre, cargo y empresa, y un video introductorio seguido de un segmento por funcionalidad." },
+            { f: "Wireframes y correcciones", t: "Cinco wireframes y después versiones con los textos reales. Revisé cada ronda con mi jefa y sus correcciones quedaron anotadas encima: hablar de industrias en vez de empresas, sumar formulario y CTA al menú desplegable, una sección de prensa y ordenar las funcionalidades en los módulos atrae, nutre y fideliza." },
+            { f: "Diseño final", t: "La home final, construida sobre el wireframe aprobado y con los textos reales, que después sirvió de base para las demás páginas." },
+          ],
+          extra: "Sobre esa base diseñé landings por país (Colombia, Chile y Argentina), páginas comparativas frente a otros CRM, que pasaron por bocetos y varias versiones antes del diseño final, y la landing de la demo grabada. El copy y el SEO los llevaba otra persona del equipo; mi parte fue el diseño.",
+          galeria: "Capturas del proceso en Figma",
+          imgs: [
+            { src: '/assets/casos/ropofy-proceso-moodboard.webp', alt: "Moodboard de paleta de color con referencias de sitios fuera del sector del software." },
+            { src: '/assets/casos/ropofy-proceso-ganadores.webp', alt: "Referencias ganadoras de la sección de funcionalidades, con mis notas de por qué se quedaban." },
+            { src: '/assets/casos/ropofy-proceso-estructura.webp', alt: "Estructura de la página: referencias del menú y el contenido definido para el menú principal y el desplegado." },
+            { src: '/assets/casos/ropofy-proceso-wireframe.webp', alt: "Wireframe de escritorio de la home, con jerarquía de títulos y CTA." },
+            { src: '/assets/casos/ropofy-proceso-correcciones.webp', alt: "Wireframe móvil con las correcciones de una ronda de revisión anotadas al lado." },
+          ],
+        },
       },
       s6: {
         grande: 'Tráfico y leads',
         p: 'crecieron durante la etapa de estabilización de la empresa, y el rediseño acompañó ese crecimiento. No puedo aislar cuánto aportó cada parte, así que prefiero decirlo así antes que atribuirme un porcentaje.',
         extra: 'Lo que no estaba en el encargo: el rediseño terminó siendo la parte pequeña. Mi lectura es que lo que más pesó fue dejar de perder conversaciones, aunque no lo puedo demostrar con cifras.',
+        exito: 'Propuse medir el tiempo real de primera respuesta, porque era lo que separaba una consulta que se vende de una que se pierde. La señal que sí tengo es la adopción: los clientes usaron la plataforma y sus estrategias de funnel de punta a punta.',
       },
       s7: {
         aprendi: 'Un encargo mal formulado no es un obstáculo: es el primer hallazgo. Y negociar el alcance a mitad del proyecto es parte del trabajo, no un fracaso de la propuesta.',
@@ -715,11 +749,33 @@ export const CASES_UX: Record<CaseKey, { es: CasoUx; en: CasoUx }> = {
           alt: 'Diagram of the site after the redesign: the home page with a fixed “Message us” entry, and the What we do, Cases and Products sections, each with its contact in view.',
           cap: 'before, the catalogue came first and contact came last. After, every section has a visible way to write in, with the channel and the response time in view.',
         },
+        proceso: {
+          label: "How I designed the site",
+          h3: "From moodboard to home page, in six steps",
+          pasos: [
+            { f: "Moodboard", t: "A colour palette and visual references from sites outside the software sector, so we wouldn’t start from the same look as every other CRM." },
+            { f: "References by section", t: "I built a bank of references for each part of the page (hero, AI, features, testimonials and case studies, interests, menu) and a separate one for the feature pages, both the overview and the detail pages." },
+            { f: "Winners", t: "From each group I picked the references that stayed and noted why. For example: each feature should work like a wish list, so that pressing the button sends the form with that information already in it." },
+            { f: "Structure", t: "I defined the page section by section, with the heading hierarchy and the content of each: a menu with features, CTA and log-in, an expanded menu by category, testimonials with name, role and company, and an intro video followed by one segment per feature." },
+            { f: "Wireframes and corrections", t: "Five wireframes, then versions with the real copy. I reviewed each round with my manager, and her corrections were noted on top: talk about industries instead of companies, add a form and CTA to the dropdown menu, a press section, and group the features into the attract, nurture and retain modules." },
+            { f: "Final design", t: "The final home page, built on the approved wireframe with the real copy, which then became the base for the other pages." },
+          ],
+          extra: "On that base I designed country landing pages (Colombia, Chile and Argentina), comparison pages against other CRMs, which went through sketches and several versions before the final design, and the landing page for the recorded demo. Copy and SEO were handled by another person on the team; my part was the design.",
+          galeria: "Screenshots of the process in Figma",
+          imgs: [
+            { src: '/assets/casos/ropofy-proceso-moodboard.webp', alt: "Colour palette moodboard with references from sites outside the software sector." },
+            { src: '/assets/casos/ropofy-proceso-ganadores.webp', alt: "Winning references for the features section, with my notes on why they stayed." },
+            { src: '/assets/casos/ropofy-proceso-estructura.webp', alt: "Page structure: menu references and the content defined for the main and expanded menus." },
+            { src: '/assets/casos/ropofy-proceso-wireframe.webp', alt: "Desktop wireframe of the home page, with heading hierarchy and CTAs." },
+            { src: '/assets/casos/ropofy-proceso-correcciones.webp', alt: "Mobile wireframe with one review round’s corrections noted beside it." },
+          ],
+        },
       },
       s6: {
         grande: 'Traffic and leads',
         p: 'grew during the company’s stabilization stage, and the redesign went along with that growth. I can’t isolate how much each part contributed, so I’d rather say it this way than claim a percentage.',
         extra: 'What wasn’t in the brief: the redesign ended up being the small part. My reading is that what weighed most was no longer losing conversations, though I can’t prove it with figures.',
+        exito: 'I proposed measuring real first-response time, because that was what separated an enquiry that sells from one that is lost. The signal I do have is adoption: clients used the platform and its end-to-end funnel strategies.',
       },
       s7: {
         aprendi: 'A badly framed brief isn’t an obstacle: it’s the first finding. And negotiating scope mid-project is part of the job, not a failure of the proposal.',
@@ -827,6 +883,7 @@ export const CASES_UX: Record<CaseKey, { es: CasoUx; en: CasoUx }> = {
         grande: '311 de 622',
         p: 'contratos públicos con inconsistencias detectadas. En el Demo Day del 28 de agosto de 2024, en Washington D.C., ganamos la categoría Distinción en Democratización de Datos y quedamos segundos en la general.',
         extra: 'El reconocimiento llegó justo por la parte que nos importaba: no publicar más datos, sino volverlos verificables para alguien que no es analista.',
+        exito: 'El indicador fue cuántas inconsistencias detectaba la herramienta sin que el funcionario leyera documento por documento: 311 de 622 contratos. Lo validaron las pruebas con usuarios sobre el prototipo y el jurado del Demo Day.',
       },
       s7: {
         aprendi: 'Definir bien al usuario antes de proponer la solución es la parte que más valor genera y la que menos se ve en un entregable. Hay que aprender a contarla.',
@@ -932,6 +989,7 @@ export const CASES_UX: Record<CaseKey, { es: CasoUx; en: CasoUx }> = {
         grande: '311 of 622',
         p: 'public contracts with inconsistencies detected. At the Demo Day on 28 August 2024, in Washington D.C., we won the Distinction in Data Democratization category and came second overall.',
         extra: 'The recognition came for exactly the part we cared about: not publishing more data, but making it verifiable for someone who isn’t an analyst.',
+        exito: 'The indicator was how many inconsistencies the tool flagged without the officer reading document by document: 311 of 622 contracts. It was validated by user tests on the prototype and by the Demo Day jury.',
       },
       s7: {
         aprendi: 'Defining the user well before proposing the solution is the part that creates the most value and the least visible one in a deliverable. You have to learn to tell it.',
@@ -948,14 +1006,14 @@ export const CASES_UX: Record<CaseKey, { es: CasoUx; en: CasoUx }> = {
       tag: 'QStrauss Consulting · Adobe Workfront · retail, banca y consumo masivo · clientes bajo NDA',
       h1: 'La plataforma quedaba configurada. El conocimiento no llegaba a los equipos.',
       lede: 'Las implementaciones salían bien. Meses después, el cliente seguía llamando para preguntar cómo funcionaba lo que ya tenía.',
-      chips: ['Technical Architect · QStrauss Consulting', '8 meses · abr 2026 – nov 2026'],
+      chips: ['Technical Architect · QStrauss Consulting', 'Desde abr 2026 · actualidad'],
       ficha: {
         rol: 'Levantamiento de requerimientos de negocio y funcionales, diagnóstico de la configuración contra el proceso real, y diseño de la documentación como producto.',
         decidi: 'Tratar la documentación como un sistema reutilizable, organizado por rol, y no como un anexo que se escribe al final de cada proyecto.',
         cambio: 'Decisiones de proceso priorizadas, flujos con menos fricción y una estrategia de adopción por rol. Lo que buscaba: menos tiempo en capacitaciones y aclaraciones.',
       },
       masAlla: 'Además de configurar, propuse tratar la documentación como un producto organizado por rol, para que los equipos pudieran operar sin depender del consultor.',
-      adopcion: 'La estrategia de adopción por rol sí se adoptó con un cliente, en una implementación de unos 6 meses de punta a punta. La herramienta de documentación que propuse no: necesitaba un desarrollo que la empresa no tenía disponible en ese momento.',
+      adopcion: 'La estrategia de adopción por rol sí se adoptó con un cliente, en una implementación de unos 6 meses de punta a punta. La herramienta de documentación que propuse no se adoptó en ese momento.',
       nota: 'Es el caso más reciente y el que menos puedo mostrar. Por el NDA no hay capturas, esquemas ni nombres de clientes: todo se cuenta en texto.',
       radiografia: 'Sin el insight, este caso es “escribimos más documentación”. Nada explica por qué el cliente seguía preguntando lo mismo, ni por qué esta vez iba a dejar de hacerlo.',
       s1: {
@@ -1007,6 +1065,7 @@ export const CASES_UX: Record<CaseKey, { es: CasoUx; en: CasoUx }> = {
         grande: 'Menos sesiones repetidas',
         p: 'en implementaciones que duran de 3 a más de 6 meses. Mi lectura es que los entregables de documentación redujeron el tiempo en capacitaciones, reuniones y aclaraciones dentro de ese ciclo, pero no tengo una cifra que pueda publicar.',
         extra: 'Lo que no estaba en el encargo: el trabajo dejó de medirse en sesiones dictadas y pasó a medirse en cuánto podía avanzar el cliente sin nosotros.',
+        exito: 'El indicador que elegí fue la adopción por rol: que cada equipo resolviera sus dudas con la documentación en vez de pedir otra sesión. Se logró con un cliente. Con más tiempo habría medido cuántas sesiones repetidas dejaron de pedirse por implementación.',
       },
       s7: {
         aprendi: 'La parte más frágil de una implementación no es la configuración: es lo que el cliente entiende de ella. En consultoría, la documentación no es el cierre del proyecto; es parte del producto.',
@@ -1024,14 +1083,14 @@ export const CASES_UX: Record<CaseKey, { es: CasoUx; en: CasoUx }> = {
       tag: 'QStrauss Consulting · Adobe Workfront · retail, banking and consumer goods · clients under NDA',
       h1: 'The platform ended up configured. The knowledge never reached the teams.',
       lede: 'The implementations went well. Months later, the client was still calling to ask how what they already had worked.',
-      chips: ['Technical Architect · QStrauss Consulting', '8 months · Apr 2026 – Nov 2026'],
+      chips: ['Technical Architect · QStrauss Consulting', 'Since Apr 2026 · present'],
       ficha: {
         rol: 'Gathering business and functional requirements, diagnosing the configuration against the real process, and designing documentation as a product.',
         decidi: 'Treat documentation as a reusable system, organized by role, and not as an appendix written at the end of each project.',
         cambio: 'Prioritized process decisions, workflows with less friction and a role-based adoption strategy. What I was after: less time spent on training and clarifications.',
       },
       masAlla: 'Beyond configuring, I proposed treating documentation as a product organized by role, so teams could operate without depending on the consultant.',
-      adopcion: 'The role-based adoption strategy was adopted by one client, in an end-to-end implementation of about 6 months. The documentation tool I proposed was not: it needed development the company didn’t have available at the time.',
+      adopcion: 'The role-based adoption strategy was adopted by one client, in an end-to-end implementation of about 6 months. The documentation tool I proposed wasn’t adopted at the time.',
       nota: 'It’s the most recent case and the one I can show least of. Because of the NDA there are no screenshots, diagrams or client names: everything is told in text.',
       radiografia: 'Without the insight, this case reads as “we wrote more documentation”. Nothing explains why the client kept asking the same questions, or why this time they would stop.',
       s1: {
@@ -1083,6 +1142,7 @@ export const CASES_UX: Record<CaseKey, { es: CasoUx; en: CasoUx }> = {
         grande: 'Fewer repeated sessions',
         p: 'in implementations that last from 3 to more than 6 months. My reading is that the documentation deliverables cut the time spent on training, meetings and clarifications within that cycle, but I don’t have a figure I can publish.',
         extra: 'What wasn’t in the brief: the work stopped being measured in sessions delivered and started being measured in how far the client could get without us.',
+        exito: 'The indicator I chose was adoption by role: each team solving its questions with the documentation instead of asking for another session. It was achieved with one client. With more time I would have measured how many repeated sessions stopped being requested per implementation.',
       },
       s7: {
         aprendi: 'The most fragile part of an implementation isn’t the configuration: it’s what the client understands of it. In consulting, documentation isn’t the close of the project; it’s part of the product.',

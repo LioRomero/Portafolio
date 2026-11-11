@@ -1,0 +1,34 @@
+---
+/**
+ * La raíz del sitio (perfil "UX Strategist & Business Analyst") ya no se
+ * publica: CV, LinkedIn y portafolio dicen lo mismo, "UX Designer", y viven en
+ * /ux/. Estas páginas solo existen para que un enlace viejo no termine en 404.
+ */
+import type { Lang } from '../content/ui';
+import { withBase } from '../lib/paths';
+
+interface Props {
+  lang: Lang;
+  /** Ruta de destino sin el prefijo de despliegue, p. ej. "/ux/sobre-mi". */
+  to: string;
+}
+
+const { lang, to } = Astro.props;
+const destino = withBase(to);
+const texto = lang === 'es' ? 'El portafolio se mudó a esta dirección.' : 'The portfolio moved to this address.';
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content={`0;url=${destino}`} />
+    <link rel="canonical" href={new URL(destino, Astro.site).href} />
+    <title>Emilio Romero</title>
+  </head>
+  <body>
+    <p><a href={destino}>{texto}</a></p>
+  </body>
+</html>

@@ -1,0 +1,409 @@
+---
+/**
+ * "Antes de esto": los proyectos del portafolio anterior (Figma) contados en
+ * el sitio, cada uno como un mini caso desplegable. Usa <details>: funciona
+ * sin JavaScript, con teclado, y todo el texto está en el HTML (lo leen ATS e
+ * IA aunque nadie lo despliegue).
+ */
+import { ARCHIVO, ARCHIVO_UI } from '../../content/archivo';
+import { FIGMA_PROTOTIPO } from '../../content/home';
+import type { Lang } from '../../content/ui';
+import { withBase } from '../../lib/paths';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const ui = ARCHIVO_UI[lang];
+const items = ARCHIVO[lang];
+---
+
+<section id="otros" class="archivo" aria-labelledby="archivo-t">
+  <div class="archivo-cab">
+    <div>
+      <p class="archivo-kicker">{ui.kicker}</p>
+      <h2 id="archivo-t" class="archivo-h2">{ui.titulo}</h2>
+    </div>
+    <p class="archivo-sub">{ui.sub}</p>
+  </div>
+
+  <ol class="archivo-lista">
+    {
+      items.map((p, i) => (
+        <li class="archivo-item">
+          <details class="mini" name="archivo">
+            <summary class="mini-sum">
+              <img
+                class="mini-portada"
+                src={withBase(p.imgs[0]!.src)}
+                alt=""
+                width="1277"
+                height="640"
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="mini-txt">
+                <span class="mini-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <span class="mini-t">{p.titulo}</span>
+                <span class="mini-ctx">{p.contexto}</span>
+                <span class="mini-abrir">
+                  <span class="mini-abrir-a">{ui.abrir}</span>
+                  <span class="mini-abrir-c">{ui.cerrar}</span>
+                </span>
+              </span>
+            </summary>
+
+            <div class="mini-cuerpo">
+              <dl class="mini-ficha">
+                <div>
+                  <dt>{ui.rol}</dt>
+                  <dd>{p.rol}</dd>
+                </div>
+                <div>
+                  <dt>{ui.problema}</dt>
+                  <dd>{p.problema}</dd>
+                </div>
+                <div>
+                  <dt>{ui.resultado}</dt>
+                  <dd>{p.resultado}</dd>
+                </div>
+              </dl>
+              <h3 class="mini-h">{ui.hice}</h3>
+              <ol class="mini-pasos">
+                {
+                  p.hice.map((paso, n) => (
+                    <li>
+                      <span class="mini-paso-n" aria-hidden="true">{n + 1}</span>
+                      <div>
+                        <p class="mini-paso-f">{paso.f}</p>
+                        <p class="mini-paso-t">{paso.t}</p>
+                      </div>
+                    </li>
+                  ))
+                }
+              </ol>
+              <p class="mini-hoy">
+                <b>{ui.hoy}:</b> {p.hoy}
+              </p>
+              <ul class="mini-galeria" aria-label={ui.galeria}>
+                {
+                  p.imgs.map((im) => (
+                    <li>
+                      <img src={withBase(im.src)} alt={im.alt} loading="lazy" decoding="async" />
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+          </details>
+        </li>
+      ))
+    }
+  </ol>
+
+  <p class="archivo-original">
+    <a href={FIGMA_PROTOTIPO} target="_blank" rel="noopener">
+      {ui.original}
+      <span class="sr-only">{ui.nuevaPestana}</span>
+    </a>
+  </p>
+</section>
+
+<style>
+  .archivo {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(48px, 7vw, 80px) clamp(20px, 4vw, 40px) 0;
+  }
+
+  .archivo-cab {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 32px;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .archivo-kicker {
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+  }
+
+  .archivo-h2 {
+    margin-top: 6px;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(28px, 3vw, 38px);
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+
+  .archivo-sub {
+    max-width: 46ch;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--dimmer);
+  }
+
+  .archivo-lista {
+    list-style: none;
+    padding: 0;
+    margin: 28px 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+    /* dense: al abrir uno, los demás suben a llenar la fila y no queda un hueco. */
+    grid-auto-flow: dense;
+    gap: 20px;
+  }
+
+  /* El que se abre ocupa toda la fila: el proceso necesita ancho. */
+  .archivo-item:has(details[open]) {
+    grid-column: 1 / -1;
+  }
+
+  /* Con uno abierto quedan tres cerrados: tres columnas para que no sobre una vacía. */
+  @media (min-width: 900px) {
+    .archivo-lista:has(details[open]) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .mini {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: #fff;
+    overflow: hidden;
+  }
+
+  .mini-sum {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .mini-sum::-webkit-details-marker {
+    display: none;
+  }
+
+  .mini[open] .mini-sum {
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .mini-portada {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: top;
+    transition: transform 400ms var(--ease-hover, ease);
+  }
+
+  .mini[open] .mini-portada {
+    width: min(100%, 360px);
+    flex: 0 0 auto;
+  }
+
+  .mini-sum:hover .mini-portada {
+    transform: scale(1.02);
+  }
+
+  .mini-txt {
+    padding: 18px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1 1 260px;
+  }
+
+  .mini-n {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--dimmer);
+  }
+
+  .mini-t {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .mini-ctx {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--dimmer);
+  }
+
+  .mini-abrir {
+    margin-top: auto;
+    padding-top: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--clarity);
+  }
+
+  .mini-abrir-c,
+  .mini[open] .mini-abrir-a {
+    display: none;
+  }
+
+  .mini[open] .mini-abrir-c {
+    display: inline;
+  }
+
+  .mini-abrir-a::after {
+    content: ' →';
+  }
+
+  .mini-sum:focus-visible {
+    outline: 2px solid var(--clarity);
+    outline-offset: -2px;
+  }
+
+  .mini-cuerpo {
+    padding: clamp(20px, 3vw, 32px);
+    animation: mini-entra 360ms ease both;
+  }
+
+  @keyframes mini-entra {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mini-cuerpo {
+      animation: none;
+    }
+    .mini-portada {
+      transition: none;
+    }
+  }
+
+  .mini-ficha {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    gap: 20px 32px;
+  }
+
+  .mini-ficha dt {
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+  }
+
+  .mini-ficha dd {
+    margin: 6px 0 0;
+    font-size: 15.5px;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  .mini-h {
+    margin-top: 28px;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+  }
+
+  /* Paso a paso: número, fase y lo que hice en ella. Dos columnas en escritorio. */
+  .mini-pasos {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    gap: 14px 28px;
+  }
+
+  .mini-pasos li {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fbfaf7;
+  }
+
+  .mini-paso-n {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--clarity);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .mini-paso-f {
+    font-size: 15.5px;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .mini-paso-t {
+    margin-top: 4px;
+    font-size: 15px;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  .mini-hoy {
+    margin-top: 24px;
+    padding: 16px 18px;
+    border-left: 4px solid var(--clarity);
+    background: #f4f6fc;
+    border-radius: 0 12px 12px 0;
+    font-size: 15.5px;
+    line-height: 1.6;
+  }
+
+  .mini-galeria {
+    list-style: none;
+    margin: 24px 0 0;
+    padding: 0 0 8px;
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+
+  .mini-galeria li {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  .mini-galeria img {
+    height: clamp(180px, 26vw, 280px);
+    width: auto;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: #f4f4f2;
+  }
+
+  .archivo-original {
+    margin-top: 18px;
+    font-size: 14.5px;
+  }
+
+  .archivo-original a {
+    color: var(--clarity);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>

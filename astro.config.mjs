@@ -28,11 +28,8 @@ export default defineConfig({
     preact({ compat: true }),
     sitemap({
       i18n: { defaultLocale: 'es', locales: { es: 'es-CO', en: 'en' } },
-      // /ux/ lleva noindex salvo sus páginas de caso, que sí deben aparecer
-      // en Google: solo esas se anuncian.
-      filter: (page) =>
-        !page.includes('/404') &&
-        (!page.includes('/ux/') || /\/ux\/(casos|en\/cases)\/[^/]+\/?$/.test(page)),
+      // Solo se anuncia el perfil /ux/: la raíz son redirecciones a él.
+      filter: (page) => !page.includes('/404') && page.includes('/ux/') && !/\/ux\/(casos|en\/cases)\/?$/.test(page),
     }),
   ],
   i18n: {
