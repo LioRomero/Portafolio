@@ -85,10 +85,8 @@ export const ARCHIVO: Record<Lang, readonly ProyectoArchivo[]> = {
       resultado: 'Rediseño implementado en la intranet: 30% más eficiencia de navegación en plataformas que usan más de 500 personas al mes.',
       hoy: 'Diseñar dentro de restricciones técnicas reales y validar con usuarios antes de implementar: lo mismo que hago en implementaciones enterprise.',
       imgs: [
-        { src: img('etb-final'), alt: 'Página principal de Talento Humano rediseñada, con el banner de regreso a clases.' },
         { src: img('etb-p1'), alt: 'Wireframes de la página principal y la página interna de Talento Humano, con la paleta de color.' },
         { src: img('etb-p2'), alt: 'Wireframe de la página interna con banners promocionales y accesos.' },
-        { src: img('etb-p3'), alt: 'Mockup final de la página de Talento Humano.' },
       ],
     },
     {
@@ -176,10 +174,8 @@ export const ARCHIVO: Record<Lang, readonly ProyectoArchivo[]> = {
       resultado: 'Redesign implemented on the intranet: 30% better navigation efficiency on platforms used by 500+ people a month.',
       hoy: 'Designing within real technical constraints and validating with users before implementation: the same thing I do in enterprise implementations.',
       imgs: [
-        { src: img('etb-final'), alt: 'Redesigned HR home page, with the back-to-school banner.' },
         { src: img('etb-p1'), alt: 'Wireframes of the HR home and inner page, with the colour palette.' },
         { src: img('etb-p2'), alt: 'Wireframe of the inner page with promotional banners and shortcuts.' },
-        { src: img('etb-p3'), alt: 'Final mockup of the HR page.' },
       ],
     },
     {
