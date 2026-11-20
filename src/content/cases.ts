@@ -1008,9 +1008,9 @@ export const CASES_UX: Record<CaseKey, { es: CasoUx; en: CasoUx }> = {
       lede: 'Las implementaciones salían bien. Meses después, el cliente seguía llamando para preguntar cómo funcionaba lo que ya tenía.',
       chips: ['Technical Architect · QStrauss Consulting', 'Desde abr 2026 · actualidad'],
       ficha: {
-        rol: 'Levantamiento de requerimientos de negocio y funcionales, diagnóstico de la configuración contra el proceso real, y diseño de la documentación como producto.',
+        rol: 'Participación en todo el ciclo de la implementación junto al business analyst, mapeo de la configuración contra el proceso real, pruebas de punta a punta y diseño de la documentación como producto.',
         decidi: 'Tratar la documentación como un sistema reutilizable, organizado por rol, y no como un anexo que se escribe al final de cada proyecto.',
-        cambio: 'Decisiones de proceso priorizadas, flujos con menos fricción y una estrategia de adopción por rol. Lo que buscaba: menos tiempo en capacitaciones y aclaraciones.',
+        cambio: 'Una estrategia de adopción por rol que se adoptó con un cliente. Lo que buscaba: menos tiempo en capacitaciones y aclaraciones.',
       },
       masAlla: 'Además de configurar, propuse tratar la documentación como un producto organizado por rol, para que los equipos pudieran operar sin depender del consultor.',
       adopcion: 'La estrategia de adopción por rol sí se adoptó con un cliente, en una implementación de unos 6 meses de punta a punta. La herramienta de documentación que propuse no se adoptó en ese momento.',
@@ -1085,9 +1085,9 @@ export const CASES_UX: Record<CaseKey, { es: CasoUx; en: CasoUx }> = {
       lede: 'The implementations went well. Months later, the client was still calling to ask how what they already had worked.',
       chips: ['Technical Architect · QStrauss Consulting', 'Since Apr 2026 · present'],
       ficha: {
-        rol: 'Gathering business and functional requirements, diagnosing the configuration against the real process, and designing documentation as a product.',
+        rol: 'Taking part in the whole implementation cycle alongside the business analyst, mapping the configuration against the real process, end-to-end testing and designing documentation as a product.',
         decidi: 'Treat documentation as a reusable system, organized by role, and not as an appendix written at the end of each project.',
-        cambio: 'Prioritized process decisions, workflows with less friction and a role-based adoption strategy. What I was after: less time spent on training and clarifications.',
+        cambio: 'A role-based adoption strategy adopted by one client. What I was after: less time spent on training and clarifications.',
       },
       masAlla: 'Beyond configuring, I proposed treating documentation as a product organized by role, so teams could operate without depending on the consultant.',
       adopcion: 'The role-based adoption strategy was adopted by one client, in an end-to-end implementation of about 6 months. The documentation tool I proposed wasn’t adopted at the time.',
