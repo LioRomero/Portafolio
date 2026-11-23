@@ -1,0 +1,160 @@
+---
+/**
+ * "Cómo uso la IA": cada tarjeta separa lo que hizo la IA de lo que decidí yo.
+ * Sin JavaScript; todo el texto queda en el HTML (lo leen ATS e IA).
+ */
+import { IA_UI, USOS_IA } from '../../content/ia';
+import type { Lang } from '../../content/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const ui = IA_UI[lang];
+const usos = USOS_IA[lang];
+---
+
+<section id="ia" class="ia" aria-labelledby="ia-t">
+  <div class="ia-cab">
+    <div>
+      <p class="ia-kicker">{ui.kicker}</p>
+      <h2 id="ia-t" class="ia-h2">{ui.titulo}</h2>
+    </div>
+    <p class="ia-sub">{ui.sub}</p>
+  </div>
+
+  <ul class="ia-lista">
+    {
+      usos.map((u) => (
+        <li class="ia-card">
+          <p class="ia-donde">{u.donde}</p>
+          <p class="ia-herr">{u.herramientas}</p>
+          <dl class="ia-dl">
+            <div class="ia-fila ia-fila--ia">
+              <dt>{ui.laIa}</dt>
+              <dd>{u.ia}</dd>
+            </div>
+            <div class="ia-fila ia-fila--yo">
+              <dt>{ui.yoDecidi}</dt>
+              <dd>{u.yo}</dd>
+            </div>
+          </dl>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="ia-principio">{ui.principio}</p>
+</section>
+
+<style>
+  .ia {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(48px, 7vw, 80px) clamp(20px, 4vw, 40px) 0;
+  }
+
+  .ia-cab {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 32px;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .ia-kicker {
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+  }
+
+  .ia-h2 {
+    margin-top: 6px;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(28px, 3vw, 38px);
+    line-height: 1.12;
+  }
+
+  .ia-sub {
+    max-width: 50ch;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--dimmer);
+  }
+
+  .ia-lista {
+    list-style: none;
+    margin: 28px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 18px;
+  }
+
+  .ia-card {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: #fff;
+    padding: 20px 22px 22px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ia-donde {
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .ia-herr {
+    margin-top: 4px;
+    font-size: 13.5px;
+    color: var(--dimmer);
+  }
+
+  .ia-dl {
+    margin: 14px 0 0;
+    display: grid;
+    gap: 10px;
+  }
+
+  .ia-fila {
+    padding: 12px 14px;
+    border-radius: 10px;
+  }
+
+  .ia-fila--ia {
+    background: #f3f4f6;
+  }
+
+  .ia-fila--yo {
+    background: #eef1fb;
+    border-left: 4px solid var(--clarity);
+  }
+
+  .ia-fila dt {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+  }
+
+  .ia-fila dd {
+    margin: 4px 0 0;
+    font-size: 15px;
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+
+  .ia-principio {
+    margin-top: 20px;
+    font-family: var(--serif);
+    font-size: clamp(19px, 2vw, 23px);
+    line-height: 1.35;
+  }
+</style>

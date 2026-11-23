@@ -132,11 +132,11 @@ export const PROFILES: Record<Profile, ProfileDef> = {
       ],
       aboutRole: 'UX Strategist · Research aplicado a decisiones de negocio',
       aboutHook: 'Investigo para entender el negocio y a su gente, y diseño el sistema que resuelve lo que encuentro. No creo que una cosa se pueda hacer bien sin la otra.',
-      aboutChips: ['Análisis de negocio', 'Levantamiento de requerimientos', 'Mapeo de procesos', 'Definición de KPIs', 'Gestión de stakeholders', 'UX Research', 'Bogotá · Remoto', 'Inglés C1'],
+      aboutChips: ['Análisis de negocio', 'Análisis de requerimientos', 'Mapeo de procesos', 'Definición de KPIs', 'Gestión de stakeholders', 'UX Research', 'Bogotá · Remoto', 'Inglés C1'],
       aboutSkills: [
         {
           label: 'Análisis de negocio',
-          items: ['Levantamiento de requerimientos', 'Mapeo y rediseño de procesos', 'Casos de uso', 'Gestión de stakeholders', 'Definición de KPIs y métricas', 'Priorización (impacto vs esfuerzo)', 'Diseño de modelos operativos'],
+          items: ['Análisis de requerimientos', 'Mapeo y rediseño de procesos', 'Casos de uso', 'Gestión de stakeholders', 'Definición de KPIs y métricas', 'Priorización (impacto vs esfuerzo)', 'Diseño de modelos operativos'],
         },
         {
           label: 'Estrategia de experiencia',
@@ -148,7 +148,7 @@ export const PROFILES: Record<Profile, ProfileDef> = {
         },
         {
           label: 'Herramientas',
-          items: ['Figma', 'Webflow', 'Adobe Workfront', 'Adobe Creative Suite', 'Power BI', 'HubSpot', 'HTML / CSS / JS', 'Confluence / Jira', 'Google Workspace', 'Microsoft 365', 'Claude, Gemini, NotebookLM'],
+          items: ['Figma', 'Webflow', 'Adobe Workfront', 'Adobe Creative Suite', 'Power BI', 'GoHighLevel', 'HTML / CSS / JS', 'Confluence / Jira', 'Google Workspace', 'Microsoft 365', 'Claude, Gemini, NotebookLM'],
         },
       ],
     },
@@ -158,7 +158,7 @@ export const PROFILES: Record<Profile, ProfileDef> = {
       homeDescription: HOME.en.heroSub,
       homeSkills: [
         'Business analysis',
-        'Requirements gathering',
+        'Requirements analysis',
         'Process mapping',
         'Stakeholder management',
         'KPI definition',
@@ -174,11 +174,11 @@ export const PROFILES: Record<Profile, ProfileDef> = {
       ],
       aboutRole: 'UX Strategist · Research applied to business decisions',
       aboutHook: 'I research to understand the business and the people in it, and I design the system that solves what I find. I don’t think either half can be done well without the other.',
-      aboutChips: ['Business analysis', 'Requirements gathering', 'Process mapping', 'KPI definition', 'Stakeholder management', 'UX research', 'Bogotá · Remote', 'English C1'],
+      aboutChips: ['Business analysis', 'Requirements analysis', 'Process mapping', 'KPI definition', 'Stakeholder management', 'UX research', 'Bogotá · Remote', 'English C1'],
       aboutSkills: [
         {
           label: 'Business analysis',
-          items: ['Requirements gathering', 'Process mapping and redesign', 'Use cases', 'Stakeholder management', 'KPI and metric definition', 'Prioritization (impact vs effort)', 'Operating model design'],
+          items: ['Requirements analysis', 'Process mapping and redesign', 'Use cases', 'Stakeholder management', 'KPI and metric definition', 'Prioritization (impact vs effort)', 'Operating model design'],
         },
         {
           label: 'Experience strategy',
@@ -190,7 +190,7 @@ export const PROFILES: Record<Profile, ProfileDef> = {
         },
         {
           label: 'Tools',
-          items: ['Figma', 'Webflow', 'Adobe Workfront', 'Adobe Creative Suite', 'Power BI', 'HubSpot', 'HTML / CSS / JS', 'Confluence / Jira', 'Google Workspace', 'Microsoft 365', 'Claude, Gemini, NotebookLM'],
+          items: ['Figma', 'Webflow', 'Adobe Workfront', 'Adobe Creative Suite', 'Power BI', 'GoHighLevel', 'HTML / CSS / JS', 'Confluence / Jira', 'Google Workspace', 'Microsoft 365', 'Claude, Gemini, NotebookLM'],
         },
       ],
     },
@@ -219,16 +219,16 @@ export const PROFILES: Record<Profile, ProfileDef> = {
         'Pruebas de usabilidad',
         'Journey maps',
         'Service blueprints',
-        'Levantamiento de requerimientos',
+        'Análisis de requerimientos',
         'Mapeo de procesos',
         'Figma',
         'Adobe Workfront',
       ],
       aboutRole: 'UX Designer · Investigación, estrategia y consultoría',
       aboutHook:
-        'Consultor UX con formación en Diseño Interactivo y experiencia en plataformas internas, SaaS B2B y herramientas enterprise. Investigo antes de diseñar: entrevisto a los usuarios, reviso cómo trabajan de verdad y encuentro dónde se rompe la experiencia; después diseño los flujos, las interfaces y la documentación que lo resuelven. Para mí una emoción es un dato de negocio: cuando alguien se cansa, no entiende o prefiere llamar, ahí suele estar el problema, y también la oportunidad.',
+        'Consultor UX con más de 2 años de experiencia profesional en plataformas internas, SaaS B2B y herramientas enterprise, y formación en Diseño Interactivo. Investigo antes de diseñar: entrevisto a los usuarios, reviso cómo trabajan de verdad y encuentro dónde se rompe la experiencia; después diseño los flujos, las interfaces y la documentación que lo resuelven. Para mí una emoción es un dato de negocio: cuando alguien se cansa, no entiende o prefiere llamar, ahí suele estar el problema, y también la oportunidad.',
       aboutDescription:
-        'UX Designer con formación en Diseño Interactivo y experiencia en plataformas internas, SaaS B2B y herramientas enterprise.',
+        'UX Designer con más de 2 años de experiencia profesional en plataformas internas, SaaS B2B y herramientas enterprise, y formación en Diseño Interactivo.',
       aboutChips: ['UX/UI', 'Investigación', 'Pruebas de usabilidad', 'Journey maps', 'Service blueprints', 'Mapeo de procesos', 'Bogotá · Remoto', 'Inglés C1'],
       /* Las cuatro líneas de "Habilidades e idiomas" de la hoja de vida. */
       aboutSkills: [
@@ -242,11 +242,11 @@ export const PROFILES: Record<Profile, ProfileDef> = {
         },
         {
           label: 'Consultoría y estrategia',
-          items: ['Levantamiento de requerimientos', 'Mapeo de procesos', 'Gestión de stakeholders', 'Estrategia de adopción', 'QA de flujos', 'Metodologías ágiles'],
+          items: ['Análisis de requerimientos', 'Mapeo de procesos', 'Gestión de stakeholders', 'Estrategia de adopción', 'QA de flujos', 'Metodologías ágiles'],
         },
         {
           label: 'Herramientas',
-          items: ['Figma', 'Webflow', 'Adobe Creative Suite', 'Adobe Workfront y Fusion', 'HTML / CSS / JS', 'Power BI', 'HubSpot', 'Jira / Confluence', 'Google Workspace', 'Microsoft 365'],
+          items: ['Figma', 'Webflow', 'Adobe Creative Suite', 'Adobe Workfront', 'HTML / CSS / JS', 'Power BI', 'GoHighLevel', 'Jira / Confluence', 'Google Workspace', 'Microsoft 365'],
         },
       ],
       jobTitles: { qstrauss: 'Technical Architect', ropofy: 'Jr UX Consultant / UX Designer', genia: 'UX/UI Designer', etb: 'Practicante UX/UI' },
@@ -255,10 +255,10 @@ export const PROFILES: Record<Profile, ProfileDef> = {
           org: 'QStrauss Consulting · Implementaciones enterprise de Adobe Workfront',
           lede: null,
           bullets: [
-            'Levanté requerimientos de negocio y funcionales con clientes enterprise de retail, banca y consumo masivo, y los traduje en flujos, configuración e interfaces de Adobe Workfront.',
-            'Diagnostiqué implementaciones que no funcionaban: mapeé el proceso real contra el configurado, entrevisté a equipos y stakeholders y prioricé las decisiones de proceso.',
+            'Participo de punta a punta en implementaciones de Adobe Workfront para clientes enterprise de retail, banca y consumo masivo, desde el discovery hasta la salida a producción: asesoro cómo implementar y cómo trabajar en la herramienta, junto al project manager y el business analyst, que lideran la configuración.',
+            'Mapeo cómo trabaja realmente cada equipo frente a lo configurado en la herramienta, para separar lo estándar de la plataforma de lo propio de cada cliente.',
             'Diseñé una estrategia de adopción por rol, con documentación y capacitaciones, que se adoptó con un cliente en una implementación de unos 6 meses de punta a punta.',
-            'Probé las implementaciones de punta a punta con desarrollo, incluidas automatizaciones de Workfront Fusion, revisando bugs antes de llegar al cliente.',
+            'Pruebo los flujos de punta a punta con desarrollo, revisando bugs antes de llegar al cliente, y apoyo las pruebas del cliente (UAT).',
           ],
         },
         ropofy: {
@@ -308,16 +308,16 @@ export const PROFILES: Record<Profile, ProfileDef> = {
         'Usability testing',
         'Journey maps',
         'Service blueprints',
-        'Requirements gathering',
+        'Requirements analysis',
         'Process mapping',
         'Figma',
         'Adobe Workfront',
       ],
       aboutRole: 'UX Designer · Research, strategy and consulting',
       aboutHook:
-        "UX consultant with a background in Interactive Design and experience across internal platforms, B2B SaaS and enterprise tools. I research before I design: I interview users, look at how they actually work and find where the experience breaks; then I design the workflows, interfaces and documentation that fix it. To me an emotion is a business signal: when someone gets tired, doesn't understand, or would rather call, that's usually where the problem is, and the opportunity too.",
+        "UX consultant with 2+ years of professional experience across internal platforms, B2B SaaS and enterprise tools, and a background in Interactive Design. I research before I design: I interview users, look at how they actually work and find where the experience breaks; then I design the workflows, interfaces and documentation that fix it. To me an emotion is a business signal: when someone gets tired, doesn't understand, or would rather call, that's usually where the problem is, and the opportunity too.",
       aboutDescription:
-        'UX Designer with a background in Interactive Design and experience across internal platforms, B2B SaaS and enterprise tools.',
+        'UX Designer with 2+ years of professional experience across internal platforms, B2B SaaS and enterprise tools, and a background in Interactive Design.',
       aboutChips: ['UX/UI', 'Research', 'Usability testing', 'Journey maps', 'Service blueprints', 'Process mapping', 'Bogotá · Remote', 'English C1'],
       aboutSkills: [
         {
@@ -330,11 +330,11 @@ export const PROFILES: Record<Profile, ProfileDef> = {
         },
         {
           label: 'Consulting & strategy',
-          items: ['Requirements gathering', 'Process mapping', 'Stakeholder management', 'Adoption strategy', 'Flow QA', 'Agile'],
+          items: ['Requirements analysis', 'Process mapping', 'Stakeholder management', 'Adoption strategy', 'Flow QA', 'Agile'],
         },
         {
           label: 'Tools',
-          items: ['Figma', 'Webflow', 'Adobe Creative Suite', 'Adobe Workfront & Fusion', 'HTML / CSS / JS', 'Power BI', 'HubSpot', 'Jira / Confluence', 'Google Workspace', 'Microsoft 365'],
+          items: ['Figma', 'Webflow', 'Adobe Creative Suite', 'Adobe Workfront', 'HTML / CSS / JS', 'Power BI', 'GoHighLevel', 'Jira / Confluence', 'Google Workspace', 'Microsoft 365'],
         },
       ],
       jobTitles: { qstrauss: 'Technical Architect', ropofy: 'Jr UX Consultant / UX Designer', genia: 'UX/UI Designer', etb: 'UX/UI Intern' },
@@ -343,10 +343,10 @@ export const PROFILES: Record<Profile, ProfileDef> = {
           org: 'QStrauss Consulting · Enterprise Adobe Workfront implementations',
           lede: null,
           bullets: [
-            'Gathered business and functional requirements with enterprise clients in retail, banking and consumer goods, and translated them into Adobe Workfront workflows, configuration and interfaces.',
-            "Diagnosed implementations that weren't working: mapped the real process against the configured one, interviewed teams and stakeholders, and prioritized process decisions.",
+            'Take part end to end in Adobe Workfront implementations for enterprise clients in retail, banking and consumer goods, from discovery to go-live, advising on how to implement and work in the tool alongside the project manager and business analyst, who lead the configuration.',
+            'Map how each team really works against what is configured in the tool, to separate what is standard on the platform from what is specific to each client.',
             'Designed a role-based adoption strategy, with documentation and training, adopted by one client in an end-to-end implementation of about 6 months.',
-            'Tested implementations end to end with development, including Workfront Fusion automations, reviewing bugs before they reached the client.',
+            'Test flows end to end with development, reviewing bugs before they reach the client, and support client testing (UAT).',
           ],
         },
         ropofy: {
